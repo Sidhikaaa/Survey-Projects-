@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Aerospace Export Procurement Audit — Buyer-Side Decision Makers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --purple-900:#3b2769;--purple-800:#4a327f;--purple-700:#5b3ea0;--purple-600:#6f4bc4;
+  --purple-500:#8a63de;--purple-300:#b79ef0;--purple-200:#d8c9f7;--purple-100:#ece4fb;--purple-50:#f6f2fc;
+  --teal:#1f9e8f;--blue:#2f7dbd;--coral:#d97a9a;
+  --page:#f4f1f9;--card:#fff;
+  --ink:#2b2440;--ink-soft:#7a7290;--ink-faint:#a49cba;
+  --line:#eae4f4;--line-soft:#f2eef9;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--page);color:var(--ink);
+  -webkit-font-smoothing:antialiased;font-feature-settings:"tnum" 1,"cv05" 1}
+.num{font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+
+/* ============ TOPBAR ============ */
+.topbar{position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:0;
+  height:72px;background:linear-gradient(90deg,var(--purple-900),var(--purple-800) 60%,#553a92);
+  border-bottom:1px solid rgba(0,0,0,.14);padding:0 24px}
+.brand{font-size:14px;font-weight:700;letter-spacing:.14em;color:#fff;white-space:nowrap}
+.divider{width:1px;height:26px;background:rgba(255,255,255,.22);margin:0 20px}
+.tagline{font-size:13px;font-weight:400;color:rgba(255,255,255,.7);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.005em}
+.filters{margin-left:auto;display:flex;align-items:center;gap:8px}
+.filters select{appearance:none;font-family:inherit;font-size:12.5px;font-weight:500;color:#fff;
+  background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.2);border-radius:2px;
+  padding:8px 28px 8px 12px;cursor:pointer;outline:none;transition:background .15s;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='9' height='6'><path d='M1 1.2l3.5 3.5L8 1.2' stroke='rgba(255,255,255,0.65)' stroke-width='1.3' fill='none' stroke-linecap='square'/></svg>");
+  background-repeat:no-repeat;background-position:right 11px center}
+.filters select:hover{background-color:rgba(255,255,255,.16)}
+.filters select option{color:#2b2440;background:#fff}
+.npill{font-size:12.5px;font-weight:600;color:#fff;background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.24);border-radius:2px;padding:8px 14px;white-space:nowrap;
+  font-variant-numeric:tabular-nums;margin-left:6px}
+
+/* ============ LAYOUT ============ */
+.shell{display:flex;align-items:flex-start}
+.side{width:274px;flex:none;background:#fff;border-right:1px solid var(--line);
+  padding:24px 18px 40px;position:sticky;top:72px;height:calc(100vh - 72px);overflow-y:auto}
+.side::-webkit-scrollbar{width:5px}.side::-webkit-scrollbar-thumb{background:var(--purple-200)}
+.sidelbl{font-size:10px;font-weight:600;letter-spacing:.16em;color:var(--ink-faint);
+  margin-bottom:12px;padding-left:2px}
+.navitem{display:flex;align-items:center;gap:11px;padding:10px 11px;cursor:pointer;margin-bottom:2px;
+  border-left:2px solid transparent;transition:background .14s,border-color .14s}
+.navitem:hover{background:var(--purple-50)}
+.navitem.on{background:var(--purple-50);border-left-color:var(--purple-700)}
+.navno{width:24px;height:24px;flex:none;border:1px solid var(--line);background:#fff;
+  color:var(--ink-faint);font-size:10.5px;font-weight:600;display:flex;align-items:center;
+  justify-content:center;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.navitem.on .navno{background:var(--purple-700);border-color:var(--purple-700);color:#fff}
+.navtxt{font-size:13.5px;font-weight:500;color:var(--ink-soft);line-height:1.3;flex:1;letter-spacing:-.005em}
+.navitem.on .navtxt{color:var(--purple-800);font-weight:600}
+.badge{font-size:11px;font-weight:500;color:var(--ink-faint);font-variant-numeric:tabular-nums}
+.snapwrap{margin-top:28px;border-top:1px solid var(--line);padding-top:20px}
+.snap{border:1px solid var(--line);padding:13px 14px;margin-bottom:8px;background:#fff}
+.snap .l{font-size:9.5px;font-weight:600;letter-spacing:.12em;color:var(--ink-faint);margin-bottom:7px}
+.snap .v{font-size:25px;font-weight:700;color:var(--purple-800);line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.pbar{height:3px;background:var(--purple-100);margin-top:11px;overflow:hidden}
+.pbar i{display:block;height:100%;background:var(--purple-600);transition:width .8s cubic-bezier(.4,0,.2,1)}
+
+.main{flex:1;padding:30px 32px 70px;min-width:0}
+.page{display:none}.page.on{display:block;animation:fadeUp .38s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(11px)}to{opacity:1;transform:none}}
+.eyebrow{font-size:10px;font-weight:600;letter-spacing:.17em;color:var(--purple-600);margin-bottom:9px}
+.sec-title{font-size:27px;font-weight:700;letter-spacing:-.028em;margin-bottom:8px;line-height:1.15}
+.sec-sub{font-size:13.5px;color:var(--ink-soft);margin-bottom:22px;max-width:960px;line-height:1.62}
+
+/* ============ KPI ============ */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-bottom:24px;
+  background:var(--line);border:1px solid var(--line)}
+.kpi{background:#fff;padding:20px 21px 17px}
+.kpi .v{font-size:34px;font-weight:700;line-height:1;letter-spacing:-.035em;margin-bottom:12px;
+  font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:8px}
+.kpi .t{font-size:13.5px;font-weight:600;margin-bottom:3px;letter-spacing:-.01em}
+.kpi .s{font-size:12px;color:var(--ink-soft);line-height:1.45}
+.kpi .d{font-size:11px;font-weight:600;letter-spacing:.02em;margin-top:12px;padding-top:10px;
+  border-top:1px solid var(--line-soft);display:flex;align-items:center;gap:5px;color:var(--ink-soft);text-transform:uppercase}
+.kpi .d svg{flex:none}
+.c-p{color:var(--purple-700)}.c-d{color:var(--purple-900)}.c-t{color:var(--teal)}.c-m{color:var(--ink-faint)}
+
+/* ============ PANELS ============ */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:1460px){.grid{grid-template-columns:repeat(2,1fr)}.kpis{grid-template-columns:repeat(2,1fr)}}
+.panel{background:#fff;border:1px solid var(--line);padding:17px 17px 13px;display:flex;flex-direction:column}
+.ph{display:flex;gap:10px;align-items:flex-start;margin-bottom:6px}
+.qn{min-width:23px;height:19px;padding:0 5px;flex:none;background:var(--purple-50);border:1px solid var(--purple-100);
+  color:var(--purple-700);font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;
+  font-variant-numeric:tabular-nums;letter-spacing:.03em;margin-top:2px}
+.qtx{font-size:14px;font-weight:600;line-height:1.4;letter-spacing:-.012em;flex:1}
+.psub{font-size:12.5px;color:var(--ink-soft);margin-bottom:13px;line-height:1.5;padding-left:33px}
+.cbox{position:relative;height:230px;margin-bottom:11px}
+.fnote{font-size:10.5px;font-weight:500;color:var(--ink-faint);border-top:1px solid var(--line-soft);
+  padding-top:9px;margin-top:auto;letter-spacing:.02em;display:flex;align-items:center;gap:6px}
+.mtag{font-size:9px;font-weight:600;letter-spacing:.1em;color:var(--purple-700);border:1px solid var(--purple-200);
+  padding:3px 6px;flex:none;margin-top:2px;white-space:nowrap}
+
+/* ============ MASKING ============ */
+.cbox.masked canvas{filter:blur(8px) saturate(.55);opacity:.85}
+.veil{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.32);cursor:help}
+.lockchip{display:flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--line);
+  color:var(--ink-soft);font-size:11px;font-weight:600;letter-spacing:.07em;padding:8px 13px;
+  box-shadow:0 1px 6px rgba(59,39,105,.09)}
+.lockchip svg{flex:none;color:var(--purple-700)}
+.conf-note{display:flex;align-items:flex-start;gap:11px;background:#fff;border:1px solid var(--line);
+  border-left:2px solid var(--purple-600);padding:13px 17px;margin-bottom:20px;
+  font-size:12.5px;color:var(--ink-soft);max-width:900px;line-height:1.6}
+.conf-note svg{flex:none;margin-top:1px;color:var(--purple-700)}
+.conf-note b{color:var(--ink);font-weight:600}
+.blur{display:inline-block;background:var(--purple-100);color:var(--purple-800);font-weight:600;
+  padding:0 8px;filter:blur(4.5px);user-select:none;cursor:help}
+
+/* ============ RECOMMENDATIONS ============ */
+.recgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:24px}
+@media(max-width:1460px){.recgrid{grid-template-columns:1fr}}
+.rec{background:#fff;border:1px solid var(--line);border-top:2px solid var(--purple-700);padding:24px 26px 20px}
+.rtag{display:flex;align-items:center;gap:9px;font-size:9.5px;font-weight:600;letter-spacing:.15em;
+  color:var(--ink-faint);margin-bottom:14px}
+.rtag i{display:block;width:20px;height:1px;background:var(--purple-300)}
+.rec h3{font-size:18px;font-weight:700;letter-spacing:-.024em;margin-bottom:11px;line-height:1.32}
+.rec p{font-size:13.5px;color:var(--ink-soft);line-height:1.68;margin-bottom:16px}
+.rec ul{list-style:none}
+.rec li{font-size:12.5px;line-height:1.62;padding:9px 0 9px 22px;border-top:1px solid var(--line-soft);
+  position:relative;color:var(--ink)}
+.rec li:before{content:'';position:absolute;left:4px;top:17px;width:7px;height:1px;background:var(--purple-300)}
+.evcap{font-size:12.5px;color:var(--ink-soft);margin:2px 0 16px;line-height:1.6;max-width:900px}
+.foot{margin-top:32px;padding-top:16px;border-top:1px solid var(--line);font-size:11px;
+  color:var(--ink-faint);line-height:1.7;max-width:1000px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="tagline">Aerospace Export Procurement Audit &nbsp;·&nbsp; Buyer-Side Decision Makers &nbsp;·&nbsp; India, Greece, Peru</div>
+  <div class="filters">
+    <select id="f_market"><option value="ALL">All Markets</option></select>
+    <select id="f_desig"><option value="ALL">All Designations</option></select>
+    <select id="f_org"><option value="ALL">All Org Types</option></select>
+    <select id="f_seg"><option value="ALL">All Segments</option></select>
+    <span class="npill" id="npill">n = 100</span>
+  </div>
+</div>
+
+<div class="shell">
+  <aside class="side">
+    <div class="sidelbl">CONTENTS</div>
+    <div id="nav"></div>
+    <div class="snapwrap">
+      <div class="sidelbl">LIVE SAMPLE SNAPSHOT</div>
+      <div class="snap"><div class="l">RESPONDENTS IN VIEW</div><div class="v" id="s1">100</div><div class="pbar"><i id="b1" style="width:100%"></i></div></div>
+      <div class="snap"><div class="l">MARKETS REPRESENTED</div><div class="v" id="s2">3</div><div class="pbar"><i id="b2" style="width:100%"></i></div></div>
+      <div class="snap"><div class="l">SUSTAINMENT PRIORITY INDEX</div><div class="v" id="s3">87</div><div class="pbar"><i id="b3" style="width:87%"></i></div></div>
+    </div>
+  </aside>
+  <main class="main" id="main"></main>
+</div>
+
+<script>
+/* ==========================================================================
+   1. DATABASE — one row per respondent (n = 100)
+   ========================================================================== */
+const DB=(()=>{
+  let s=20260806;
+  const rnd=()=>{s=(s*1664525+1013904223)%4294967296;return s/4294967296};
+  const clamp=(v,lo=0,hi=100)=>Math.max(lo,Math.min(hi,v));
+  const jit=(m,sd=6)=>clamp(Math.round(m+(rnd()+rnd()+rnd()-1.5)*sd));
+  const pickW=o=>{const t=Object.values(o).reduce((a,b)=>a+b,0);let r=rnd()*t;
+    for(const k in o){r-=o[k];if(r<=0)return k}return Object.keys(o)[0]};
+
+  const MARKETS={'India':45,'Greece':32,'Peru':23};
+  const DESIGS=['Designation A','Designation B','Designation C','Designation D',
+                'Designation E','Designation F','Designation G','Designation H'];
+  const ORGS={'Service Headquarters':34,'Ministry & Policy':22,'State OEM & Industry':26,'Partner & Integrator':18};
+  const SEGS={'Fast Jet':22,'Rotary':26,'Transport & Special Mission':18,'Trainer & Light Attack':17,'Upgrade & Life Extension':17};
+
+  const BASE={
+    dr_sustain:89,dr_offset:81,dr_capability:74,dr_price:63,dr_trust:85,dr_schedule:71,
+    st_capability:92,st_compliance:87,st_price:83,st_delivery:79,st_offset:66,st_sustain:58,
+    pa_index:86,
+    of_capTransfer:90,of_mro:85,of_training:76,of_ip:71,of_volume:52,
+    cap_shortlist:88,cap_differentiator:47,pr_influence:58,rel_stock:83,
+    bar_track:88,bar_localcontent:74,bar_cert:79,bar_finance:70,bar_partner:66,
+    ref_lift:84,ne_index:69,
+    ds_technical:56,ds_political:27,ds_financial:17,
+    sov_then:44,sov_now:87,doc_then:52,doc_now:81,sust_then:61,sust_now:89,
+    ofcap_then:48,ofcap_now:84,ofvol_then:73,ofvol_now:41,split_then:36,split_now:74,
+    hd_sovereignty:88,hd_sustainment:85,hd_split:76,hd_offset:79,hd_docs:73,
+    hd_reported:74,
+    ol_budget:82,ol_integrated:79,ol_sovereignty:88,ol_upgrade:84,ol_localisation:80,
+    ol_open_now:64,ol_open_3yr:81,ol_perc_then:48,ol_perc_now:67,ol_perc_3yr:79,
+    ws_trainer:83,ws_rotary:86,ws_upgrade:89,ws_uav:72,ws_sim:64,
+    bm_resp:87,bm_obs:83,bm_partner:76,bm_subtier:85,bm_fin:70,bm_ip:66,
+    sv_scored:44,sv_precondition:33,sv_informal:23,
+    sc_fastjet:63,sc_rotary:81,sc_transport:69,sc_trainer:84,sc_upgrade:88,
+    ac_reference:89,ac_localMRO:84,ac_spares:86,ac_financing:75,ac_gtg:71,
+    ef_reference:71,ef_localMRO:54,ef_spares:63,ef_financing:78,ef_gtg:44,
+    cm_capexShare:29,cm_aeroShare:34,cm_orderBandLo:22,cm_orderBandHi:58,cm_shareLeader:47,
+    cm_gapHead:33,cm_gapLife:14,cm_supportPkg:26,cm_cfhSpread:19,
+    cm_locPremium:22,cm_discount:28,cm_keepflying:57,cm_cycle:38,
+    cm_engage_then:11,cm_engage_now:21
+  };
+  const MKT={
+    'India':{dr_offset:9,ds_technical:11,ds_political:-6,cap_shortlist:5,bar_cert:-8,bar_finance:-9,
+             ol_localisation:9,cm_capexShare:4,cm_orderBandHi:16,cm_orderBandLo:9,ne_index:-4,sov_now:4,
+             sust_then:7,sust_now:3,split_then:6,split_now:9,ofcap_now:5},
+    'Greece':{ds_political:14,ds_technical:-7,bar_cert:12,dr_offset:-4,ol_budget:9,cm_capexShare:16,
+              cm_orderBandHi:-8,cm_orderBandLo:-4,ne_index:-9,ol_perc_now:-8,ol_open_now:-9,rel_stock:5,
+              sust_then:-9,sust_now:-2,split_then:-8,split_now:-11,ofcap_now:-4},
+    'Peru':{ds_financial:16,ds_technical:-9,bar_finance:14,dr_price:8,ol_open_now:11,ol_perc_now:7,
+            cm_capexShare:-11,cm_orderBandHi:-22,cm_orderBandLo:-13,ne_index:9,ws_rotary:6,bar_track:-5,
+            sust_then:-14,sust_now:-6,split_then:-13,split_now:-4,ofcap_now:-7}
+  };
+  const DG={
+    'Designation A':{dr_sustain:4,ol_budget:5,rel_stock:5},
+    'Designation B':{dr_price:6,pr_influence:7,bar_finance:5},
+    'Designation C':{dr_capability:9,cap_shortlist:6,dr_price:-7,pr_influence:-9},
+    'Designation D':{dr_sustain:7,ws_rotary:8,bm_obs:7,ws_upgrade:6,pr_influence:-6},
+    'Designation E':{dr_price:9,cm_capexShare:5,bar_finance:9,dr_sustain:-6,pr_influence:11},
+    'Designation F':{dr_offset:11,of_capTransfer:6,ol_localisation:8},
+    'Designation G':{dr_sustain:6,bm_resp:8,ws_rotary:5,pr_influence:-4},
+    'Designation H':{bm_partner:9,rel_stock:7,ac_localMRO:6,pr_influence:5}
+  };
+  const SUP={
+    'Client OEM':{cost:91,neutrality:90,capability:83,sustain:79,schedule:70,docs:68,offset:87},
+    'Western Prime A':{cost:61,neutrality:56,capability:78,sustain:74,schedule:66,docs:64,offset:69},
+    'Western Prime B':{cost:64,neutrality:53,capability:75,sustain:71,schedule:64,docs:62,offset:66},
+    'Regional Challenger':{cost:74,neutrality:66,capability:68,sustain:63,schedule:60,docs:57,offset:61},
+    'Legacy Supplier':{cost:70,neutrality:41,capability:62,sustain:48,schedule:46,docs:44,offset:49}
+  };
+
+  const rows=[];let id=1;
+  for(const m in MARKETS){
+    for(let i=0;i<MARKETS[m];i++){
+      const d=DESIGS[Math.floor(rnd()*DESIGS.length)];
+      const r={id:id++,market:m,desig:d,org:pickW(ORGS),seg:pickW(SEGS)};
+      for(const k in BASE) r[k]=jit(BASE[k]+((MKT[m]||{})[k]||0)+((DG[d]||{})[k]||0),6);
+      if(r.cm_orderBandHi<=r.cm_orderBandLo+6) r.cm_orderBandHi=r.cm_orderBandLo+6;
+      const t=r.ds_technical+r.ds_political+r.ds_financial;
+      r.ds_technical=Math.round(r.ds_technical/t*100);
+      r.ds_political=Math.round(r.ds_political/t*100);
+      r.ds_financial=100-r.ds_technical-r.ds_political;
+      const t2=r.sv_scored+r.sv_precondition+r.sv_informal;
+      r.sv_scored=Math.round(r.sv_scored/t2*100);
+      r.sv_precondition=Math.round(r.sv_precondition/t2*100);
+      r.sv_informal=100-r.sv_scored-r.sv_precondition;
+      r.bh_split=r.split_now>=68?1:0;
+      r.bh_cfh=r.dr_sustain>=84?1:0;
+      r.bh_subtier=r.sov_now>=80?1:0;
+      r.bh_embargo=r.pa_index>=82?1:0;
+      r.pa_mode=r.pa_index>=88?'Never in writing':(r.pa_index>=76?'Raised informally':'Formally scored');
+      r.eng_bucket=r.cap_shortlist>=90?'More than 18 months':(r.cap_shortlist>=82?'12 to 18 months':(r.cap_shortlist>=72?'6 to 12 months':'Only after RFP'));
+      r.ol_cycle=r.ol_budget>=80?'Lengthen':(r.ol_budget>=68?'Unchanged':'Shorten');
+      r.sup={};
+      for(const sn in SUP){r.sup[sn]={};let sum=0,n=0;
+        for(const a in SUP[sn]){const v=jit(SUP[sn][a],5);r.sup[sn][a]=v;sum+=v;n++}
+        r.sup[sn].overall=Math.round(sum/n)}
+      rows.push(r);
+    }
+  }
+  return rows;
+})();
+
+/* ==========================================================================
+   2. PALETTE + HELPERS  (restrained: mono purple ramp, one accent)
+   ========================================================================== */
+const P={d:'#3b2769',x:'#4a327f',m:'#5b3ea0',b:'#6f4bc4',l:'#8a63de',
+         p3:'#b79ef0',p2:'#d8c9f7',p1:'#ece4fb',accent:'#1f9e8f',
+         past:'#cdbdef',grid:'#f2eef9',axis:'#a49cba'};
+const RAMP=['#3b2769','#4a327f','#5b3ea0','#6f4bc4','#8a63de','#a684e8','#c2aaf0','#dccdf9'];
+const ramp=n=>n<=1?[P.b]:Array.from({length:n},(_,i)=>RAMP[Math.round(i*(RAMP.length-1)/(n-1))]);
+const STACK3=['#3b2769','#7a58c9','#d3c3f5'];
+
+const avg=(r,f)=>r.length?Math.round(r.reduce((a,x)=>a+x[f],0)/r.length):0;
+const many=(r,fs)=>fs.map(f=>avg(r,f));
+const groupAvg=(r,g,f,o)=>o.map(k=>avg(r.filter(x=>x[g]===k),f));
+const countBy=(r,g,o)=>o.map(k=>r.filter(x=>x[g]===k).length);
+const pctBy=(r,g,o)=>{const n=r.length||1;return o.map(k=>Math.round(r.filter(x=>x[g]===k).length/n*100))};
+const pctFlag=(r,f)=>r.length?Math.round(r.filter(x=>x[f]===1).length/r.length*100):0;
+const pctAbove=(r,f,t)=>r.length?Math.round(r.filter(x=>x[f]>=t).length/r.length*100):0;
+const supAvg=(r,sp,a)=>r.length?Math.round(r.reduce((x,y)=>x+y.sup[sp][a],0)/r.length):0;
+const zip=(a,b)=>a.map((v,i)=>[v,b[i]]);
+
+const SUPS=['Client OEM','Western Prime A','Western Prime B','Regional Challenger','Legacy Supplier'];
+const MKTS=['India','Greece','Peru'];
+const DESIGS=['Designation A','Designation B','Designation C','Designation D','Designation E','Designation F','Designation G','Designation H'];
+const DSHORT=DESIGS.map(d=>'Desig. '+d.slice(-1));
+const ORGS=['Service Headquarters','Ministry & Policy','State OEM & Industry','Partner & Integrator'];
+const OSHORT=['Service HQ','Ministry & Policy','State OEM','Partner'];
+const SEGS=['Fast Jet','Rotary','Transport & Special Mission','Trainer & Light Attack','Upgrade & Life Extension'];
+const SSHORT=['Fast jet','Rotary','Transport','Trainer / light attack','Upgrade & MLU'];
+
+/* ==========================================================================
+   3. SECTIONS
+   ========================================================================== */
+const SECTIONS=[
+ {id:'ov',name:'Executive Overview',title:'Executive Overview',eyebrow:'SECTION 01',
+  sub:'Buyer-side decision makers across three export markets. Behavioural, evaluation and outlook findings are presented in full; commercial and quantitative findings are withheld in this illustrative preview.'},
+ {id:'dr',name:'Decision Drivers',title:'Decision Drivers & Evaluation',eyebrow:'SECTION 02',
+  sub:'What the tender document says decides the award, what actually decides it, and where influence sits at each stage of the evaluation.'},
+ {id:'bh',name:'Behaviour Shift',title:'How Buying Behaviour Has Changed',eyebrow:'SECTION 03',
+  sub:'Practices that have hardened since the previous procurement cycle: order splitting, sustainment weighting, sub-tier scrutiny and the expected form of offset.'},
+ {id:'cm',name:'Commercial Lens',title:'Commercial & Pricing Lens',eyebrow:'SECTION 04',
+  sub:'Budget structure, order economics, price differentials and supplier conversion. Every figure in this section is client-confidential and withheld in this preview.'},
+ {id:'ol',name:'Market Outlook',title:'Market Outlook — Next Three Years',eyebrow:'SECTION 05',
+  sub:'Where these buyers expect procurement practice, supplier preference and requirement shape to move across the coming planning cycle.'},
+ {id:'rc',name:'Recommendations',title:'Recommendations',eyebrow:'SECTION 06',
+  sub:'Advised position on entry sequencing and proposition design. Actionable specifics are withheld in this illustrative sample.'}
+];
+
+/* ==========================================================================
+   4. CHART REGISTRY
+   ========================================================================== */
+const REG=[
+/* ---------- 01 EXECUTIVE OVERVIEW ---------- */
+{id:'ov1',sec:'ov',type:'lollipop',q:'Which factors actually decide the award, as opposed to how the tender scores them?',
+ sub:'Observed decision weight, not stated evaluation criteria.',
+ compute:r=>({labels:['Supportability confidence','Relationship stock','Offset & local content','Capability fit','Schedule credibility','Acquisition price'],
+   series:[{data:many(r,['dr_sustain','dr_trust','dr_offset','dr_capability','dr_schedule','dr_price'])}],highlight:true})},
+
+{id:'ov2',sec:'ov',type:'doughnut',q:'What is your role in the procurement decision?',
+ sub:'Respondent composition. Designations are masked at participant request.',center:'n',
+ compute:r=>({labels:DSHORT,series:[{data:countBy(r,'desig',DESIGS)}]})},
+
+{id:'ov3',sec:'ov',type:'hstack',q:'How does the sample distribute across markets and institution type?',
+ sub:'Composition of the decision chain in each market.',
+ compute:r=>({labels:MKTS,series:OSHORT.map((o,i)=>({label:o,color:ramp(4)[i],
+   data:MKTS.map(m=>{const sub=r.filter(x=>x.market===m);return sub.length?Math.round(sub.filter(x=>x.org===ORGS[i]).length/sub.length*100):0})}))})},
+
+{id:'ov4',sec:'ov',type:'slope',q:'How has the weight given to sustainment moved over three years?',
+ sub:'The single largest movement in stated decision weighting.',
+ startLabel:'Three years ago',endLabel:'Today',
+ compute:r=>({labels:MKTS,series:[{data:zip(groupAvg(r,'market','sust_then',MKTS),groupAvg(r,'market','sust_now',MKTS))}]})},
+
+{id:'ov5',sec:'ov',type:'gauge',q:'How far does supportability outrank price in the decision?',
+ sub:'Share of decision weight attributable to sustainment confidence.',
+ compute:r=>({value:avg(r,'dr_sustain'),label:'SUPPORTABILITY WEIGHT'})},
+
+{id:'ov6',sec:'ov',type:'polar',q:'Which platform segment is your current requirement in?',
+ sub:'Where live demand sits across the sample.',
+ compute:r=>({labels:SSHORT,series:[{data:countBy(r,'seg',SEGS)}]})},
+
+{id:'ov7',sec:'ov',type:'mixed',q:'How do suppliers rate on the criteria that matter to you?',
+ sub:'Composite perception index, with sustainment plotted separately.',
+ compute:r=>({labels:['Client OEM','W. Prime A','W. Prime B','Regional','Legacy'],
+   series:[{label:'Composite index',data:SUPS.map(s=>supAvg(r,s,'overall')),kind:'bar'},
+           {label:'Sustainment score',data:SUPS.map(s=>supAvg(r,s,'sustain')),kind:'line'}]})},
+
+{id:'ov8',sec:'ov',type:'gauge',mask:'full',q:'What share of lifetime cost do you attribute to acquisition?',
+ sub:'Acquisition against sustainment over platform life.',
+ compute:r=>({value:avg(r,'cm_supportPkg'),label:'ACQUISITION SHARE'})},
+
+{id:'ov9',sec:'ov',type:'hbar',mask:'full',q:'How long does a procurement decision cycle typically run?',
+ sub:'Decision cycle duration by market.',
+ compute:r=>({labels:MKTS,series:[{data:groupAvg(r,'market','cm_cycle',MKTS)}]})},
+
+{id:'ov10',sec:'ov',type:'bar',q:'How open are you to a supplier with no prior operator in your region?',
+ sub:'New-entrant consideration by market.',
+ compute:r=>({labels:MKTS,series:[{data:groupAvg(r,'market','ne_index',MKTS)}]})},
+
+{id:'ov11',sec:'ov',type:'radar',q:'Where does the client OEM stand against the strongest incumbent?',
+ sub:'Seven-attribute perception profile on identical axes.',
+ compute:r=>({labels:['Cost','Neutrality','Capability','Sustainment','Schedule','Documentation','Offset'],
+   series:[{label:'Client OEM',data:['cost','neutrality','capability','sustain','schedule','docs','offset'].map(a=>supAvg(r,'Client OEM',a)),color:P.b},
+           {label:'Strongest incumbent',data:['cost','neutrality','capability','sustain','schedule','docs','offset'].map(a=>supAvg(r,'Western Prime A',a)),color:P.accent}]})},
+
+{id:'ov12',sec:'ov',type:'range',mask:'full',q:'What price differential do you observe between emerging and Western supply?',
+ sub:'Spread between lifetime and headline differential.',
+ compute:r=>({labels:MKTS,series:[{data:zip(groupAvg(r,'market','cm_gapLife',MKTS),groupAvg(r,'market','cm_gapHead',MKTS))}]})},
+
+/* ---------- 02 DECISION DRIVERS ---------- */
+{id:'dr1',sec:'dr',type:'dumbbell',q:'How does the stated evaluation weighting compare with the weighting you actually apply?',
+ sub:'Distance between the tender document and the decision.',
+ startLabel:'As stated in tender',endLabel:'As actually weighted',
+ compute:r=>({labels:['Capability','Compliance & schedule','Price','Offset & local content','Sustainment'],
+   series:[{data:zip(
+     [avg(r,'st_capability'),avg(r,'st_compliance'),avg(r,'st_price'),avg(r,'st_offset'),avg(r,'st_sustain')],
+     [avg(r,'dr_capability'),avg(r,'dr_schedule'),avg(r,'dr_price'),avg(r,'dr_offset'),avg(r,'dr_sustain')])}]})},
+
+{id:'dr2',sec:'dr',type:'hbar',q:'How much does confidence in continued supportability weigh on the decision?',
+ sub:'Supportability priority by market.',
+ compute:r=>({labels:MKTS,series:[{data:groupAvg(r,'market','dr_sustain',MKTS)}]})},
+
+{id:'dr3',sec:'dr',type:'doughnut',q:'Is supplier political availability raised openly during evaluation?',
+ sub:'How the embargo-risk question actually surfaces.',center:'pct',
+ compute:r=>({labels:['Never in writing','Raised informally','Formally scored'],
+   series:[{data:pctBy(r,'pa_mode',['Never in writing','Raised informally','Formally scored'])}]})},
+
+{id:'dr4',sec:'dr',type:'lollipop',q:'What makes an offset proposition credible in your assessment?',
+ sub:'Capability transfer outranks volume placement decisively.',
+ compute:r=>({labels:['Capability transfer','Local MRO stand-up','Training & skills transfer','IP and design access','Local component volume'],
+   series:[{data:many(r,['of_capTransfer','of_mro','of_training','of_ip','of_volume'])}],highlight:true})},
+
+{id:'dr5',sec:'dr',type:'hstack',q:'At what point must a supplier engage to influence the requirement?',
+ sub:'Engagement lead time required to shape the specification.',
+ compute:r=>{const buckets=['More than 18 months','12 to 18 months','6 to 12 months','Only after RFP'];
+   return{labels:MKTS,series:buckets.map((b,i)=>({label:b,color:ramp(4)[i],
+     data:MKTS.map(m=>{const sub=r.filter(x=>x.market===m);return sub.length?Math.round(sub.filter(x=>x.eng_bucket===b).length/sub.length*100):0})}))}}},
+
+{id:'dr6',sec:'dr',type:'gbar',q:'Is capability fit a threshold or a differentiator at shortlist?',
+ sub:'Almost universally a gate, rarely a separator.',
+ compute:r=>({labels:MKTS,series:[
+   {label:'Treated as threshold',data:groupAvg(r,'market','cap_shortlist',MKTS),kind:'bar'},
+   {label:'Treated as differentiator',data:groupAvg(r,'market','cap_differentiator',MKTS),kind:'line'}]})},
+
+{id:'dr7',sec:'dr',type:'scatter',q:'Which decision roles are most price-sensitive, and which are most sustainment-led?',
+ sub:'Each point is one designation group. Masked labels shown on hover.',
+ xLabel:'Price influence index',yLabel:'Sustainment weight',
+ compute:r=>({series:[{label:'Designation group',
+   data:DESIGS.map((d,i)=>({x:avg(r.filter(x=>x.desig===d),'pr_influence'),y:avg(r.filter(x=>x.desig===d),'dr_sustain'),t:DSHORT[i]}))}]})},
+
+{id:'dr8',sec:'dr',type:'bar',q:'How heavily do you weight accumulated relationship history?',
+ sub:'Relationship stock as an unscored but decisive input.',
+ compute:r=>({labels:OSHORT,series:[{data:groupAvg(r,'org','rel_stock',ORGS)}]})},
+
+{id:'dr9',sec:'dr',type:'hbar',q:'What is the hardest barrier for a supplier with no reference operator?',
+ sub:'Track record outranks price and capability as an obstacle.',
+ compute:r=>({labels:['Absence of reference operator','Certification & airworthiness','Local content mandates','Financing structure','Local partner depth'],
+   series:[{data:many(r,['bar_track','bar_cert','bar_localcontent','bar_finance','bar_partner'])}],highlight:true})},
+
+{id:'dr10',sec:'dr',type:'vstack',q:'Which evaluation stage is genuinely decisive in your market?',
+ sub:'Where the award is actually settled.',
+ compute:r=>({labels:MKTS,series:[
+   {label:'Technical evaluation',color:STACK3[0],data:groupAvg(r,'market','ds_technical',MKTS)},
+   {label:'Political & alliance layer',color:STACK3[1],data:groupAvg(r,'market','ds_political',MKTS)},
+   {label:'Finance & payment structure',color:STACK3[2],data:groupAvg(r,'market','ds_financial',MKTS)}]})},
+
+/* ---------- 03 BEHAVIOUR SHIFT ---------- */
+{id:'bh1',sec:'bh',type:'gauge',q:'Do you now deliberately split orders across two suppliers?',
+ sub:'Dual-sourcing as a stated procurement posture.',
+ compute:r=>({value:pctFlag(r,'bh_split'),label:'SPLIT DELIBERATELY'})},
+
+{id:'bh2',sec:'bh',type:'slope',q:'How has that order-splitting practice changed since the last cycle?',
+ sub:'Dual-sourcing intent, previous cycle against current.',
+ startLabel:'Previous cycle',endLabel:'Current cycle',
+ compute:r=>({labels:MKTS,series:[{data:zip(groupAvg(r,'market','split_then',MKTS),groupAvg(r,'market','split_now',MKTS))}]})},
+
+{id:'bh3',sec:'bh',type:'bar',q:'Have you moved from flyaway price to cost per flying hour as the comparison?',
+ sub:'Share now evaluating on lifetime operating cost.',
+ compute:r=>({labels:MKTS,series:[{data:MKTS.map(m=>pctFlag(r.filter(x=>x.market===m),'bh_cfh'))}]})},
+
+{id:'bh4',sec:'bh',type:'gbar',q:'How has the weight placed on supply chain sovereignty changed?',
+ sub:'From talking point to scored criterion inside one cycle.',
+ startLabel:'Three years ago',endLabel:'Today',
+ compute:r=>({labels:MKTS,series:[{data:zip(groupAvg(r,'market','sov_then',MKTS),groupAvg(r,'market','sov_now',MKTS))}]})},
+
+{id:'bh5',sec:'bh',type:'pie',q:'Are you now asking suppliers where sub-tier components are manufactured?',
+ sub:'Sub-tier disclosure as a live evaluation question.',
+ center:'pct',
+ compute:r=>{const y=pctFlag(r,'bh_subtier');return{labels:['Ask explicitly','Do not ask'],series:[{data:[y,100-y]}]}}},
+
+{id:'bh6',sec:'bh',type:'dumbbell',q:'How has the expected form of offset changed?',
+ sub:'Volume placement has given way to capability transfer.',
+ startLabel:'Previous cycle',endLabel:'Current cycle',
+ compute:r=>({labels:['Capability transfer','Local component volume'],
+   series:[{data:[[avg(r,'ofcap_then'),avg(r,'ofcap_now')],[avg(r,'ofvol_then'),avg(r,'ofvol_now')]]}]})},
+
+{id:'bh7',sec:'bh',type:'hbar',q:'Has an embargo or delivery suspension changed how you screen suppliers?',
+ sub:'Political availability screening intensity by institution type.',
+ compute:r=>({labels:OSHORT,series:[{data:groupAvg(r,'org','pa_index',ORGS)}]})},
+
+{id:'bh8',sec:'bh',type:'slope',mask:'values',q:'How much earlier do you now engage suppliers ahead of an RFP?',
+ sub:'Lead time shift. Direction shown, values withheld.',
+ startLabel:'Previous cycle',endLabel:'Current cycle',
+ compute:r=>({labels:MKTS,series:[{data:zip(groupAvg(r,'market','cm_engage_then',MKTS),groupAvg(r,'market','cm_engage_now',MKTS))}]})},
+
+{id:'bh9',sec:'bh',type:'bar',mask:'full',q:'What proportion of budget attention has moved from buy-new to keep-flying?',
+ sub:'Reallocation between acquisition and sustainment budgets.',
+ compute:r=>({labels:MKTS,series:[{data:groupAvg(r,'market','cm_keepflying',MKTS)}]})},
+
+{id:'bh10',sec:'bh',type:'mixed',q:'Which buyer behaviours have hardened most since the last cycle?',
+ sub:'Current weighting against the same measure one cycle earlier.',
+ compute:r=>({labels:['Sovereignty','Sustainment','Offset test','Order split','Documentation'],
+   series:[{label:'Current cycle',data:many(r,['hd_sovereignty','hd_sustainment','hd_offset','hd_split','hd_docs']),kind:'bar'},
+           {label:'Previous cycle',data:many(r,['sov_then','sust_then','ofcap_then','split_then','doc_then']),kind:'line'}]})},
+
+/* ---------- 04 COMMERCIAL LENS ---------- */
+{id:'cm1',sec:'cm',type:'bar',mask:'full',q:'What share of the defence budget reaches the capital acquisition line?',
+ sub:'Capital share of total defence outlay.',
+ compute:r=>({labels:MKTS,series:[{data:groupAvg(r,'market','cm_capexShare',MKTS)}]})},
+
+{id:'cm2',sec:'cm',type:'hbar',mask:'full',q:'What share of that capital line is addressable by aerospace?',
+ sub:'Aerospace share of capital acquisition.',
+ compute:r=>({labels:MKTS,series:[{data:groupAvg(r,'market','cm_aeroShare',MKTS)}]})},
+
+{id:'cm3',sec:'cm',type:'range',mask:'full',q:'What order sizes are realistic in your market by platform segment?',
+ sub:'Typical order band, low to high.',
+ compute:r=>({labels:SSHORT,series:[{data:zip(groupAvg(r,'seg','cm_orderBandLo',SEGS),groupAvg(r,'seg','cm_orderBandHi',SEGS))}]})},
+
+{id:'cm4',sec:'cm',type:'gauge',mask:'full',q:'What share of recent shortlists has the leading supplier converted?',
+ sub:'Leading-supplier conversion rate.',
+ compute:r=>({value:avg(r,'cm_shareLeader'),label:'LEADER CONVERSION'})},
+
+{id:'cm5',sec:'cm',type:'gbar',mask:'full',q:'How wide is the price gap on headline acquisition versus lifetime cost?',
+ sub:'Where the apparent price advantage evaporates.',
+ startLabel:'Lifetime gap',endLabel:'Headline gap',
+ compute:r=>({labels:MKTS,series:[{data:zip(groupAvg(r,'market','cm_gapLife',MKTS),groupAvg(r,'market','cm_gapHead',MKTS))}]})},
+
+{id:'cm6',sec:'cm',type:'polar',mask:'full',q:'How large is the initial support package as a share of contract value?',
+ sub:'Support package loading by segment.',
+ compute:r=>({labels:SSHORT,series:[{data:groupAvg(r,'seg','cm_supportPkg',SEGS)}]})},
+
+{id:'cm7',sec:'cm',type:'area',mask:'full',q:'What is the spread in cost per flying hour across comparable platforms?',
+ sub:'Operating cost dispersion against acquisition dispersion.',
+ compute:r=>({labels:MKTS,series:[
+   {label:'Acquisition spread',data:groupAvg(r,'market','cm_gapHead',MKTS),color:P.p3},
+   {label:'Cost per flying hour spread',data:groupAvg(r,'market','cm_cfhSpread',MKTS),color:P.x}]})},
+
+{id:'cm8',sec:'cm',type:'lollipop',mask:'full',q:'What premium does localisation add in the early years of a programme?',
+ sub:'Early-year localisation cost premium.',
+ compute:r=>({labels:MKTS,series:[{data:groupAvg(r,'market','cm_locPremium',MKTS)}]})},
+
+{id:'cm9',sec:'cm',type:'range',mask:'full',q:'How deeply do incumbents discount when a credible challenger reaches shortlist?',
+ sub:'Observed discount depth band.',
+ compute:r=>({labels:MKTS,series:[{data:zip(groupAvg(r,'market','cm_locPremium',MKTS),groupAvg(r,'market','cm_discount',MKTS).map(v=>v+14))}]})},
+
+{id:'cm10',sec:'cm',type:'doughnut',q:'Which cost line do you now hold suppliers accountable to?',
+ sub:'Behavioural finding. Shown in full.',center:'pct',
+ compute:r=>{const y=pctFlag(r,'bh_cfh');return{labels:['Cost per flying hour','Flyaway / unit price'],series:[{data:[y,100-y]}]}}},
+
+/* ---------- 05 MARKET OUTLOOK ---------- */
+{id:'ol1',sec:'ol',type:'hbar',q:'What will change most in your procurement practice over the next three years?',
+ sub:'Expected direction of travel across the sample.',
+ compute:r=>({labels:['Sovereignty scoring','Upgrade over new-build','Budget scrutiny','Localisation requirement','Integrated propositions'],
+   series:[{data:many(r,['ol_sovereignty','ol_upgrade','ol_budget','ol_localisation','ol_integrated'])}],highlight:true})},
+
+{id:'ol2',sec:'ol',type:'pie',q:'As budgets rise, do you expect decision cycles to lengthen or shorten?',
+ sub:'More money attracts more oversight, not more speed.',center:'pct',
+ compute:r=>({labels:['Lengthen','Unchanged','Shorten'],series:[{data:pctBy(r,'ol_cycle',['Lengthen','Unchanged','Shorten'])}]})},
+
+{id:'ol3',sec:'ol',type:'slope',q:'Will you buy platforms or integrated system propositions?',
+ sub:'Requirement shape, today against three years out.',
+ startLabel:'Platform-led today',endLabel:'Systems-led in three years',
+ compute:r=>({labels:MKTS,series:[{data:zip(groupAvg(r,'market','cap_shortlist',MKTS),groupAvg(r,'market','ol_integrated',MKTS))}]})},
+
+{id:'ol4',sec:'ol',type:'lollipop',q:'Where is the requirement most under-served by the current supplier set?',
+ sub:'White space ranked by buyer-reported gap.',
+ compute:r=>({labels:['Upgrade & life extension','Rotary sustainment','Trainer & light attack','Unmanned systems','Simulation & training'],
+   series:[{data:many(r,['ws_upgrade','ws_rotary','ws_trainer','ws_uav','ws_sim'])}],highlight:true})},
+
+{id:'ol5',sec:'ol',type:'dumbbell',q:'How open will you be to a non-aligned supplier three years from now?',
+ sub:'Openness trajectory by market.',
+ startLabel:'Today',endLabel:'In three years',
+ compute:r=>({labels:MKTS,series:[{data:zip(groupAvg(r,'market','ol_open_now',MKTS),groupAvg(r,'market','ol_open_3yr',MKTS))}]})},
+
+{id:'ol6',sec:'ol',type:'bar',q:'Will upgrade and life extension outgrow new-build in your plan?',
+ sub:'Keep-flying emphasis by market.',
+ compute:r=>({labels:MKTS,series:[{data:groupAvg(r,'market','ol_upgrade',MKTS)}]})},
+
+{id:'ol7',sec:'ol',type:'lollipop',q:'Which benchmarking criteria will you add to your next supplier evaluation?',
+ sub:'Criteria buyers say are currently missed.',
+ compute:r=>({labels:['Historic spares responsiveness','Sub-tier concentration','Obsolescence track record','Local partner bench depth','Financing structure','IP and data rights'],
+   series:[{data:many(r,['bm_resp','bm_subtier','bm_obs','bm_partner','bm_fin','bm_ip'])}],highlight:true})},
+
+{id:'ol8',sec:'ol',type:'hstack',q:'How will supply chain sovereignty be applied in evaluation?',
+ sub:'From informal question to scored criterion.',
+ compute:r=>({labels:MKTS,series:[
+   {label:'Formally scored',color:STACK3[0],data:groupAvg(r,'market','sv_scored',MKTS)},
+   {label:'Treated as precondition',color:STACK3[1],data:groupAvg(r,'market','sv_precondition',MKTS)},
+   {label:'Raised informally',color:STACK3[2],data:groupAvg(r,'market','sv_informal',MKTS)}]})},
+
+{id:'ol9',sec:'ol',type:'line',q:'How do you expect perception of Indian aerospace supply to move?',
+ sub:'Perception trajectory across three reference points.',
+ compute:r=>({labels:['Three years ago','Today','In three years'],series:MKTS.map((m,i)=>{
+   const sub=r.filter(x=>x.market===m);
+   return{label:m,color:[P.d,P.b,P.p3][i],data:[avg(sub,'ol_perc_then'),avg(sub,'ol_perc_now'),avg(sub,'ol_perc_3yr')]}})})},
+
+{id:'ol10',sec:'ol',type:'radar',q:'Which segments will you contest most competitively?',
+ sub:'Expected competitive intensity against buyer-reported gap.',
+ compute:r=>({labels:['Fast jet','Rotary','Transport','Trainer','Upgrade & MLU'],series:[
+   {label:'Contest intensity',data:many(r,['sc_fastjet','sc_rotary','sc_transport','sc_trainer','sc_upgrade']),color:P.b},
+   {label:'Requirement gap',data:many(r,['ws_uav','ws_rotary','ws_sim','ws_trainer','ws_upgrade']),color:P.accent}]})},
+
+{id:'ol11',sec:'ol',type:'bubble',q:'Where does an under-served requirement meet low competitive intensity?',
+ sub:'Bubble size is the share of the sample carrying that requirement.',
+ xLabel:'Requirement gap',yLabel:'Competitive intensity',
+ compute:r=>{const gaps=['ws_upgrade','ws_rotary','ws_trainer','ws_uav','ws_sim'];
+   const cont=['sc_upgrade','sc_rotary','sc_trainer','sc_fastjet','sc_transport'];
+   const names=['Upgrade & MLU','Rotary sustainment','Trainer & light attack','Unmanned','Simulation'];
+   const segShare=[4,1,3,0,2].map(i=>r.length?r.filter(x=>x.seg===SEGS[i]).length/r.length:0);
+   return{series:[{label:'Requirement',data:names.map((n,i)=>({x:avg(r,gaps[i]),y:avg(r,cont[i]),r:6+segShare[i]*46,t:n}))}]}}},
+
+/* ---------- 06 RECOMMENDATIONS SUPPORT ---------- */
+{id:'rc1',sec:'rc',type:'bubble',q:'Which levers move buyer consideration furthest, at what effort?',
+ sub:'Consideration lift plotted against implementation effort.',
+ xLabel:'Implementation effort',yLabel:'Consideration lift',
+ compute:r=>{const A=['ac_reference','ac_spares','ac_localMRO','ac_financing','ac_gtg'];
+   const E=['ef_reference','ef_spares','ef_localMRO','ef_financing','ef_gtg'];
+   const N=['Reference operator','Spares pipeline','Local MRO stand-up','Financing construct','Govt-to-govt route'];
+   return{series:[{label:'Lever',data:N.map((n,i)=>({x:avg(r,E[i]),y:avg(r,A[i]),r:11,t:n}))}]}}},
+
+{id:'rc2',sec:'rc',type:'dumbbell',mask:'values',q:'What is the modelled consideration lift by market?',
+ sub:'Sizing withheld. Shape and direction of the opportunity shown.',
+ startLabel:'Today',endLabel:'Post-intervention',
+ compute:r=>({labels:MKTS,series:[{data:zip(groupAvg(r,'market','ol_open_now',MKTS),groupAvg(r,'market','ol_open_3yr',MKTS))}]})}
+];
+
+/* ==========================================================================
+   5. KPI STRIPS
+   ========================================================================== */
+const UP=`<svg width="7" height="7" viewBox="0 0 8 8"><path d="M4 0.8L7.4 6.6H0.6z" fill="currentColor"/></svg>`;
+const LOCKSM=`<svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="7" width="10" height="7"/><path d="M5.4 7V4.9a2.6 2.6 0 015.2 0V7"/></svg>`;
+const LOCKBIG=`<svg width="26" height="26" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="3" y="7" width="10" height="7"/><path d="M5.4 7V4.9a2.6 2.6 0 015.2 0V7"/></svg>`;
+const M=v=>`<span class="c-m">${LOCKBIG}</span>`;
+
+const KPI={
+ ov:r=>[
+  {v:r.length,t:'Buyer-side respondents',s:'Decision makers and influencers',cls:'c-d',d:'Full quota achieved',up:1},
+  {v:new Set(r.map(x=>x.market)).size,t:'Export markets covered',s:'India, Greece and Peru',cls:'c-p',d:'Three-market read',up:1},
+  {v:'15',t:'Question modules',s:'Structured survey blocks',cls:'c-p',d:'Full depth retained',up:1},
+  {v:M(),t:'Commercial findings',s:'Released within engagement',cls:'c-m',d:'Withheld',up:0}],
+ dr:r=>[
+  {v:avg(r,'dr_sustain'),t:'Supportability priority',s:'Highest observed decision weight',cls:'c-d',d:'Ranked first',up:1},
+  {v:'+'+(avg(r,'dr_sustain')-avg(r,'st_sustain')),t:'Stated versus actual gap',s:'Sustainment, tender against decision',cls:'c-p',d:'Widest divergence',up:1},
+  {v:avg(r,'rel_stock'),t:'Relationship stock weight',s:'Unscored but decisive input',cls:'c-p',d:'Ranks above price',up:1},
+  {v:M(),t:'Cycle length by market',s:'Released within engagement',cls:'c-m',d:'Withheld',up:0}],
+ bh:r=>[
+  {v:pctFlag(r,'bh_split')+'%',t:'Now split orders deliberately',s:'Dual-sourcing as stated posture',cls:'c-d',d:'Up on last cycle',up:1},
+  {v:'+'+(avg(r,'sov_now')-avg(r,'sov_then')),t:'Sovereignty weighting shift',s:'Index movement over three years',cls:'c-p',d:'Largest single move',up:1},
+  {v:pctFlag(r,'bh_subtier')+'%',t:'Ask about sub-tier sourcing',s:'Now a live evaluation question',cls:'c-p',d:'Newly standard',up:1},
+  {v:M(),t:'Budget reallocation',s:'Released within engagement',cls:'c-m',d:'Withheld',up:0}],
+ cm:r=>[
+  {v:M(),t:'Capital acquisition share',s:'Client-confidential',cls:'c-m',d:'Withheld',up:0},
+  {v:M(),t:'Order economics by segment',s:'Client-confidential',cls:'c-m',d:'Withheld',up:0},
+  {v:M(),t:'Headline versus lifetime gap',s:'Client-confidential',cls:'c-m',d:'Withheld',up:0},
+  {v:M(),t:'Leading-supplier conversion',s:'Client-confidential',cls:'c-m',d:'Withheld',up:0}],
+ ol:r=>[
+  {v:avg(r,'ol_sovereignty'),t:'Sovereignty scoring expectation',s:'Strongest expected change',cls:'c-d',d:'Ranked first',up:1},
+  {v:avg(r,'ws_upgrade'),t:'Upgrade white space',s:'Least contested opening',cls:'c-p',d:'Most overlooked',up:1},
+  {v:'+'+(avg(r,'ol_open_3yr')-avg(r,'ol_open_now')),t:'Openness trajectory',s:'Non-aligned supplier consideration',cls:'c-p',d:'Improving',up:1},
+  {v:M(),t:'Addressable value by segment',s:'Released within engagement',cls:'c-m',d:'Withheld',up:0}],
+ rc:r=>[
+  {v:'4',t:'Priority levers',s:'Sequence · Sustain · Offset · Sovereignty',cls:'c-d',d:'Action set',up:0},
+  {v:'+'+(avg(r,'ol_open_3yr')-avg(r,'ol_open_now')),t:'Peak modelled lift',s:'Consideration index points',cls:'c-p',d:'Highest return',up:1},
+  {v:'18 mo',t:'Fastest payback lever',s:'Rotary sustainment entry',cls:'c-p',d:'Quick win',up:1},
+  {v:M(),t:'Full sizing and sequencing',s:'Shared within engagement',cls:'c-m',d:'Withheld',up:0}]
+};
+
+/* ==========================================================================
+   6. STATIC BLOCKS
+   ========================================================================== */
+const CONF_NOTE=`<div class="conf-note">${LOCKSM}<span>Locked and blurred figures are <b>client-confidential</b> and released only within the full engagement. Respondent identity, employer and designation are masked throughout this sample.</span></div>`;
+
+const RECS=`
+<div class="recgrid">
+ <div class="rec">
+  <div class="rtag"><i></i>PRIORITY 01 &nbsp;·&nbsp; SEQUENCE</div>
+  <h3>Enter through the winnable market, but budget for the strategically valuable one</h3>
+  <p>Buyer openness to an unfamiliar supplier is materially higher in one of the three markets, while a reference win in another changes how every subsequent buyer reads the proposition. These are different objectives and should not compete for the same budget line in the same planning year.</p>
+  <ul>
+   <li>Openness to a supplier with no regional operator runs <span class="blur" title="Client-confidential">+17 pts</span> higher in <span class="blur" title="Client-confidential">Market X</span> than the sample average.</li>
+   <li>A single credible reference operator moves consideration by <span class="blur" title="Client-confidential">31 index points</span> with no change to the product.</li>
+   <li>Recommended sequencing window opens <span class="blur" title="Client-confidential">Q3 FY27</span>, ahead of the next requirement drafting cycle.</li>
+  </ul>
+ </div>
+ <div class="rec">
+  <div class="rtag"><i></i>PRIORITY 02 &nbsp;·&nbsp; SUSTAIN</div>
+  <h3>Lead the proposition with the sustainment answer, not the platform</h3>
+  <p>Supportability confidence is the highest-weighted decision factor in all three markets and carries the widest gap between what tenders score and what buyers actually decide on. Vendors consistently answer it in an annexure. Moving it to the front of the bid costs nothing and addresses the largest single objection on the table.</p>
+  <ul>
+   <li>Sustainment sits <span class="blur" title="Client-confidential">31 points</span> above its stated tender weighting, the widest divergence measured.</li>
+   <li>Spares pipeline guarantees rank second among all consideration accelerators tested.</li>
+   <li>Commitment horizon required before the answer reads as credible: <span class="blur" title="Client-confidential">15 years</span>.</li>
+  </ul>
+ </div>
+ <div class="rec">
+  <div class="rtag"><i></i>PRIORITY 03 &nbsp;·&nbsp; OFFSET</div>
+  <h3>Convert offset obligation into capability transfer, not component volume</h3>
+  <p>Buyers now distinguish sharply between a supplier discharging an obligation through low-value local orders and one standing up an overhaul capability that outlives the contract. The second is what earns the follow-on order, and the follow-on is where programme profitability actually sits.</p>
+  <ul>
+   <li>Capability transfer scores well above local component volume on offset credibility in every market cut.</li>
+   <li>Follow-on and sustainment revenue is estimated at <span class="blur" title="Client-confidential">62%</span> of platform lifetime value.</li>
+   <li>Indicative local MRO stand-up investment of <span class="blur" title="Client-confidential">USD 40-55mn</span> against a <span class="blur" title="Client-confidential">4-year</span> payback.</li>
+  </ul>
+ </div>
+ <div class="rec">
+  <div class="rtag"><i></i>WATCH 04 &nbsp;·&nbsp; SOVEREIGNTY</div>
+  <h3>Publish the sub-tier position before a buyer asks for it</h3>
+  <p>Supply chain sovereignty has moved from a talking point to a scoring criterion inside one cycle, and sub-tier concentration is the question buyers say most often changes their conclusion. A supplier whose own sub-tier is single-sourced from one geography passes that exposure to the buyer silently, and buyers have started checking.</p>
+  <ul>
+   <li>Sovereignty weighting has risen <span class="blur" title="Client-confidential">43 index points</span> in three years, the largest movement in the study.</li>
+   <li>Sub-tier disclosure ranks second among the benchmarking criteria buyers intend to add.</li>
+   <li>Exposure above <span class="blur" title="Client-confidential">35%</span> from a single geography is the threshold at which buyers report discounting a bid.</li>
+  </ul>
+ </div>
+</div>
+<div class="evcap">Supporting evidence is capped at two exhibits by design. The balance of this section is written advice rather than further data, because the argument here concerns sequencing and proposition design rather than measurement.</div>`;
+
+/* ==========================================================================
+   7. CHART ENGINE
+   ========================================================================== */
+Chart.defaults.font.family="'Inter',system-ui,sans-serif";
+Chart.defaults.font.size=11;
+Chart.defaults.color=P.axis;
+Chart.defaults.maintainAspectRatio=false;
+Chart.defaults.animation.duration=520;
+
+/* -- plugin: dots at bar tips (lollipop) and both ends (dumbbell/range) -- */
+const tipDots={id:'tipDots',afterDatasetsDraw(ch,a,o){
+  if(!o||!o.on)return;const R=o.r===undefined?5:o.r;if(R<=0)return;const ctx=ch.ctx;
+  ch.data.datasets.forEach((ds,di)=>{
+    const meta=ch.getDatasetMeta(di);if(meta.hidden)return;
+    meta.data.forEach((el,i)=>{
+      const cols=Array.isArray(ds.backgroundColor)?ds.backgroundColor[i]:ds.backgroundColor;
+      const pts=o.both?[[el.base,o.startColor||P.p2],[el.x,o.endColor||P.d]]:[[el.x,cols]];
+      pts.forEach(([x,c])=>{
+        ctx.save();ctx.beginPath();ctx.arc(x,el.y,R,0,Math.PI*2);
+        ctx.fillStyle=c;ctx.fill();
+        ctx.lineWidth=1.6;ctx.strokeStyle='#fff';ctx.stroke();ctx.restore();
+      });
+    });
+  });
+}};
+/* -- plugin: centre readout for doughnut / gauge -- */
+const centreText={id:'centreText',afterDraw(ch,a,o){
+  if(!o||!o.text)return;const {ctx,chartArea}=ch;if(!chartArea)return;
+  const x=(chartArea.left+chartArea.right)/2;
+  const y=(chartArea.top+chartArea.bottom)/2+(o.dy||0);
+  ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';
+  if(o.lock){
+    ctx.strokeStyle=P.axis;ctx.lineWidth=1.5;
+    ctx.strokeRect(x-8,y-4,16,11);
+    ctx.beginPath();ctx.arc(x,y-4,4.6,Math.PI,0);ctx.stroke();
+  }else{
+    ctx.font="700 25px 'Inter'";ctx.fillStyle=o.color||P.x;
+    ctx.fillText(o.text,x,y-5);
+  }
+  if(o.sub){ctx.font="600 9px 'Inter'";ctx.fillStyle=P.axis;
+    ctx.letterSpacing='0.09em';ctx.fillText(o.sub,x,y+(o.lock?20:15))}
+  ctx.restore();
+}};
+/* -- plugin: point labels for scatter / bubble -- */
+const ptLabels={id:'ptLabels',afterDatasetsDraw(ch,a,o){
+  if(!o||!o.on)return;const ctx=ch.ctx;
+  ch.data.datasets.forEach((ds,di)=>{
+    const meta=ch.getDatasetMeta(di);
+    meta.data.forEach((el,i)=>{
+      const t=ds.data[i]&&ds.data[i].t;if(!t)return;
+      ctx.save();ctx.font="600 9.5px 'Inter'";ctx.fillStyle=P.axis;
+      ctx.textAlign='center';ctx.textBaseline='bottom';
+      ctx.fillText(t,el.x,el.y-(el.options&&el.options.radius?el.options.radius:5)-4);
+      ctx.restore();
+    });
+  });
+}};
+Chart.register(tipDots,centreText,ptLabels);
+
+const charts={};let VIEW=DB.slice(),CUR='ov';
+
+function fnoteText(){
+  if(!VIEW.length)return 'No respondents match this filter combination';
+  const p=[];['f_market','f_desig','f_org','f_seg'].forEach(id=>{
+    const v=document.getElementById(id).value;if(v!=='ALL')p.push(v)});
+  return (p.length?p.join('  ·  '):'All segments')+'  ·  n = '+VIEW.length;
+}
+
+const AX={grid:{display:false},border:{color:'#e6dff2'},ticks:{font:{size:10},padding:5}};
+const AY=cb=>({grid:{color:P.grid,drawTicks:false},border:{display:false},beginAtZero:true,
+  ticks:{font:{size:10},padding:7,callback:cb}});
+const LEG=(show)=>({display:show,position:'top',align:'start',
+  labels:{boxWidth:8,boxHeight:8,usePointStyle:true,pointStyle:'rect',padding:12,
+    font:{size:10.5,weight:'500'},color:P.axis}});
+const TT=on=>({enabled:on,backgroundColor:'#2b2440',padding:9,cornerRadius:2,displayColors:false,
+  titleFont:{size:11,weight:'600'},bodyFont:{size:11},borderWidth:0});
+
+function makeConfig(e,rows){
+  const d=e.compute(rows);
+  const masked=e.mask==='values'||e.mask==='full';
+  const cb=masked?(()=>'\u2007\u2007'):undefined;
+
+  if(e.type==='gauge'){
+    const v=d.value;
+    return{type:'doughnut',data:{labels:['',''],datasets:[{data:[v,100-v],
+      backgroundColor:[P.m,'#efe9f8'],borderWidth:0}]},
+      options:{rotation:-90,circumference:180,cutout:'76%',
+        plugins:{legend:{display:false},tooltip:TT(!masked),
+          centreText:masked?{lock:true,sub:'WITHHELD',dy:20}:{text:v+(e.pct===false?'':''),sub:d.label,dy:22}}}};
+  }
+  if(e.type==='doughnut'){
+    const cols=ramp(d.labels.length);
+    let c=null;
+    if(e.center==='n')c={text:String(rows.length),sub:'RESPONDENTS'};
+    if(e.center==='pct')c={text:d.series[0].data[0]+'%',sub:String(d.labels[0]).toUpperCase()};
+    if(masked)c={lock:true,sub:'WITHHELD'};
+    return{type:'doughnut',data:{labels:d.labels,datasets:[{data:d.series[0].data,
+      backgroundColor:cols,borderColor:'#fff',borderWidth:1.5}]},
+      options:{cutout:'68%',plugins:{legend:{...LEG(true),position:'right',align:'center',
+        labels:{boxWidth:8,boxHeight:8,usePointStyle:true,pointStyle:'rect',padding:8,
+          font:{size:10},color:P.axis}},tooltip:TT(!masked),centreText:c}}};
+  }
+  if(e.type==='radar'){
+    return{type:'radar',data:{labels:d.labels,datasets:d.series.map((s,i)=>({label:s.label,data:s.data,
+      borderColor:s.color||P.b,backgroundColor:(s.color||P.b)+'22',borderWidth:1.8,
+      pointBackgroundColor:s.color||P.b,pointRadius:2.6,pointHoverRadius:4}))},
+      options:{plugins:{legend:LEG(true),tooltip:TT(!masked)},
+        scales:{r:{beginAtZero:true,suggestedMax:100,grid:{color:P.grid},angleLines:{color:P.grid},
+          pointLabels:{font:{size:10,weight:'500'},color:P.axis},ticks:{display:false}}}}};
+  }
+  if(e.type==='area'||e.type==='line'){
+    return{type:'line',data:{labels:d.labels,datasets:d.series.map((s,i)=>({label:s.label,data:s.data,
+      borderColor:s.color||ramp(d.series.length)[i],
+      backgroundColor:(s.color||ramp(d.series.length)[i])+(e.type==='area'?'1f':'00'),
+      borderWidth:1.9,tension:0,fill:e.type==='area',
+      pointRadius:2.8,pointBackgroundColor:'#fff',pointBorderColor:s.color||ramp(d.series.length)[i],pointBorderWidth:1.8}))},
+      options:{plugins:{legend:LEG(d.series.length>1),tooltip:TT(!masked)},
+        scales:{x:AX,y:AY(cb)}}};
+  }
+  if(e.type==='scatter'||e.type==='bubble'){
+    return{type:e.type,data:{datasets:d.series.map(s=>({label:s.label,data:s.data,
+      backgroundColor:P.b+'d9',borderColor:'#fff',borderWidth:1.4,
+      pointRadius:e.type==='scatter'?6:undefined,hoverRadius:e.type==='scatter'?8:undefined}))},
+      options:{plugins:{legend:{display:false},ptLabels:{on:!masked},
+        tooltip:{...TT(!masked),callbacks:{label:c=>c.raw.t+'  ·  '+Math.round(c.raw.x)+' / '+Math.round(c.raw.y)}}},
+        layout:{padding:{top:14,right:12}},
+        scales:{x:{...AX,grid:{color:P.grid,drawTicks:false},border:{display:false},
+            title:{display:!!e.xLabel,text:e.xLabel||'',font:{size:9.5,weight:'600'},color:P.axis},ticks:{font:{size:10},callback:cb}},
+          y:{...AY(cb),title:{display:!!e.yLabel,text:e.yLabel||'',font:{size:9.5,weight:'600'},color:P.axis}}}}};
+  }
+  if(e.type==='polar'||e.type==='pie'){
+    const cols=ramp(d.labels.length),isPie=e.type==='pie';
+    let c=null;
+    if(isPie&&e.center==='pct')c=null;
+    return{type:isPie?'pie':'polarArea',data:{labels:d.labels,datasets:[{data:d.series[0].data,
+      backgroundColor:isPie?cols:cols.map(x=>x+'cc'),borderColor:'#fff',borderWidth:1.5}]},
+      options:{plugins:{legend:{...LEG(true),position:'right',align:'center',
+        labels:{boxWidth:8,boxHeight:8,usePointStyle:true,pointStyle:'rect',padding:8,
+          font:{size:10},color:P.axis}},tooltip:TT(!masked),centreText:masked?null:c},
+        scales:isPie?{}:{r:{beginAtZero:true,grid:{color:P.grid},angleLines:{color:P.grid},
+          ticks:{display:false},border:{display:false}}}}};
+  }
+  if(e.type==='hbar'){
+    const s=d.series[0],mx=Math.max(...s.data);
+    const cols=d.highlight?s.data.map(v=>v===mx?P.d:P.p3):s.data.map(()=>P.b);
+    return{type:'bar',data:{labels:d.labels,datasets:[{data:s.data,backgroundColor:cols,
+      borderWidth:0,barPercentage:.66,categoryPercentage:.84}]},
+      options:{indexAxis:'y',plugins:{legend:{display:false},
+        tooltip:{...TT(!masked),callbacks:{label:c=>' '+c.raw}}},
+        scales:{x:{...AY(cb),grid:{color:P.grid,drawTicks:false}},
+          y:{grid:{display:false},border:{color:'#e6dff2'},
+            ticks:{font:{size:10.5,weight:'500'},color:P.ink,autoSkip:false}}}}};
+  }
+  if(e.type==='vstack'){
+    return{type:'bar',data:{labels:d.labels,datasets:d.series.map((s,i)=>({label:s.label,data:s.data,
+      backgroundColor:s.color||ramp(d.series.length)[i],borderWidth:0,
+      barPercentage:.5,categoryPercentage:.85}))},
+      options:{plugins:{legend:LEG(true),tooltip:TT(!masked)},
+        scales:{x:{...AX,stacked:true},y:{...AY(cb),stacked:true,max:100}}}};
+  }
+  if(e.type==='slope'){
+    const pairs=d.series[0].data,cols=ramp(pairs.length);
+    return{type:'line',data:{labels:[e.startLabel||'Then',e.endLabel||'Now'],
+      datasets:pairs.map((pr,i)=>({label:d.labels[i],data:[pr[0],pr[1]],
+        borderColor:cols[i],backgroundColor:cols[i],borderWidth:2,tension:0,
+        pointRadius:4.6,pointHoverRadius:6.4,pointBackgroundColor:'#fff',
+        pointBorderColor:cols[i],pointBorderWidth:2}))},
+      options:{layout:{padding:{left:8,right:12,top:6}},
+        plugins:{legend:LEG(true),tooltip:TT(!masked)},
+        scales:{x:{...AX,offset:true,grid:{color:P.grid,drawTicks:false}},y:AY(cb)}}};
+  }
+  if(e.type==='gbar'){
+    let ds;
+    if(d.series.length>1){
+      const cols=d.series.length===2?[P.p3,P.d]:ramp(d.series.length);
+      ds=d.series.map((s,i)=>({label:s.label,data:s.data,backgroundColor:s.color||cols[i]}));
+    }else{
+      const pairs=d.series[0].data;
+      ds=[{label:e.startLabel||'Then',data:pairs.map(pr=>pr[0]),backgroundColor:P.p3},
+          {label:e.endLabel||'Now', data:pairs.map(pr=>pr[1]),backgroundColor:P.d}];
+    }
+    return{type:'bar',data:{labels:d.labels,datasets:ds.map(x=>({...x,borderWidth:0,
+      barPercentage:.8,categoryPercentage:.6}))},
+      options:{plugins:{legend:LEG(true),tooltip:TT(!masked)},scales:{x:AX,y:AY(cb)}}};
+  }
+  if(e.type==='hstack'){
+    return{type:'bar',data:{labels:d.labels,datasets:d.series.map((s,i)=>({label:s.label,data:s.data,
+      backgroundColor:s.color||ramp(d.series.length)[i],borderWidth:0,barPercentage:.52,categoryPercentage:.9}))},
+      options:{indexAxis:'y',plugins:{legend:LEG(true),tooltip:TT(!masked)},
+        scales:{x:{stacked:true,max:100,grid:{color:P.grid,drawTicks:false},border:{display:false},
+            ticks:{font:{size:10},callback:cb}},
+          y:{stacked:true,grid:{display:false},border:{color:'#e6dff2'},ticks:{font:{size:10.5,weight:'500'},color:P.ink}}}}};
+  }
+  if(e.type==='dumbbell'||e.type==='range'){
+    const isRange=e.type==='range';
+    return{type:'bar',data:{labels:d.labels,datasets:[{label:'',data:d.series[0].data,
+      backgroundColor:isRange?P.p2:'#ded1f5',borderWidth:0,
+      barThickness:isRange?11:3,borderSkipped:false}]},
+      options:{indexAxis:'y',
+        plugins:{legend:{display:false},
+          tipDots:{on:true,both:true,r:isRange?0:5.2,startColor:P.p3,endColor:P.d},
+          tooltip:{...TT(!masked),callbacks:{label:c=>{
+            const v=c.raw;return (e.startLabel||'Low')+' '+v[0]+'   →   '+(e.endLabel||'High')+' '+v[1]}}}},
+        scales:{x:{...AY(cb),grid:{color:P.grid,drawTicks:false}},
+          y:{grid:{display:false},border:{color:'#e6dff2'},
+            ticks:{font:{size:10.5,weight:'500'},color:P.ink,autoSkip:false}}}}};
+  }
+  if(e.type==='lollipop'){
+    const s=d.series[0],mx=Math.max(...s.data);
+    const cols=d.highlight?s.data.map(v=>v===mx?P.d:P.p3):s.data.map(()=>P.b);
+    return{type:'bar',data:{labels:d.labels,datasets:[{data:s.data,backgroundColor:cols,
+      barThickness:2,borderWidth:0}]},
+      options:{indexAxis:'y',plugins:{legend:{display:false},tipDots:{on:true,r:5},
+        tooltip:{...TT(!masked),callbacks:{label:c=>' '+c.raw}}},
+        layout:{padding:{right:10}},
+        scales:{x:{...AY(cb),grid:{color:P.grid,drawTicks:false}},
+          y:{grid:{display:false},border:{color:'#e6dff2'},
+            ticks:{font:{size:10.5,weight:'500'},color:P.ink,autoSkip:false}}}}};
+  }
+  if(e.type==='mixed'){
+    return{type:'bar',data:{labels:d.labels,datasets:d.series.map((s,i)=>
+      s.kind==='line'
+        ?{type:'line',label:s.label,data:s.data,borderColor:P.accent,backgroundColor:P.accent,
+          borderWidth:1.8,tension:0,pointRadius:3,pointBackgroundColor:'#fff',pointBorderColor:P.accent,pointBorderWidth:1.8,order:0}
+        :{type:'bar',label:s.label,data:s.data,backgroundColor:P.p3,hoverBackgroundColor:P.b,
+          borderWidth:0,barPercentage:.55,order:1})},
+      options:{plugins:{legend:LEG(true),tooltip:TT(!masked)},scales:{x:AX,y:AY(cb)}}};
+  }
+  /* default vertical bar */
+  const s=d.series[0],mx=Math.max(...s.data);
+  return{type:'bar',data:{labels:d.labels,datasets:[{data:s.data,
+    backgroundColor:s.data.map(v=>v===mx?P.x:P.p3),borderWidth:0,barPercentage:.5}]},
+    options:{plugins:{legend:{display:false},tooltip:{...TT(!masked),callbacks:{label:c=>' '+c.raw}}},
+      scales:{x:AX,y:AY(cb)}}};
+}
+
+/* ==========================================================================
+   8. RENDER
+   ========================================================================== */
+function panelHTML(e,i){
+  const tag=e.mask?'<span class="mtag">'+(e.mask==='full'?'WITHHELD':'VALUES WITHHELD')+'</span>':'';
+  const veil=e.mask==='full'
+    ?'<div class="veil" title="Client-confidential — released within the full engagement"><span class="lockchip">'+LOCKSM+'FIGURES WITHHELD</span></div>':'';
+  const no=String(i+1).padStart(2,'0');
+  return `<div class="panel">
+    <div class="ph"><span class="qn">Q${no}</span><span class="qtx">${e.q}</span>${tag}</div>
+    <div class="psub">${e.sub}</div>
+    <div class="cbox ${e.mask==='full'?'masked':''}"><canvas id="cv_${e.id}"></canvas>${veil}</div>
+    <div class="fnote" id="fn_${e.id}"></div>
+  </div>`;
+}
+
+function buildPages(){
+  document.getElementById('main').innerHTML=SECTIONS.map(s=>{
+    const panels=REG.filter(e=>e.sec===s.id);
+    const conf=(s.id==='cm'||s.id==='rc')?CONF_NOTE:'';
+    const body=(s.id==='rc'?RECS:'')+`<div class="grid">${panels.map(panelHTML).join('')}</div>`;
+    return `<section class="page ${s.id==='ov'?'on':''}" id="pg_${s.id}">
+      <div class="eyebrow">${s.eyebrow}</div>
+      <h1 class="sec-title">${s.title}</h1>
+      <div class="sec-sub">${s.sub}</div>
+      ${conf}
+      <div class="kpis" id="kpi_${s.id}"></div>
+      ${body}
+      ${s.id==='rc'?'<div class="foot">Illustrative preview. Index values are directional and drawn from a 100-respondent buyer-side survey across India, Greece and Peru. Respondent identity, employer and designation, and all quantitative and commercial findings, are withheld in this sample.</div>':''}
+    </section>`;
+  }).join('');
+
+  document.getElementById('nav').innerHTML=SECTIONS.map((s,i)=>
+    `<div class="navitem ${s.id==='ov'?'on':''}" data-sec="${s.id}">
+       <div class="navno">${String(i+1).padStart(2,'0')}</div>
+       <div class="navtxt">${s.name}</div>
+       <div class="badge">${REG.filter(e=>e.sec===s.id).length}</div></div>`).join('');
+
+  document.querySelectorAll('.navitem').forEach(n=>n.onclick=()=>{
+    document.querySelectorAll('.navitem').forEach(x=>x.classList.remove('on'));
+    n.classList.add('on');CUR=n.dataset.sec;
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+    const pg=document.getElementById('pg_'+CUR);void pg.offsetWidth;pg.classList.add('on');
+    window.scrollTo({top:0,behavior:'smooth'});renderSection(CUR);
+  });
+}
+
+function renderKPI(sec){
+  document.getElementById('kpi_'+sec).innerHTML=KPI[sec](VIEW).map(k=>
+    `<div class="kpi"><div class="v ${k.cls}">${k.v}</div><div class="t">${k.t}</div>
+     <div class="s">${k.s}</div>
+     <div class="d">${k.up?'<span class="c-t">'+UP+'</span>':''}${k.d}</div></div>`).join('');
+}
+
+function renderSection(sec){
+  renderKPI(sec);
+  const note=fnoteText();
+  REG.filter(e=>e.sec===sec).forEach(e=>{
+    const el=document.getElementById('cv_'+e.id);if(!el)return;
+    if(charts[e.id]){charts[e.id].destroy();delete charts[e.id]}
+    charts[e.id]=new Chart(el.getContext('2d'),makeConfig(e,VIEW));
+    const fn=document.getElementById('fn_'+e.id);
+    if(fn)fn.innerHTML=(e.mask&&VIEW.length?LOCKSM:'')+'<span>'+note+'</span>';
+  });
+}
+
+function applyFilters(){
+  const m=f_market.value,d=f_desig.value,o=f_org.value,g=f_seg.value;
+  VIEW=DB.filter(r=>(m==='ALL'||r.market===m)&&(d==='ALL'||r.desig===d)&&(o==='ALL'||r.org===o)&&(g==='ALL'||r.seg===g));
+  document.getElementById('npill').textContent='n = '+VIEW.length;
+  document.getElementById('s1').textContent=VIEW.length;
+  document.getElementById('b1').style.width=Math.round(VIEW.length/DB.length*100)+'%';
+  const mk=new Set(VIEW.map(r=>r.market)).size;
+  document.getElementById('s2').textContent=mk;
+  document.getElementById('b2').style.width=Math.round(mk/3*100)+'%';
+  const si=avg(VIEW,'dr_sustain');
+  document.getElementById('s3').textContent=si;
+  document.getElementById('b3').style.width=si+'%';
+  renderSection(CUR);
+}
+
+(function init(){
+  const fill=(id,arr)=>{const s=document.getElementById(id);
+    arr.forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;s.appendChild(o)})};
+  fill('f_market',MKTS);fill('f_desig',DESIGS);fill('f_org',ORGS);fill('f_seg',SEGS);
+  ['f_market','f_desig','f_org','f_seg'].forEach(id=>document.getElementById(id).onchange=applyFilters);
+  buildPages();applyFilters();
+})();
+</script>
+</body>
+</html>

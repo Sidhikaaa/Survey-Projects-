@@ -1,0 +1,2181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Snacks Questionnaire - USA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   Tokens
+   ============================================================ */
+:root{
+  --page:#EEF3FA;
+  --panel:#FFFFFF;
+  --ink:#15233C;
+  --ink-2:#3B4A66;
+  --muted:#6D7B94;
+  --line:#E3E9F3;
+  --line-2:#CBD6E8;
+  --blue:#2F6FED;
+  --blue-dark:#1E55C6;
+  --blue-soft:#EBF2FE;
+  --blue-soft-2:#D5E4FD;
+  --soft:#F6F9FD;
+  --radius:14px;
+  --shadow:0 1px 2px rgba(21,35,60,.04), 0 14px 34px -20px rgba(21,35,60,.30);
+  --sans:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  background:var(--page);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:16px;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+button{font-family:inherit;font-size:inherit;color:inherit}
+input{font-family:inherit;font-size:inherit}
+table{border-collapse:collapse}
+
+/* ============================================================
+   Header
+   ============================================================ */
+.chrome{
+  position:sticky; top:0; z-index:40;
+  background:rgba(255,255,255,.92);
+  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.chrome[hidden]{display:none}
+.chrome-top{
+  max-width:1180px; margin:0 auto;
+  display:flex; align-items:center; gap:16px;
+  padding:14px 26px 12px;
+}
+.study{
+  font-size:12px; font-weight:800; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--blue); white-space:nowrap;
+}
+.meta{
+  margin-left:auto; display:flex; align-items:center; gap:14px;
+  font-size:13px; font-weight:500; color:var(--muted);
+}
+.pct{
+  font-weight:700; color:var(--blue); font-variant-numeric:tabular-nums;
+  background:var(--blue-soft); border-radius:100px; padding:3px 11px; font-size:12.5px;
+}
+
+.steps{
+  max-width:1180px; margin:0 auto; list-style:none;
+  display:flex; padding:0 26px 12px; gap:8px;
+}
+.step{
+  flex:1; display:flex; align-items:center; gap:7px; min-width:0;
+  font-size:12px; font-weight:600; color:var(--muted);
+}
+.step-n{
+  width:20px; height:20px; flex:none; border-radius:50%;
+  border:1.5px solid var(--line-2); background:var(--panel);
+  display:flex; align-items:center; justify-content:center;
+  font-size:10.5px; font-weight:700; color:var(--muted);
+  transition:all .2s ease;
+}
+.step-l{white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.step.is-done .step-n{background:var(--blue-soft-2); border-color:var(--blue-soft-2); color:var(--blue-dark)}
+.step.is-done{color:var(--ink-2)}
+.step.is-now .step-n{background:var(--blue); border-color:var(--blue); color:#fff; box-shadow:0 0 0 4px var(--blue-soft)}
+.step.is-now{color:var(--blue)}
+.stepnow{display:none}
+
+.track{height:3px; background:var(--blue-soft-2)}
+.bar{height:100%; width:0%; background:var(--blue); border-radius:0 3px 3px 0; transition:width .4s cubic-bezier(.4,0,.2,1)}
+
+/* ============================================================
+   Layout with side navigation
+   ============================================================ */
+.layout{
+  display:grid; grid-template-columns:minmax(0,1fr);
+  justify-content:center; padding:28px 16px 100px;
+}
+.stage{width:100%; max-width:780px; margin:0 auto}
+
+.panel{
+  background:var(--panel);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:32px 34px 34px;
+  animation:rise .3s cubic-bezier(.22,.9,.3,1) both;
+}
+@keyframes rise{from{opacity:0; transform:translateY(8px)}to{opacity:1; transform:none}}
+
+/* nav buttons */
+.navbar{
+  position:fixed; left:0; right:0; bottom:0; height:70px;
+  background:rgba(255,255,255,.94);
+  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  border-top:1px solid var(--line); z-index:45;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+.navbar[hidden],.navbtn[hidden],.hint[hidden]{display:none}
+
+.navbtn{
+  position:fixed; bottom:calc(14px + env(safe-area-inset-bottom));
+  z-index:46; cursor:pointer; border:0;
+  display:inline-flex; align-items:center; gap:9px;
+  font-weight:700; border-radius:100px;
+  transition:background .16s ease, box-shadow .16s ease, opacity .16s ease, transform .12s ease;
+}
+.navbtn:active{transform:scale(.97)}
+.navbtn svg{width:17px; height:17px; flex:none}
+
+.navbtn--back{
+  left:16px; padding:11px 20px 11px 15px;
+  background:var(--panel); color:var(--ink-2);
+  box-shadow:inset 0 0 0 1.5px var(--line-2);
+}
+.navbtn--back:hover:not(:disabled){box-shadow:inset 0 0 0 1.5px var(--blue); color:var(--blue)}
+.navbtn--back:disabled{opacity:.35; cursor:not-allowed}
+
+.navbtn--next{
+  right:16px; padding:13px 22px 13px 26px;
+  background:var(--blue); color:#fff;
+  box-shadow:0 6px 18px -8px rgba(47,111,237,.9);
+  font-size:15.5px;
+}
+.navbtn--next:hover:not(:disabled){background:var(--blue-dark)}
+.navbtn--next:disabled{
+  background:var(--line-2); color:#fff; cursor:not-allowed; box-shadow:none;
+}
+
+.hint{
+  position:fixed; bottom:calc(84px + env(safe-area-inset-bottom));
+  left:50%; transform:translateX(-50%); z-index:46; margin:0;
+  max-width:min(86vw,440px);
+  background:var(--panel); border:1px solid var(--line);
+  box-shadow:0 8px 22px -12px rgba(21,35,60,.45);
+  border-radius:100px; padding:8px 18px;
+  text-align:center; font-size:12.5px; font-weight:600; color:var(--ink-2);
+  opacity:0; transition:opacity .18s ease; pointer-events:none;
+}
+.hint.is-on{opacity:1}
+
+/* desktop: navigation moves to the sides of the card */
+@media (min-width:1180px){
+  .layout{padding:34px 16px 92px}
+  .navbar{display:none}
+  .navbtn{position:fixed; top:50%; bottom:auto; transform:translateY(-50%)}
+  .navbtn:active{transform:translateY(-50%) scale(.97)}
+  .navbtn--back{
+    left:max(24px, calc(50% - 476px)); padding:0;
+    width:54px; height:54px; justify-content:center;
+  }
+  .navbtn--back .lbl{display:none}
+  .navbtn--next{
+    right:max(24px, calc(50% - 520px));
+    padding:15px 24px 15px 28px;
+  }
+  .hint{bottom:26px}
+}
+
+/* ============================================================
+   Question head
+   ============================================================ */
+.q-head{margin-bottom:24px}
+.q-num{
+  display:inline-block; margin-bottom:12px;
+  background:var(--blue-soft); color:var(--blue-dark);
+  border-radius:100px; padding:4px 12px;
+  font-size:11.5px; font-weight:800; letter-spacing:.06em;
+}
+.q-num--sub{margin-bottom:10px}
+.q-title{font-size:22px; font-weight:800; line-height:1.32; margin:0; letter-spacing:-.015em}
+.q-note{margin:10px 0 0; color:var(--muted); font-size:14px; font-weight:500}
+
+.kicker{
+  margin:0 0 12px; font-size:11.5px; font-weight:800;
+  letter-spacing:.1em; text-transform:uppercase; color:var(--blue);
+}
+
+/* ============================================================
+   Options
+   ============================================================ */
+.opts{display:flex; flex-direction:column; gap:9px}
+.opts--cols{display:grid; grid-template-columns:repeat(auto-fill,minmax(215px,1fr)); gap:9px}
+
+.opt{
+  display:flex; align-items:flex-start; gap:12px; width:100%;
+  text-align:left; background:var(--soft);
+  border:1.5px solid transparent; border-radius:12px;
+  padding:13px 16px; cursor:pointer;
+  transition:background .15s ease, border-color .15s ease, color .15s ease;
+}
+.opt:hover{background:var(--blue-soft); border-color:var(--blue-soft-2)}
+.opt.is-on{background:var(--blue); border-color:var(--blue); color:#fff}
+.opt.is-on .opt-sub{color:rgba(255,255,255,.82)}
+.opt.is-off{
+  opacity:.45; cursor:not-allowed; background:var(--soft);
+  border-color:transparent; color:var(--muted);
+}
+.opt.is-off:hover{background:var(--soft); border-color:transparent}
+
+.mark{
+  width:19px; height:19px; flex:none; margin-top:2px;
+  border:2px solid var(--line-2); background:#fff; position:relative;
+  transition:border-color .15s ease, background .15s ease;
+}
+.mark.radio{border-radius:50%}
+.mark.check{border-radius:6px}
+.opt:hover>.mark{border-color:var(--blue)}
+.is-on>.mark{border-color:#fff; background:#fff}
+.is-on>.mark.radio::after{
+  content:""; position:absolute; inset:0; margin:auto;
+  width:8px; height:8px; border-radius:50%; background:var(--blue);
+}
+.is-on>.mark.check::after{
+  content:""; position:absolute; left:5px; top:2px;
+  width:5px; height:9px; border:solid var(--blue); border-width:0 2.5px 2.5px 0;
+  transform:rotate(43deg);
+}
+.opt-text{display:flex; flex-direction:column; gap:3px; min-width:0}
+.opt-label{font-size:15px; font-weight:600; line-height:1.45}
+.opt-sub{font-size:13.5px; font-weight:400; color:var(--muted); line-height:1.5}
+
+.specify{
+  margin:-2px 0 4px 31px; width:calc(100% - 31px);
+  border:1.5px solid var(--line-2); border-radius:10px;
+  padding:11px 14px; background:#fff; color:var(--ink);
+}
+.specify:focus{outline:none; border-color:var(--blue)}
+.specify::placeholder{color:#9AA6BC}
+
+.counter{margin:15px 0 0; font-size:13px; font-weight:500; color:var(--muted)}
+
+/* ============================================================
+   Matrix tables
+   ============================================================ */
+.mtx-wrap{width:100%}
+.mtx{width:100%; table-layout:fixed}
+.mtx thead th{
+  padding:0 4px 12px; text-align:center; vertical-align:bottom;
+  font-size:13px; font-weight:700; color:var(--ink-2);
+}
+.mtx thead th.corner{width:36%}
+.th-l{display:block}
+.th-a{display:block; margin-top:4px; font-size:11px; font-weight:500; color:var(--muted); line-height:1.3}
+.mtx tbody th.rowhead{
+  text-align:left; font-weight:600; font-size:14.5px; color:var(--ink-2);
+  padding:12px 16px 12px 14px; line-height:1.45;
+}
+.mtx tbody tr{background:var(--soft)}
+.mtx tbody tr:nth-child(even){background:var(--panel)}
+.mtx tbody tr:hover{background:var(--blue-soft)}
+.mtx tbody tr td:last-child,.mtx tbody tr th:first-child{border-radius:0}
+.mtx tbody th.rowhead{border-radius:10px 0 0 10px}
+.mtx tbody th.rowhead.is-empty{padding:0}
+.mtx tbody td:last-child{border-radius:0 10px 10px 0}
+.mtx tbody td{padding:5px 3px; text-align:center}
+
+.cell{
+  display:flex; align-items:center; justify-content:center;
+  width:100%; min-height:38px; background:transparent;
+  border:0; cursor:pointer; border-radius:8px; padding:6px 2px;
+}
+.cell>.mark{margin-top:0}
+.cell:hover>.mark{border-color:var(--blue)}
+.cell.is-off{opacity:.32; cursor:not-allowed}
+.cell.is-off:hover>.mark{border-color:var(--line-2)}
+.cell.is-on>.mark{border-color:var(--blue); background:var(--blue)}
+.cell.is-on>.mark.radio::after{background:#fff}
+.cell.is-on>.mark.check::after{border-color:#fff}
+.cell-l{display:none}
+
+/* ============================================================
+   Text fields
+   ============================================================ */
+.stack{display:flex; flex-direction:column; gap:14px}
+.tfield{display:flex; align-items:center; gap:12px}
+.tfield-n{
+  width:28px; height:28px; flex:none; border-radius:50%;
+  background:var(--blue-soft); color:var(--blue-dark);
+  display:flex; align-items:center; justify-content:center;
+  font-size:12.5px; font-weight:700;
+}
+.tfield input{
+  flex:1; min-width:0; border:1.5px solid var(--line-2); border-radius:10px;
+  padding:12px 14px; background:#fff; color:var(--ink); font-weight:500;
+}
+.tfield input:focus{outline:none; border-color:var(--blue)}
+.tfield input::placeholder{color:#9AA6BC; font-weight:400}
+
+/* ============================================================
+   Concepts and heat map
+   ============================================================ */
+.concept{background:var(--soft); border-radius:12px; padding:24px 24px 18px}
+.concept--tight{padding:20px}
+.concept-title{
+  font-size:11.5px; font-weight:800; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--blue); margin:0 0 14px; line-height:1.5;
+}
+.concept-title--plain{
+  text-transform:none; letter-spacing:0; font-size:15.5px;
+  font-weight:700; color:var(--ink);
+}
+.concept-body{
+  font-size:15.5px; line-height:1.7; color:var(--ink-2);
+  margin-bottom:20px; font-weight:500;
+}
+.concept-body b{color:var(--blue-dark); font-weight:700}
+.concept .mtx tbody tr{background:transparent}
+.concept .mtx tbody tr:nth-child(even){background:transparent}
+.concept .mtx tbody tr:hover{background:var(--blue-soft)}
+
+.ref{
+  display:inline-block; margin:0 0 18px;
+  background:var(--blue-soft); color:var(--blue-dark);
+  border-radius:100px; padding:6px 14px;
+  font-size:11.5px; font-weight:800; letter-spacing:.07em; text-transform:uppercase;
+}
+
+.hm{background:var(--soft); border-radius:12px; padding:24px 26px 22px}
+.hm-title{
+  margin:0 0 16px; font-size:11.5px; font-weight:800;
+  letter-spacing:.08em; text-transform:uppercase; color:var(--blue);
+}
+.hm-text{margin:0; font-size:17px; line-height:2.05; color:var(--ink-2); font-weight:500}
+.frag{
+  display:inline; cursor:pointer; -webkit-tap-highlight-color:transparent;
+  padding:2px 0; border-radius:4px; color:inherit;
+  text-decoration:underline; text-decoration-style:dotted;
+  text-decoration-thickness:1.5px; text-underline-offset:5px;
+  text-decoration-color:var(--line-2);
+  transition:background .14s ease, color .14s ease, text-decoration-color .14s ease;
+}
+.frag:hover{background:var(--blue-soft-2); text-decoration-color:var(--blue)}
+.frag:focus-visible{outline:2px solid var(--blue); outline-offset:3px}
+.frag.is-on{
+  background:var(--blue); color:#fff; font-weight:600;
+  box-shadow:0 0 0 3px var(--blue);
+  text-decoration-color:rgba(255,255,255,.55); text-decoration-style:solid;
+}
+.glue{color:var(--ink-2)}
+
+.sub-q{margin-top:26px; padding-top:24px; border-top:1.5px solid var(--line)}
+.sub-q-title{margin:0 0 8px; font-size:15.5px; font-weight:700}
+.sub-q-quote{
+  margin:0 0 18px; font-size:15.5px; line-height:1.6; font-weight:600;
+  color:var(--blue-dark); background:var(--blue-soft);
+  padding:14px 16px; border-radius:10px;
+}
+
+/* ============================================================
+   Intro, welcome, end
+   ============================================================ */
+.panel--intro{padding:40px 34px}
+.intro-title{font-size:26px; font-weight:800; margin:0 0 12px; line-height:1.28; letter-spacing:-.02em}
+.intro-lede{margin:0; color:var(--ink-2); font-size:16px; max-width:60ch; font-weight:500}
+.intro-lede b{color:var(--blue-dark); font-weight:700}
+.chipwrap{display:flex; flex-wrap:wrap; gap:7px; margin-top:20px}
+.chip{
+  background:var(--blue-soft); color:var(--blue-dark);
+  border-radius:100px; padding:5px 13px; font-size:13px; font-weight:600;
+}
+
+.panel--welcome{padding:44px 36px 38px}
+.welcome-title{font-size:32px; font-weight:800; margin:0 0 16px; line-height:1.2; letter-spacing:-.025em}
+.welcome-lede{margin:0 0 14px; color:var(--ink-2); font-size:16px; max-width:60ch; font-weight:500}
+.sections-box{margin:26px 0 28px; border-radius:12px; background:var(--soft); padding:20px 24px}
+.sections-box-h{
+  margin:0 0 12px; font-size:11.5px; font-weight:800;
+  letter-spacing:.09em; text-transform:uppercase; color:var(--blue);
+}
+.sections-list{margin:0; padding-left:20px; columns:2; column-gap:28px}
+.sections-list li{font-size:14.5px; font-weight:600; color:var(--ink-2); margin-bottom:6px; break-inside:avoid}
+
+.panel--end{padding:46px 36px}
+.end-title{font-size:28px; font-weight:800; margin:0 0 12px; line-height:1.25; letter-spacing:-.02em}
+.end-lede{margin:0 0 28px; color:var(--ink-2); font-size:16px; max-width:56ch; font-weight:500}
+.endrow{display:flex; flex-wrap:wrap; gap:10px; margin-bottom:18px}
+
+.btn{
+  border-radius:10px; padding:13px 26px; cursor:pointer;
+  border:0; font-size:15.5px; font-weight:700;
+  transition:background .15s ease, box-shadow .15s ease;
+}
+.btn--primary{background:var(--blue); color:#fff; box-shadow:0 6px 18px -8px rgba(47,111,237,.9)}
+.btn--primary:hover{background:var(--blue-dark)}
+.btn--ghost{background:var(--soft); color:var(--ink-2); box-shadow:inset 0 0 0 1.5px var(--line-2)}
+.btn--ghost:hover{box-shadow:inset 0 0 0 1.5px var(--blue); color:var(--blue)}
+.btn--lg{padding:15px 34px; font-size:16px; width:100%; max-width:280px}
+
+.linkish{
+  display:block; margin-top:18px; background:none; border:0; padding:0;
+  color:var(--muted); font-size:13.5px; font-weight:600; cursor:pointer;
+  text-decoration:underline; text-underline-offset:3px;
+}
+.linkish:hover{color:var(--blue)}
+
+:focus-visible{outline:2px solid var(--blue); outline-offset:2px}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width:900px){
+  .steps{display:none}
+  .stepnow{
+    display:block; max-width:1180px; margin:0 auto;
+    padding:0 20px 11px; font-size:12.5px; font-weight:700; color:var(--blue);
+  }
+}
+
+@media (max-width:719px){
+  .chrome-top{padding:12px 18px 9px}
+  .study{font-size:11px}
+  .meta{font-size:12px; gap:10px; white-space:nowrap}
+  .layout{padding:16px 12px 96px}
+  .panel{padding:24px 20px 26px; border-radius:12px}
+  .panel--intro,.panel--welcome,.panel--end{padding:30px 20px}
+  .q-title{font-size:19px}
+  .welcome-title{font-size:25px}
+  .sections-list{columns:1}
+  .opts--cols{grid-template-columns:1fr}
+  .btn--lg{max-width:none}
+  .hint{font-size:11.5px; padding:7px 15px}
+  .navbtn--back{padding:10px 16px 10px 13px; font-size:14px}
+  .navbtn--next{padding:12px 20px 12px 24px; font-size:15px}
+
+  /* matrix collapses to one card per row */
+  .mtx,.mtx tbody,.mtx tr{display:block; width:100%}
+  .mtx thead{display:none}
+  .mtx tbody tr,.mtx tbody tr:nth-child(even){
+    background:var(--soft); border-radius:12px;
+    padding:14px 14px 9px; margin-bottom:9px;
+  }
+  .mtx tbody tr:hover{background:var(--soft)}
+  .mtx tbody th.rowhead{
+    display:block; padding:0 0 11px; font-size:15px;
+    font-weight:700; color:var(--ink); border-radius:0;
+  }
+  .mtx tbody td,.mtx tbody td:last-child{
+    display:inline-block; width:auto; padding:0 6px 6px 0;
+    text-align:left; border-radius:0;
+  }
+  .cell{
+    display:inline-flex; width:auto; min-height:0; gap:8px;
+    border-radius:100px; padding:8px 15px 8px 11px; background:var(--panel);
+    box-shadow:inset 0 0 0 1.5px var(--line-2);
+  }
+  .cell.is-on{background:var(--blue); box-shadow:none}
+  .cell.is-on>.mark{border-color:#fff; background:#fff}
+  .cell.is-on>.mark.radio::after{background:var(--blue)}
+  .cell.is-on>.mark.check::after{border-color:var(--blue)}
+  .cell-l{display:inline; font-size:13.5px; font-weight:600; color:var(--ink-2)}
+  .cell.is-on .cell-l{color:#fff}
+  .mtx--scale tbody tr{display:flex; flex-wrap:wrap; align-items:center}
+  .mtx--scale tbody th.rowhead{flex:0 0 100%}
+  .mtx--scale tbody th.rowhead.is-empty{display:none}
+  .mtx--scale tbody td,.mtx--scale tbody td:last-child{
+    flex:1 1 0; min-width:0; display:block; padding:0 5px 5px 0;
+  }
+  .mtx--scale tbody td:last-child{padding-right:0}
+  .mtx--scale .cell{
+    width:100%; justify-content:center; gap:6px; padding:9px 4px;
+  }
+  .mtx--scale .cell>.mark{width:16px; height:16px}
+  .mtx--scale .cell-l{font-size:13px}
+
+  .hm-text{font-size:16px; line-height:2}
+  .concept{padding:20px 18px 14px}
+}
+
+@media (max-width:560px){
+  .study{display:none}
+  .stepnow{padding-bottom:10px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important; transition-duration:.01ms !important}
+}
+</style>
+</head>
+<body>
+
+<header class="chrome" id="chrome" hidden>
+  <div class="chrome-top">
+    <span class="study">Snacks Questionnaire</span>
+    <div class="meta">
+      <span id="count"></span>
+      <span class="pct" id="pct">0%</span>
+    </div>
+  </div>
+  <div class="stepnow" id="stepnow"></div>
+  <ol class="steps" id="steps"></ol>
+  <div class="track"><div class="bar" id="bar"></div></div>
+</header>
+
+<div class="layout">
+  <main class="stage" id="stage"></main>
+</div>
+
+<div class="navbar" id="navbar" hidden></div>
+<button type="button" class="navbtn navbtn--back" id="back" hidden>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+  <span class="lbl">Back</span>
+</button>
+<button type="button" class="navbtn navbtn--next" id="next" hidden>
+  <span class="lbl">Next</span>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+</button>
+<p class="hint" id="hint" hidden></p>
+
+<script>
+/* ============================================================
+   MARINELA BRANDVERSE - MARINELA QUESTIONNAIRE - USA
+   Content transcribed verbatim from the approved questionnaire.
+   ============================================================ */
+(function () {
+  'use strict';
+
+  var esc = function (s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  };
+  var shuffle = function (arr) {
+    var a = arr.slice(), i, j, t;
+    for (i = a.length - 1; i > 0; i--) {
+      j = Math.floor(Math.random() * (i + 1));
+      t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  };
+  var LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+  /* ---------- option banks, exactly as written in the document ---------- */
+  var OCCASIONS = [
+    'In the morning before breakfast',
+    'At Breakfast',
+    'Between breakfast and lunch',
+    'At Lunch',
+    'Between lunch and dinner',
+    'At dinner',
+    'After dinner',
+    'Special occasion or celebration',
+    'Before, during or after exercising'
+  ];
+
+  var CHOICE_DRIVERS = [
+    'I crave it at that moment',
+    'It is the most affordable option',
+    'I want to share it with someone',
+    'I need quick energy',
+    'It reminds me of something or someone',
+    'I want to treat myself or reward myself',
+    'It is part of my routine',
+    'I saw it on social media or someone recommended it to me',
+    'I want to try something new',
+    'It is easy to carry',
+    "It's easy to find in stores",
+    "It's easy to eat"
+  ];
+
+  var COMPANY = ['Alone', 'With friends', 'With coworkers', 'With family', 'With my partner'];
+
+  /* Q11 and Q15 differ in the source: "At the park or outdoors" vs "At the park/outdoors" */
+  var PLACES_Q11 = [
+    'At home',
+    'At school / university / work',
+    'While commuting (car, public transportation)',
+    'Social event or gathering with friends or family',
+    'At the park or outdoors',
+    'Other'
+  ];
+  var PLACES_Q15 = [
+    'At home',
+    'At school / university / work',
+    'While commuting (car, public transportation)',
+    'Social event or gathering with friends or family',
+    'At the park/outdoors',
+    'Other'
+  ];
+
+  var ACTIVITIES = [
+    'Watching series or movies',
+    'Browsing social media or the internet',
+    'Playing video games',
+    'Listening to music or podcasts',
+    'Reading',
+    'Before, during, or after exercising',
+    'Studying or working',
+    'Nothing in particular, just eating',
+    'Other'
+  ];
+
+  var MARINELA_BRANDS = [
+    'Pinguinos', 'Gansito', 'Submarines', 'Chocoroles', 'Sponch', 'Barritas',
+    'Cinnas', 'Principe', 'Polvorones', 'Trikis', 'Napolitano', 'Rocko',
+    'Pastitas', 'Caribenas', 'Tartinas (Tart A Lets)', 'Gansito Cookie',
+    'Pastisetas (Butter Crowns)'
+  ];
+
+  var AGREE_5 = [
+    'Strongly disagree', 'Disagree', 'Neither agree nor disagree', 'Agree', 'Strongly agree'
+  ];
+
+  var FREQ = [
+    { v: 'daily', l: 'Daily' },
+    { v: 'w23', l: '2-3 times per week' },
+    { v: 'w1', l: 'Once a week' },
+    { v: 'w2', l: 'Once every two weeks' },
+    { v: 'rare', l: 'Less than once a month' }
+  ];
+
+  /* ---------- the three territory concepts ---------- */
+  var CONCEPTS = [
+    {
+      code: 'T2',
+      label: 'Your Rituals, Your Rules',
+      title: 'MAKE IT POSSIBLE: YOUR RITUALS, YOUR RULES',
+      hmTitle: 'YOUR RITUALS, YOUR RULES',
+      suffix: 'a',
+      body: 'The things I enjoy, the products I choose, and the rituals I create help me show people who I really am and how I connect with others. <b>Sometimes, though, I feel like people don\u2019t fully see everything I have to offer.</b><br><br><b>(brand name)</b> understands that we all express ourselves in different ways. <b>That\u2019s why it creates products, brands, and moments that reflect who I am and help me show my true self.</b><br><br><b><i>With (brand name), your everyday rituals become part of your story.</i></b>',
+      fragments: [
+        'The things I enjoy, the products I choose',
+        'and the rituals I create',
+        'help me show people who I really am and how I connect with others',
+        'but sometimes, I feel like people don\u2019t fully see everything I have to offer',
+        'Marinela understands that we all express ourselves in different ways',
+        'creates products, brands, and moments that reflect who I am',
+        'and help me show my true self',
+        'your everyday rituals become part of your story'
+      ],
+      glue: [', ', ' ', ', ', '. ', '. That\u2019s why it ', ' ', '. With Marinela, ', '.']
+    },
+    {
+      code: 'T3',
+      label: 'Unfiltered Enjoyment',
+      title: 'UNFILTERED ENJOYMENT',
+      hmTitle: 'UNFILTERED ENJOYMENT',
+      suffix: 'b',
+      body: 'Life feels better when I stop overthinking and simply enjoy the moment, when I can be myself, laugh freely, and enjoy what I love <b>without feeling the need to explain or justify it.</b><br><br><b>(brand name)</b> believes enjoyment should come naturally and invites me to enjoy life\u2019s small moments exactly as they are through authentic products and experiences.<br><br><b><i>With (brand name), enjoying yourself doesn\u2019t need a reason.</i></b>',
+      fragments: [
+        'Life feels better when I stop overthinking and simply enjoy the moment',
+        'when I can be myself, laugh freely, and enjoy what I love',
+        'without feeling the need to explain or justify it',
+        'Marinela believes enjoyment should come naturally',
+        'and invites me to enjoy life\u2019s small moments exactly as they are',
+        'through authentic products and experiences',
+        'With Marinela, enjoying yourself doesn\u2019t need a reason'
+      ],
+      glue: [', ', ' ', '. ', ' ', ', ', '. ', '.']
+    },
+    {
+      code: 'T5',
+      label: 'Comes from within',
+      title: 'COMES FROM WITHIN',
+      hmTitle: 'COMES FROM WITHIN',
+      suffix: 'c',
+      body: 'In a world that <b>is constantly trying to define people</b>, staying true to who I am matters more than ever. What makes me unique is something worth celebrating, not hiding.<br><br><b>(brand name)</b> encourages me to <b>embrace what makes me different and share it proudly with the world.</b><br><br><b><i>With (brand name), the best part of you comes from within.</i></b>',
+      fragments: [
+        'In a world that is constantly trying to define people',
+        'staying true to who I am',
+        'matters more than ever',
+        'What makes me unique',
+        'is something worth celebrating, not hiding',
+        'Marinela encourages me to embrace what makes me different',
+        'and share it proudly with the world',
+        'the best part of you comes from within'
+      ],
+      glue: [', ', ' ', '. ', ' ', '. ', ' ', '. With Marinela, ', '.']
+    }
+  ];
+
+  /* Q17, Q18 and Q19 statements, in document order */
+  var TERRITORY_Q17 = [
+    { v: 'T2', l: 'The things I enjoy, the products I choose, and the rituals I create help me show people who I really am and how I connect with others.' },
+    { v: 'T3', l: 'Life feels better when I stop overthinking and simply enjoy the moment, when I can be myself, laugh freely, and enjoy what I love without filters.' },
+    { v: 'T5', l: 'Staying true to who I am matters more than ever. What makes me unique is something worth celebrating, not hiding.' }
+  ];
+  var TERRITORY_Q18 = [
+    { v: 'T2', l: 'Sometimes, I feel like people don\u2019t fully see everything I have to offer.' },
+    { v: 'T3', l: 'Sometimes it feels like enjoying myself is just another obligation, something I have to explain and justify.' },
+    { v: 'T5', l: 'Sometimes it feels like the world is constantly trying to define people.' }
+  ];
+  var TERRITORY_Q19 = [
+    { v: 'T2', l: 'A brand that understands that we all express ourselves in different ways. That\u2019s why it creates products, brands, and moments that reflect who I am.' },
+    { v: 'T3', l: 'A brand that believes enjoyment should come naturally and invites me to enjoy life\u2019s small moments exactly as they are, through authentic products and experiences.' },
+    { v: 'T5', l: 'A brand that encourages me to embrace what makes me different and share it proudly with the world.' }
+  ];
+
+  /* ---------- Q31 blocks, exactly as written ---------- */
+  var BLOCKS = [
+    {
+      id: 'b1',
+      options: [
+        'Sugar-free or no-added-sugar product line',
+        'Gluten-free product line',
+        'Clean-label products (recognizable ingredients, no additives)',
+        'High-protein product line',
+        'High-fiber or whole-grain product line',
+        'Low-calorie version',
+        'Reduced-sugar product line',
+        'Vegan or plant-based product line',
+        'Lactose-free product line',
+        'Sweetened with stevia or monk fruit',
+        'Kids\u2019 product line with an improved nutritional profile'
+      ]
+    },
+    {
+      id: 'b2',
+      options: [
+        'Dark chocolate line (70%+ cocoa)',
+        'Premium fillings (artisan dulce de leche, praline, hazelnut cream)',
+        '\u201cExtra\u201d or \u201cDouble\u201d line (double cream, double chocolate)',
+        'Fully chocolate-covered version',
+        'Gourmet snack cakes collection (French snack cakes style)',
+        'Flavors inspired by spirits or extracts (rum, coffee, bourbon vanilla)',
+        'Cheesecake, tiramisu, or red velvet collection'
+      ]
+    },
+    {
+      id: 'b3',
+      options: [
+        'Limited-edition seasonal flavors (Halloween, Thanksgiving, Christmas, Valentine\u2019s Day)',
+        'Regional American flavors (maple, pecan pie)',
+        'Exotic and Asian flavors (matcha, lychee, yuzu)',
+        'Co-branded products with popular brands',
+        'Collaborations with renowned chefs or bakeries',
+        'International flavors (Argentine dulce de leche, Spanish churro, tiramisu)',
+        'Sweet-and-spicy flavors (chamoy, Tajín, chili)'
+      ]
+    },
+    {
+      id: 'b4',
+      options: [
+        'Mini bites or individually portioned snack packs',
+        'Family-size or multipack format for sharing',
+        'Breakfast product line (more filling, with oats and granola)',
+        'On-the-go product line (durable individual packaging)',
+        'Party or birthday line (ready-to-eat cakes and cupcakes)',
+        'Coffee companion line (premium cookies/ biscuits and biscotti)',
+        'Collaborations between Marinela portfolio brands'
+      ]
+    },
+    {
+      id: 'b5',
+      options: [
+        'Marinela Café (branded coffee shops)',
+        'Monthly subscription or surprise box',
+        'Personalization (messages or photos on cakes through the app)',
+        'Marinela Experience Centers (flagship stores, museums, or factory tours)',
+        'Premium vending machines',
+        'HORECA product line (Hotels, Restaurants, and Cafés)'
+      ]
+    },
+    {
+      id: 'b6',
+      options: [
+        'Compostable or recyclable packaging',
+        'Fair Trade product line (cocoa, vanilla)',
+        'Social impact edition (a percentage of sales donated to charitable organizations)',
+        'Ingredients sourced from local producers or small-scale farmers'
+      ]
+    },
+    {
+      id: 'b7',
+      options: [
+        'Breakfast cereals and cereal bars',
+        'Home baking mixes',
+        'Baking ingredients (toppings, fillings, and frosting for homemade desserts)',
+        'Ready-to-drink beverages (milkshakes, frappés, flavored drinks).',
+        'Ice cream and popsicles',
+        'Sweet Spreads (Nut spreads, cookie butter, fruit spreads)',
+        'Traditional American baked goods (apple pie, cinnamon roll, peanut butter, s\u2019mores).'
+      ]
+    }
+  ];
+
+  var TRIBES = [
+    { code: 'TR1', text: 'In life, I don\u2019t wait for the perfect moment to live, I create it. A life well lived is built through everyday choices made my own way.' },
+    { code: 'TR2', text: 'I enjoy every day. I\u2019m the kind of person who can make an ordinary Tuesday feel special, whether I\u2019m alone or with others.' },
+    { code: 'TR3', text: 'I prefer authenticity over perfection, and I seek what helps me express my true self. Authenticity isn\u2019t something you fake, it simply reveals itself.' }
+  ];
+
+  /* ---------- randomisation: only where the document asks for it ---------- */
+  var RND = {
+    blocks: shuffle(BLOCKS.map(function (b) { return b.id; })),
+    tribes: shuffle(TRIBES.map(function (t) { return t.code; }))
+  };
+
+  var conceptByCode = function (c) {
+    for (var i = 0; i < CONCEPTS.length; i++) if (CONCEPTS[i].code === c) return CONCEPTS[i];
+    return null;
+  };
+  var blockById = function (id) {
+    for (var i = 0; i < BLOCKS.length; i++) if (BLOCKS[i].id === id) return BLOCKS[i];
+    return null;
+  };
+  var tribeByCode = function (c) {
+    for (var i = 0; i < TRIBES.length; i++) if (TRIBES[i].code === c) return TRIBES[i];
+    return null;
+  };
+
+  var A = {};
+  var STATE = { i: 0, terminated: null, phase: 'welcome', startedAt: null };
+
+  function cats() {
+    var q4 = A.Q4 && A.Q4.value;
+    var cookies = (q4 === 'cookies' || q4 === 'both');
+    var cakes = (q4 === 'cakes' || q4 === 'both');
+    if (cakes && A.Q5a && A.Q5a.value === 'rare') cakes = false;
+    if (cookies && A.Q5b && A.Q5b.value === 'rare') cookies = false;
+    return { cookies: cookies, cakes: cakes };
+  }
+  function knowsMarinela() { return A.Q22 && A.Q22.value === 'yes'; }
+  function knownBrands() {
+    var a = A.Q23;
+    if (!a || !a.values) return [];
+    return a.values.slice();
+  }
+  function winningTerritory() {
+    if (!A.Q30 || !A.Q30.value) return null;
+    return conceptByCode(A.Q30.value);
+  }
+
+  function opts(list) { return list.map(function (l) { return { v: l, l: l }; }); }
+
+  var SCREENS = [];
+  function push(s) { SCREENS.push(s); return s; }
+
+  /* ============================================================
+     WELCOME
+     ============================================================ */
+  push({ id: 'welcome', type: 'welcome', sec: 0 });
+
+  /* ============================================================
+     SECTION 1. PROFILE AND SCREENING
+     ============================================================ */
+  push({
+    id: 'i1', type: 'intro', sec: 1, kicker: 'Section 1 of 6',
+    title: 'Profile and screening',
+    lede: 'To begin, a few questions about you.'
+  });
+
+  push({
+    id: 'Q1', auto: true, sec: 1, num: 'Q1', type: 'single',
+    title: 'How old are you?',
+    options: [
+      { v: '13-18', l: '13-18 years old' },
+      { v: '19-24', l: '19-24 years old' },
+      { v: '25+', l: '25 years old or older' }
+    ],
+    terminate: function (v) { return v === '25+'; }
+  });
+
+  push({
+    id: 'Q2', auto: true, sec: 1, num: 'Q2', type: 'single',
+    title: 'In which city do you live?',
+    options: [
+      { v: 'dallas', l: 'Dallas' },
+      { v: 'la', l: 'Los Angeles' },
+      { v: 'chicago', l: 'Chicago' },
+      { v: 'other', l: 'Other' }
+    ],
+    terminate: function (v) { return v === 'other'; }
+  });
+
+  push({
+    id: 'Q2_1', sec: 1, num: 'Q2.1', type: 'single',
+    title: 'Which of the following best describes your background?',
+    options: [
+      { v: 'hla', l: 'Hispanic or Latino American' },
+      { v: 'nonhisp', l: 'Non-Hispanic American' },
+      { v: 'hl_us', l: 'Hispanic or Latino living in the U.S.' },
+      { v: 'other', l: 'Other (please specify)', specify: true }
+    ]
+  });
+
+  push({
+    id: 'Q3', auto: true, sec: 1, num: 'Q3', type: 'single',
+    title: 'How do you identify your gender?',
+    options: [
+      { v: 'male', l: 'Male' },
+      { v: 'female', l: 'Female' },
+      { v: 'nb', l: 'Non Binary/gender fluid' },
+      { v: 'na', l: 'Prefer not to say' }
+    ]
+  });
+
+  push({
+    id: 'Q4', auto: true, sec: 1, num: 'Q4', type: 'single',
+    title: 'When you\u2019re craving something sweet or looking for a snack, which of the following would you choose first?',
+    options: [
+      { v: 'cookies', l: 'A cookie / biscuit' },
+      { v: 'cakes', l: 'A snack cake' },
+      { v: 'both', l: 'Both equally' },
+      { v: 'none', l: 'None of the above' }
+    ],
+    terminate: function (v) { return v === 'none'; }
+  });
+
+  push({
+    id: 'Q5a', auto: true, sec: 1, num: 'Q5.a', type: 'single',
+    title: 'How often do you consume snack cakes?',
+    options: FREQ,
+    showIf: function () { return A.Q4 && (A.Q4.value === 'cakes' || A.Q4.value === 'both'); },
+    terminate: function (v) { return A.Q4.value === 'cakes' && v === 'rare'; }
+  });
+
+  push({
+    id: 'Q5b', auto: true, sec: 1, num: 'Q5.b', type: 'single',
+    title: 'How often do you consume cookies/ biscuits?',
+    options: FREQ,
+    showIf: function () { return A.Q4 && (A.Q4.value === 'cookies' || A.Q4.value === 'both'); },
+    terminate: function (v) {
+      if (A.Q4.value === 'cookies') return v === 'rare';
+      if (A.Q4.value === 'both') return v === 'rare' && A.Q5a && A.Q5a.value === 'rare';
+      return false;
+    }
+  });
+
+  /* ============================================================
+     SECTION 2. HABITS AND CONSUMPTION MOMENTS
+     ============================================================ */
+  push({
+    id: 'i2', type: 'intro', sec: 2, kicker: 'Section 2 of 6',
+    title: 'Habits and consumption moments',
+    lede: 'Some questions about how, where and when you eat these products.'
+  });
+
+  push({
+    id: 'Q6', sec: 2, num: 'Q6', type: 'multi', min: 1,
+    title: 'Where do you usually buy these products?',
+    note: 'Select all that apply.',
+    options: opts([
+      'Convenience store',
+      'Supermarket',
+      'Corner store or small grocery store',
+      'At school / university / work',
+      'Delivery app or online order',
+      'Other'
+    ])
+  });
+
+  push({
+    id: 'Q7', sec: 2, num: 'Q7', type: 'gridSingle',
+    title: 'Your Snacking week',
+    note: 'Assign each moment of the day to the snack category you most associate it with.',
+    rows: OCCASIONS,
+    cols: function () {
+      var c = cats(), out = [];
+      if (c.cakes) out.push({ v: 'cakes', l: 'Snack cakes' });
+      if (c.cookies) out.push({ v: 'cookies', l: 'Cookies/ Biscuits' });
+      if (c.cakes && c.cookies) out.push({ v: 'both', l: 'Both' });
+      out.push({ v: 'none', l: 'None' });
+      return out;
+    }
+  });
+
+  push({
+    id: 'Q8', sec: 2, num: 'Q8', type: 'gridScale',
+    title: 'When choosing these products, how important is each of these factors?',
+    note: 'Scale from 1 to 5, where 1 = not important at all and 5 = very important.',
+    lowLabel: 'Not important at all', highLabel: 'Very important',
+    rows: [
+      'Flavor and texture',
+      'Price',
+      'Familiar or well-known brand',
+      'Available and easy to find',
+      'Innovation',
+      'Popular on social media',
+      'Recommendation from someone I know',
+      'Mini / Bite sized format',
+      'Individual format',
+      'Sharing format',
+      'Convenient to carry',
+      'Convenient to eat'
+    ]
+  });
+
+  /* ===== SECTION 2.1 COOKIES / BISCUITS ===== */
+  var ifCookies = function () { return cats().cookies; };
+  var ifCakes = function () { return cats().cakes; };
+
+  push({
+    id: 'i21', type: 'intro', sec: 2, showIf: ifCookies,
+    kicker: 'Section 2.1',
+    title: 'Habits and consumption moments: cookies / biscuits'
+  });
+
+  push({
+    id: 'Q9', sec: 2, num: 'Q9', type: 'multi', min: 3, max: 3, showIf: ifCookies,
+    title: 'What makes you choose a cookie/ biscuit?',
+    note: 'Select the 3 most important.',
+    options: opts(CHOICE_DRIVERS)
+  });
+
+  push({
+    id: 'Q10', sec: 2, num: 'Q10', type: 'multi', min: 1, showIf: ifCookies,
+    title: 'Who do you usually eat cookies/ biscuits with?',
+    note: 'Select all that apply.',
+    options: opts(COMPANY)
+  });
+
+  push({
+    id: 'Q11', sec: 2, num: 'Q11', type: 'multi', min: 1, showIf: ifCookies,
+    title: 'Where do you usually eat cookies/ biscuits?',
+    note: 'Select all that apply.',
+    options: opts(PLACES_Q11)
+  });
+
+  push({
+    id: 'Q12', sec: 2, num: 'Q12', type: 'multi', min: 1, max: 3, showIf: ifCookies,
+    title: 'What are you usually doing when you eat cookies/ biscuits?',
+    note: 'Select up to three options.',
+    options: ACTIVITIES.map(function (l) {
+      return { v: l, l: l, exclusive: l === 'Nothing in particular, just eating' };
+    })
+  });
+
+  /* ===== SECTION 2.2 SNACK CAKES ===== */
+  push({
+    id: 'i22', type: 'intro', sec: 2, showIf: ifCakes,
+    kicker: 'Section 2.2',
+    title: 'Habits and consumption moments: snack cakes'
+  });
+
+  push({
+    id: 'Q13', sec: 2, num: 'Q13', type: 'multi', min: 3, max: 3, showIf: ifCakes,
+    title: 'What makes you choose a snack cake?',
+    note: 'Select the 3 most important.',
+    options: opts(CHOICE_DRIVERS)
+  });
+
+  push({
+    id: 'Q14', sec: 2, num: 'Q14', type: 'multi', min: 1, showIf: ifCakes,
+    title: 'Who do you usually eat snack cakes with?',
+    note: 'Select all that apply.',
+    options: opts(COMPANY)
+  });
+
+  push({
+    id: 'Q15', sec: 2, num: 'Q15', type: 'multi', min: 1, showIf: ifCakes,
+    title: 'Where do you usually eat snack cakes?',
+    note: 'Select all that apply.',
+    options: opts(PLACES_Q15)
+  });
+
+  push({
+    id: 'Q16', sec: 2, num: 'Q16', type: 'multi', min: 1, max: 3, showIf: ifCakes,
+    title: 'What are you usually doing when you eat snack cakes?',
+    note: 'Select up to three options.',
+    options: ACTIVITIES.map(function (l) {
+      return { v: l, l: l, exclusive: l === 'Nothing in particular, just eating' };
+    })
+  });
+
+  /* ============================================================
+     SECTION 3. TERRITORY EVALUATION
+     ============================================================ */
+  push({
+    id: 'i3', type: 'intro', sec: 3, kicker: 'Section 3 of 6',
+    title: 'Territory evaluation',
+    lede: 'Please answer the following questions thinking about a large global brand of cookies / biscuits and snack cakes.'
+  });
+
+  push({
+    id: 'Q17', sec: 3, num: 'Q17', type: 'single',
+    title: 'Which of the following statements do you identify with the most?',
+    note: 'Select a single option.',
+    options: TERRITORY_Q17
+  });
+
+  push({
+    id: 'Q18', sec: 3, num: 'Q18', type: 'single',
+    title: 'Which of the following situations feels most like your everyday life?',
+    note: 'Select a single option.',
+    options: TERRITORY_Q18
+  });
+
+  push({
+    id: 'Q19', sec: 3, num: 'Q19', type: 'single',
+    title: 'Which of these brands would you feel most connected to or be most likely to consume?',
+    note: 'Select a single option.',
+    options: TERRITORY_Q19
+  });
+
+  push({
+    id: 'i3b', type: 'intro', sec: 3, kicker: 'Please read',
+    title: 'Three brand ideas',
+    lede: 'Now we\u2019re going to show you three brand ideas. There are no right or wrong answers; we simply want to know which one you find most appealing and which connects with you the most.'
+  });
+
+  push({
+    id: 'Q20', sec: 3, num: 'Q20', type: 'conceptRate',
+    title: 'Please read each of the following ideas and rate them from 1 to 5.',
+    note: '1 = Doesn\u2019t connect with me at all / 5 = Connects with me completely.',
+    lowLabel: 'Doesn\u2019t connect with me at all', highLabel: 'Connects with me completely'
+  });
+
+  /* ============================================================
+     SECTION 4. BRAND PERCEPTION
+     ============================================================ */
+  push({
+    id: 'i4', type: 'intro', sec: 4, kicker: 'Section 4 of 6',
+    title: 'Brand perception',
+    lede: 'Now a few questions about the brands in this category.'
+  });
+
+  push({
+    id: 'Q21a', sec: 4, num: 'Q21.a', type: 'textList', showIf: ifCookies,
+    title: 'What are your top 3 favorite cookies/ biscuits brands?',
+    fields: 3, requiredFields: 1
+  });
+
+  push({
+    id: 'Q21b', sec: 4, num: 'Q21.b', type: 'textList', showIf: ifCakes,
+    title: 'What are your top 3 favorite snack cake brands?',
+    fields: 3, requiredFields: 1
+  });
+
+  push({
+    id: 'Q22', auto: true, sec: 4, num: 'Q22', type: 'single',
+    title: 'Have you heard of the Marinela brand?',
+    options: [{ v: 'yes', l: 'Yes' }, { v: 'no', l: 'No' }]
+  });
+
+  push({
+    id: 'Q23', sec: 4, num: 'Q23', type: 'multi', min: 0, columns: true,
+    title: 'Which of the following brands are you familiar with?',
+    note: 'Select all that apply.',
+    options: opts(MARINELA_BRANDS)
+  });
+
+  push({
+    id: 'Q24', sec: 4, num: 'Q24', type: 'multi', min: 0, columns: true,
+    title: 'Which of these brands have you ever purchased?',
+    note: 'Select all that apply.',
+    showIf: function () { return knownBrands().length > 0; },
+    options: function () { return opts(knownBrands()); }
+  });
+
+  push({ id: 'reveal', type: 'reveal', sec: 4 });
+
+  push({
+    id: 'Q25', sec: 4, num: 'Q25', type: 'single',
+    title: 'Thinking about Marinela, which of the following best describes your relationship with the brand?',
+    note: 'Select a single option.',
+    options: [
+      { v: 'stranger', l: 'Stranger', sub: 'I don\u2019t know it, or it means nothing to me.' },
+      { v: 'acquaintance', l: 'Acquaintance', sub: 'I know it, but I don\u2019t have a close relationship with it.' },
+      { v: 'friend', l: 'Friend', sub: 'It\u2019s part of my everyday life.' },
+      { v: 'family', l: 'Family', sub: 'It has always been close to me' },
+      { v: 'bestfriend', l: 'Best friend or confidant', sub: 'It\u2019s part of who I am.' }
+    ]
+  });
+
+  push({
+    id: 'Q26', sec: 4, num: 'Q26', type: 'gridScale', showIf: knowsMarinela,
+    title: 'To what extent do you agree with the following statements about Marinela?',
+    note: 'Scale: 1 = Strongly disagree | 5 = Strongly agree.',
+    lowLabel: 'Strongly disagree', highLabel: 'Strongly agree',
+    rows: [
+      'Marinela is a brand I trust.',
+      'Marinela is a brand that usually innovates.',
+      'Marinela has evolved over time.',
+      'Marinela is only for older generations.',
+      'Marinela is a brand for everyone.',
+      'Marinela is only for younger generations.',
+      'Marinela offers products that are different from other brands.',
+      'Marinela is more than a brand, it\u2019s part of who I am and my culture.'
+    ]
+  });
+
+  push({
+    id: 'Q27', sec: 4, num: 'Q27', type: 'gridMultiCol', showIf: knowsMarinela,
+    title: 'Which of the following attributes do you think Marinela has today? And which do you think it could have in the future?',
+    note: 'Please answer every line. You may select more than one option in each line.',
+    cols: [
+      { v: 'today', l: 'Marinela TODAY' },
+      { v: 'future', l: 'Marinela COULD BE IN THE FUTURE' },
+      { v: 'na', l: 'I DON\u2019T ASSOCIATE THIS WITH MARINELA', exclusive: true }
+    ],
+    rows: [
+      'A brand that inspires me to be authentic',
+      'A brand that stands for guilt-free enjoyment',
+      'A brand connected to my roots and identity',
+      'A brand that celebrates everyday life',
+      'A brand that supports the way I live',
+      'A brand that understands me and doesn\u2019t judge me',
+      'A high-quality brand',
+      'A brand that feels close to me',
+      'A brand that\u2019s easy to find and available everywhere',
+      'An innovative brand that always brings something new',
+      'A leading brand in its category'
+    ]
+  });
+
+  /* heat map, then Q28 and Q29, once per concept, in document order */
+  CONCEPTS.forEach(function (c) {
+    push({
+      id: 'HM_' + c.code, sec: 4, num: 'Q27 heat map (' + c.suffix + ')',
+      type: 'heatmap', concept: c.code,
+      title: 'Read the following text and select the phrases or fragments that catch your attention the most or that you identify with the most.',
+      note: 'You may select as many as you like.'
+    });
+    push({
+      id: 'Q28' + c.suffix, sec: 4, num: 'Q28.' + c.suffix, type: 'conceptEval', concept: c.code,
+      title: 'To what extent does the concept you just read...',
+      note: 'Scale from 1 to 5, where 1 = not important at all and 5 = very important.'
+    });
+    push({
+      id: 'Q29' + c.suffix, sec: 4, num: 'Q29.' + c.suffix, type: 'agree', concept: c.code,
+      title: 'How much do you agree with the following statement?',
+      quote: 'This idea has the potential to remain relevant for future generations and stay meaningful over time.'
+    });
+  });
+
+  push({
+    id: 'Q30', sec: 4, num: 'Q30', type: 'single',
+    title: 'Of the three ideas above, which is your favorite?',
+    note: 'Select a single option.',
+    options: CONCEPTS.map(function (c) { return { v: c.code, l: c.label }; })
+  });
+
+  /* ============================================================
+     SECTION 5. MARINELA BEYOND WHAT IT IS TODAY (STRETCHABILITY)
+     ============================================================ */
+  push({
+    id: 'i5', type: 'intro', sec: 5, kicker: 'Section 5 of 6',
+    title: 'Marinela beyond what it is today',
+    lede: 'Marinela is exploring new directions for its products and experiences. Below are several ideas grouped into categories.'
+  });
+
+  RND.blocks.forEach(function (bid, n) {
+    var b = blockById(bid);
+    push({
+      id: 'Q31_' + bid, sec: 5, num: 'Q31 (block ' + (n + 1) + ' of 7)', type: 'multi',
+      min: 1, max: 2, block: bid,
+      title: 'In each category, select up to 2 options that make the most sense for Marinela:',
+      options: opts(b.options).concat([{ v: 'None of these', l: 'None of these', exclusive: true }])
+    });
+    push({
+      id: 'Q31r_' + bid, sec: 5, num: 'Q31 ratings (block ' + (n + 1) + ')', type: 'blockRate', block: bid,
+      title: 'For each selected idea:',
+      note: 'Scale from 1 to 5, where 1 = doesn\u2019t fit at all and 5 = fits perfectly.',
+      lowLabel: 'Doesn\u2019t fit at all', highLabel: 'Fits perfectly',
+      showIf: function () {
+        var a = A['Q31_' + bid];
+        return !!(a && a.values && a.values.length >= 1 && a.values.indexOf('None of these') === -1);
+      }
+    });
+  });
+
+  push({
+    id: 'Q32', sec: 5, num: 'Q32', type: 'multi', min: 1, max: 3,
+    title: 'In which of the following occasions would you like to see more Marinela offerings in the future?',
+    note: 'Select up to 3.',
+    options: opts(OCCASIONS.concat([
+      'Get-togethers with friends', 'Treating myself', 'On-the-go consumption'
+    ]))
+  });
+
+  push({
+    id: 'Q33', sec: 5, num: 'Q33', type: 'multi', min: 1, max: 2,
+    title: 'What type of products would you expect Marinela to launch?',
+    note: 'Select up to 2.',
+    options: opts([
+      'More indulgent products',
+      'More functional products',
+      'More premium products',
+      'More products for everyday moments',
+      'More fun products',
+      'More innovative products'
+    ])
+  });
+
+  /* ============================================================
+     SECTION 6. TRIBE IDENTIFICATION
+     ============================================================ */
+  push({
+    id: 'i6', type: 'intro', sec: 6, kicker: 'Section 6 of 6',
+    title: 'Tribe identification',
+    lede: 'This final section helps us understand a little more about who you are. There are no right or wrong answers.'
+  });
+
+  var tribeOptions = function (extra) {
+    return RND.tribes.map(function (code, i) {
+      return { v: code, l: 'Option ' + LETTERS[i], sub: tribeByCode(code).text };
+    }).concat([extra]);
+  };
+
+  push({
+    id: 'Q34', sec: 6, num: 'Q34', type: 'single', tribes: true,
+    title: 'Which of these three types of people do you identify with the most?',
+    note: 'Select a single option.',
+    options: tribeOptions({ v: 'none', l: 'None of these describes me' })
+  });
+
+  push({
+    id: 'Q35', sec: 6, num: 'Q35', type: 'single', tribes: true,
+    title: 'Which type of person do you think primarily consumes Marinela today?',
+    note: 'Select a single option.',
+    options: tribeOptions({ v: 'unsure', l: 'I\u2019m not sure' })
+  });
+
+  push({ id: 'done', type: 'done', sec: 6 });
+
+  /* ============================================================
+     ENGINE
+     ============================================================ */
+  function optionsOf(s) {
+    return typeof s.options === 'function' ? s.options() : (s.options || []);
+  }
+  function optByValue(s, v) {
+    var list = optionsOf(s), i;
+    for (i = 0; i < list.length; i++) if (list[i].v === v) return list[i];
+    return null;
+  }
+
+  function visible() {
+    return SCREENS.filter(function (s) {
+      if (s.type === 'welcome' || s.type === 'done') return false;
+      if (typeof s.showIf === 'function') { try { return !!s.showIf(); } catch (e) { return false; } }
+      return true;
+    });
+  }
+  function questionScreens() {
+    return visible().filter(function (s) { return s.num; });
+  }
+
+  function requirement(s) {
+    var a = A[s.id];
+    switch (s.type) {
+      case 'single': {
+        if (!a || !a.value) return 'Please choose one option to continue.';
+        var opt = optByValue(s, a.value);
+        if (opt && opt.specify && !(a.other || '').trim()) return 'Please add a short description to continue.';
+        return null;
+      }
+      case 'agree':
+        return (a && a.value) ? null : 'Please choose one option to continue.';
+      case 'multi': {
+        var v = (a && a.values) || [];
+        var min = s.min || 0, max = s.max || 99;
+        var hasExclusive = v.some(function (x) {
+          var o = optByValue(s, x); return !!(o && o.exclusive);
+        });
+        if (hasExclusive) return null;
+        if (min === max && min > 0) {
+          if (v.length < min) return 'Please select ' + min + '. ' + (min - v.length) + ' still to go.';
+          return null;
+        }
+        if (v.length < min) return 'Please select at least ' + min + ' to continue.';
+        return null;
+      }
+      case 'gridSingle': {
+        var need = s.rows.length - Object.keys((a && a.map) || {}).length;
+        return need > 0 ? need + ' row' + (need > 1 ? 's' : '') + ' still to answer.' : null;
+      }
+      case 'gridScale': {
+        var n2 = s.rows.length - Object.keys((a && a.map) || {}).length;
+        return n2 > 0 ? n2 + ' row' + (n2 > 1 ? 's' : '') + ' still to rate.' : null;
+      }
+      case 'gridMultiCol': {
+        var m = (a && a.map) || {};
+        var miss = s.rows.filter(function (r) {
+          return !s.cols.some(function (c) { return (m[c.v] || []).indexOf(r) !== -1; });
+        }).length;
+        return miss > 0 ? miss + ' row' + (miss > 1 ? 's' : '') + ' still to answer.' : null;
+      }
+      case 'textList': {
+        var f = (a && a.values) || [];
+        var filled = f.filter(function (x) { return (x || '').trim(); }).length;
+        return filled >= (s.requiredFields || 1) ? null : 'Please name at least one brand to continue.';
+      }
+      case 'conceptRate': {
+        var left = CONCEPTS.length - Object.keys((a && a.map) || {}).length;
+        return left > 0 ? left + ' idea' + (left > 1 ? 's' : '') + ' still to rate.' : null;
+      }
+      case 'heatmap': return null;
+      case 'conceptEval': {
+        var left2 = 4 - Object.keys((a && a.map) || {}).length;
+        return left2 > 0 ? left2 + ' still to rate.' : null;
+      }
+      case 'blockRate': {
+        var picks = ((A['Q31_' + s.block] || {}).values) || [];
+        var m5 = (a && a.map) || {}, missing = 0;
+        picks.forEach(function (p) {
+          var r = m5[p] || {};
+          if (!r.brand) missing++;
+          if (!r.territory) missing++;
+        });
+        return missing > 0 ? missing + ' rating' + (missing > 1 ? 's' : '') + ' still to give.' : null;
+      }
+      default: return null;
+    }
+  }
+
+  var NOTE = null;
+  var LAST = null;
+
+  var elStage = document.getElementById('stage');
+  var elBar = document.getElementById('bar');
+  var elPct = document.getElementById('pct');
+  var elCount = document.getElementById('count');
+  var elBack = document.getElementById('back');
+  var elNext = document.getElementById('next');
+  var elHint = document.getElementById('hint');
+  var elChrome = document.getElementById('chrome');
+  var elSteps = document.getElementById('steps');
+  var elStepNow = document.getElementById('stepnow');
+  var elNavbar = document.getElementById('navbar');
+  var elNextLbl = elNext.querySelector('.lbl');
+
+  var SECTION_NAMES = ['', 'Profile', 'Habits', 'Territory', 'Brand', 'Stretchability', 'Tribe'];
+
+  function showNav(on) {
+    elNavbar.hidden = !on;
+    elBack.hidden = !on;
+    elNext.hidden = !on;
+    elHint.hidden = !on;
+  }
+
+  function buildSteps() {
+    var html = '';
+    for (var i = 1; i <= 6; i++) {
+      html += '<li class="step" data-sec="' + i + '"><span class="step-n">' + i +
+        '</span><span class="step-l">' + SECTION_NAMES[i] + '</span></li>';
+    }
+    elSteps.innerHTML = html;
+  }
+
+  function optionRow(o, checked, disabled, kind, screenId) {
+    var cls = 'opt' + (checked ? ' is-on' : '') + (disabled ? ' is-off' : '');
+    var h = '<button type="button" class="' + cls + '" data-act="opt" data-v="' + esc(o.v) + '"' +
+      (disabled ? ' aria-disabled="true"' : '') +
+      ' role="' + (kind === 'radio' ? 'radio' : 'checkbox') + '" aria-checked="' + (checked ? 'true' : 'false') + '">' +
+      '<span class="mark ' + kind + '"></span>' +
+      '<span class="opt-text"><span class="opt-label">' + esc(o.l) + '</span>';
+    if (o.sub) h += '<span class="opt-sub">' + esc(o.sub) + '</span>';
+    h += '</span></button>';
+    if (o.specify && checked) {
+      h += '<input class="specify" data-act="specify" type="text" placeholder="Please specify" value="' +
+        esc((A[screenId] && A[screenId].other) || '') + '" />';
+    }
+    return h;
+  }
+
+  function matrixTable(cfg) {
+    var h = '<div class="mtx-wrap"><table class="mtx' + (cfg.cls ? ' ' + cfg.cls : '') +
+      '"><thead><tr><th class="corner"></th>';
+    cfg.cols.forEach(function (c) {
+      h += '<th><span class="th-l">' + esc(c.l) + '</span>' +
+        (c.anchor ? '<span class="th-a">' + esc(c.anchor) + '</span>' : '') + '</th>';
+    });
+    h += '</tr></thead><tbody>';
+    cfg.rows.forEach(function (r) {
+      h += '<tr><th scope="row" class="rowhead' + (r.l ? '' : ' is-empty') +
+        '">' + esc(r.l) + '</th>';
+      cfg.cols.forEach(function (c) {
+        var on = cfg.isOn(r, c);
+        var off = !on && cfg.isOff && cfg.isOff(r, c);
+        h += '<td' + (on ? ' class="on"' : '') + '><button type="button" class="cell' + (on ? ' is-on' : '') +
+          (off ? ' is-off' : '') +
+          '" data-act="' + cfg.act + '" ' + (off ? 'aria-disabled="true" ' : '') + cfg.data(r, c) +
+          ' role="' + (cfg.kind === 'check' ? 'checkbox' : 'radio') + '" aria-checked="' + (on ? 'true' : 'false') +
+          '" aria-label="' + esc((r.aria || r.l) + ': ' + c.l) + '">' +
+          '<span class="mark ' + (cfg.kind === 'check' ? 'check' : 'radio') + '"></span>' +
+          '<span class="cell-l">' + esc(c.l) + '</span></button></td>';
+      });
+      h += '</tr>';
+    });
+    return h + '</tbody></table></div>';
+  }
+
+  function scaleCols(low, high) {
+    var cols = [], i;
+    for (i = 1; i <= 5; i++) {
+      cols.push({ v: i, l: String(i), anchor: i === 1 ? low : (i === 5 ? high : '') });
+    }
+    return cols;
+  }
+
+  function render() {
+    var vis = visible();
+    var s;
+
+    if (STATE.phase === 'welcome') { renderWelcome(); return; }
+    if (STATE.phase === 'terminated') { renderTerminated(); return; }
+    if (STATE.phase === 'done') { renderDone(); return; }
+
+    if (STATE.i >= vis.length) { STATE.phase = 'done'; render(); return; }
+    s = vis[STATE.i];
+
+    elChrome.hidden = false;
+    showNav(true);
+
+    var pct = vis.length > 1 ? Math.round((STATE.i / (vis.length - 1)) * 100) : 0;
+    elBar.style.width = pct + '%';
+    elPct.textContent = pct + '%';
+
+    var qs = questionScreens();
+    var qIndex = s.num ? qs.indexOf(s) + 1 : 0;
+    elCount.textContent = qIndex ? 'Question ' + qIndex + ' of ' + qs.length : '';
+
+    Array.prototype.forEach.call(elSteps.children, function (li) {
+      var n = parseInt(li.getAttribute('data-sec'), 10);
+      li.className = 'step' + (n === s.sec ? ' is-now' : (n < s.sec ? ' is-done' : ''));
+    });
+    elStepNow.textContent = 'Section ' + s.sec + ' of 6: ' + SECTION_NAMES[s.sec];
+
+    var body;
+    if (s.type === 'intro') {
+      body = '<section class="panel panel--intro">' +
+        '<p class="kicker">' + esc(s.kicker) + '</p>' +
+        '<h2 class="intro-title">' + esc(s.title) + '</h2>' +
+        (s.lede ? '<p class="intro-lede">' + esc(s.lede) + '</p>' : '') + '</section>';
+    } else if (s.type === 'reveal') {
+      body = '<section class="panel panel--intro">' +
+        '<p class="kicker">Please read before continuing</p>' +
+        '<h2 class="intro-title">One single family</h2>' +
+        '<p class="intro-lede">From now on, please imagine that all of these products belong to one single family: <b>MARINELA</b>.</p>' +
+        '<div class="chipwrap">' + MARINELA_BRANDS.map(function (b) {
+          return '<span class="chip">' + esc(b) + '</span>';
+        }).join('') + '</div></section>';
+    } else {
+      body = '<section class="panel">' + head(s) + fieldFor(s) + '</section>';
+    }
+    elStage.innerHTML = body;
+    if (LAST !== s.id) {
+      LAST = s.id;
+      window.scrollTo({ top: 0, behavior: 'auto' });
+    }
+
+    elBack.disabled = STATE.i === 0;
+    var req = s.num ? requirement(s) : null;
+    elNext.disabled = !!req;
+    elNextLbl.textContent = (STATE.i === vis.length - 1) ? 'Submit' : 'Next';
+    elHint.textContent = NOTE || req || '';
+    elHint.classList.toggle('is-on', !!(NOTE || req));
+    save();
+  }
+
+  function head(s) {
+    var h = '<header class="q-head">';
+    if (s.num) h += '<span class="q-num">' + esc(s.num) + '</span>';
+    h += '<h2 class="q-title">' + esc(s.title) + '</h2>';
+    if (s.note) h += '<p class="q-note">' + esc(s.note) + '</p>';
+    return h + '</header>';
+  }
+
+  function fieldFor(s) {
+    var a = A[s.id] || {};
+    var h = '';
+
+    if (s.type === 'single') {
+      h += '<div class="opts' + (s.tribes ? ' opts--stacked' : '') + '" role="radiogroup">';
+      optionsOf(s).forEach(function (o) {
+        h += optionRow(o, a.value === o.v, false, 'radio', s.id);
+      });
+      return h + '</div>';
+    }
+
+    if (s.type === 'agree') {
+      h += '<p class="sub-q-quote">\u201c' + esc(s.quote) + '\u201d</p><div class="opts" role="radiogroup">';
+      AGREE_5.forEach(function (l) {
+        h += optionRow({ v: l, l: l }, a.value === l, false, 'radio', s.id);
+      });
+      return h + '</div>';
+    }
+
+    if (s.type === 'multi') {
+      var all = optionsOf(s);
+      if (a.values && typeof s.options === 'function') {
+        a.values = a.values.filter(function (v) { return !!optByValue(s, v); });
+      }
+      var vals = a.values || [];
+      var exclusiveOn = vals.some(function (v) {
+        var o = optByValue(s, v); return !!(o && o.exclusive);
+      });
+      var atMax = !!(s.max && vals.length >= s.max);
+
+      h += '<div class="opts' + (s.columns ? ' opts--cols' : '') + '" role="group">';
+      all.forEach(function (o) {
+        var checked = vals.indexOf(o.v) !== -1;
+        var disabled = false;
+        if (!checked) {
+          if (o.exclusive) disabled = false;
+          else disabled = exclusiveOn || atMax;
+        }
+        h += optionRow(o, checked, disabled, 'check', s.id);
+      });
+      h += '</div>';
+
+      var msg = '';
+      if (exclusiveOn) {
+        msg = 'The other options are switched off while this is selected.';
+      } else if (s.max && s.max < 90) {
+        msg = vals.length + ' of ' + s.max + ' selected';
+        if (atMax) msg += '. Deselect one to change your answer.';
+      }
+      if (msg) h += '<p class="counter">' + esc(msg) + '</p>';
+      return h;
+    }
+
+    if (s.type === 'gridSingle') {
+      var map = a.map || {};
+      return matrixTable({
+        kind: 'radio', act: 'grid',
+        rows: s.rows.map(function (r) { return { l: r }; }),
+        cols: s.cols(),
+        isOn: function (r, c) { return map[r.l] === c.v; },
+        data: function (r, c) { return 'data-r="' + esc(r.l) + '" data-v="' + esc(c.v) + '"'; }
+      });
+    }
+
+    if (s.type === 'gridScale') {
+      var m = a.map || {};
+      return matrixTable({
+        kind: 'radio', act: 'gscale', cls: 'mtx--scale',
+        rows: s.rows.map(function (r) { return { l: r }; }),
+        cols: scaleCols(s.lowLabel, s.highLabel),
+        isOn: function (r, c) { return m[r.l] === c.v; },
+        data: function (r, c) { return 'data-r="' + esc(r.l) + '" data-n="' + c.v + '"'; }
+      });
+    }
+
+    if (s.type === 'gridMultiCol') {
+      var mm = a.map || {};
+      var rowHas = function (rl, pred) {
+        return s.cols.some(function (c) {
+          if (pred && !pred(c)) return false;
+          return (mm[c.v] || []).indexOf(rl) !== -1;
+        });
+      };
+      return matrixTable({
+        kind: 'check', act: 'gmc',
+        rows: s.rows.map(function (r) { return { l: r }; }),
+        cols: s.cols,
+        isOn: function (r, c) { return (mm[c.v] || []).indexOf(r.l) !== -1; },
+        isOff: function (r, c) {
+          if ((mm[c.v] || []).indexOf(r.l) !== -1) return false;
+          if (c.exclusive) return rowHas(r.l, function (x) { return !x.exclusive; });
+          return rowHas(r.l, function (x) { return !!x.exclusive; });
+        },
+        data: function (r, c) { return 'data-r="' + esc(r.l) + '" data-v="' + esc(c.v) + '"'; }
+      });
+    }
+
+    if (s.type === 'textList') {
+      var vv = a.values || [];
+      h += '<div class="stack">';
+      for (var i = 0; i < s.fields; i++) {
+        h += '<label class="tfield"><span class="tfield-n">' + (i + 1) + '</span>' +
+          '<input type="text" data-act="text" data-i="' + i + '" value="' + esc(vv[i] || '') +
+          '" placeholder="' + (i === 0 ? 'Brand name' : 'Optional') + '" /></label>';
+      }
+      return h + '</div>';
+    }
+
+    if (s.type === 'conceptRate') {
+      var cm = a.map || {};
+      h += '<div class="stack">';
+      CONCEPTS.forEach(function (c) {
+        h += '<article class="concept"><h3 class="concept-title">' + esc(c.title) + '</h3>' +
+          '<div class="concept-body">' + c.body + '</div>' +
+          matrixTable({
+            kind: 'radio', act: 'crate', cls: 'mtx--scale',
+            rows: [{ l: '', aria: c.title }],
+            cols: scaleCols(s.lowLabel, s.highLabel),
+            isOn: function (r, cc) { return cm[c.code] === cc.v; },
+            data: function (r, cc) { return 'data-c="' + c.code + '" data-n="' + cc.v + '"'; }
+          }) + '</article>';
+      });
+      return h + '</div>';
+    }
+
+    if (s.type === 'heatmap') {
+      var c2 = conceptByCode(s.concept);
+      var sel = a.values || [];
+      h += '<div class="hm"><p class="hm-title">' + esc(c2.hmTitle) + '</p><p class="hm-text">';
+      c2.fragments.forEach(function (f, i) {
+        h += '<span class="frag' + (sel.indexOf(i) !== -1 ? ' is-on' : '') +
+          '" data-act="frag" data-i="' + i + '" role="checkbox" tabindex="0" aria-checked="' +
+          (sel.indexOf(i) !== -1 ? 'true' : 'false') + '">' + esc(f) + '</span>';
+        var g = (c2.glue && c2.glue[i] !== undefined) ? c2.glue[i] : ' ';
+        if (g) h += '<span class="glue">' + esc(g) + '</span>';
+      });
+      h += '</p></div><p class="counter">' + sel.length + ' phrase' + (sel.length === 1 ? '' : 's') + ' selected</p>';
+      return h;
+    }
+
+    if (s.type === 'conceptEval') {
+      var c3 = conceptByCode(s.concept);
+      var em = a.map || {};
+      h += '<p class="ref">' + esc(c3.hmTitle) + '</p>';
+      return h + matrixTable({
+        kind: 'radio', act: 'eval', cls: 'mtx--scale',
+        rows: [
+          { l: 'Connects with me', k: 'connects' },
+          { l: 'Fits with Marinela', k: 'fits' },
+          { l: 'Feels different from other brands I know', k: 'different' },
+          { l: 'Feels credible for Marinela', k: 'credible' }
+        ],
+        cols: scaleCols('Not important at all', 'Very important'),
+        isOn: function (r, c) { return em[r.k] === c.v; },
+        data: function (r, c) { return 'data-k="' + r.k + '" data-n="' + c.v + '"'; }
+      });
+    }
+
+    if (s.type === 'blockRate') {
+      var picks = ((A['Q31_' + s.block] || {}).values) || [];
+      var rm = a.map || {};
+      var wt = winningTerritory();
+      h += '<div class="stack">';
+      picks.forEach(function (p) {
+        var r = rm[p] || {};
+        h += '<article class="concept concept--tight"><h3 class="concept-title concept-title--plain">' +
+          esc(p) + '</h3>' +
+          matrixTable({
+            kind: 'radio', act: 'brate', cls: 'mtx--scale',
+            rows: [
+              { l: 'How well does this fit Marinela as a brand?', k: 'brand' },
+              { l: 'How well does this fit \u201c' + (wt ? wt.label : 'the idea you selected in Q30') + '\u201d?', k: 'territory' }
+            ],
+            cols: scaleCols(s.lowLabel, s.highLabel),
+            isOn: function (row, c) { return r[row.k] === c.v; },
+            data: function (row, c) { return 'data-p="' + esc(p) + '" data-k="' + row.k + '" data-n="' + c.v + '"'; }
+          }) + '</article>';
+      });
+      return h + '</div>';
+    }
+
+    return h;
+  }
+
+  function renderWelcome() {
+    elChrome.hidden = true;
+    showNav(false);
+    elStage.innerHTML =
+      '<section class="panel panel--welcome">' +
+      '<p class="kicker">Consumer research study</p>' +
+      '<h1 class="welcome-title">Snacks questionnaire</h1>' +
+      '<p class="welcome-lede">Thank you for agreeing to take part. This survey asks about the sweet snacks you buy and eat, and about a few brand ideas we would like your opinion on. There are no right or wrong answers; we simply want to know what you think.</p>' +
+      '<p class="welcome-lede">Your responses are anonymous and will be used exclusively for research purposes.</p>' +
+      '<div class="sections-box"><p class="sections-box-h">The survey has 6 sections</p><ol class="sections-list">' +
+      '<li>Profile and screening</li><li>Habits and consumption moments</li><li>Territory evaluation</li>' +
+      '<li>Brand perception</li><li>The brand beyond what it is today</li><li>Tribe identification</li>' +
+      '</ol></div>' +
+      '<button type="button" class="btn btn--primary btn--lg" id="start">Begin survey</button>' +
+      '</section>';
+    document.getElementById('start').addEventListener('click', function () {
+      STATE.phase = 'run'; STATE.i = 0; STATE.startedAt = new Date().toISOString(); render();
+    });
+  }
+
+  function renderTerminated() {
+    elChrome.hidden = true;
+    showNav(false);
+    submitToSheet();
+    elStage.innerHTML =
+      '<section class="panel panel--end">' +
+      '<p class="kicker">Survey closed</p>' +
+      '<h2 class="end-title">Thank you for your time</h2>' +
+      '<p class="end-lede">Based on your answers, this study is not a match for you right now. We are grateful that you got in touch, and we hope to reach you with the next one.</p>' +
+      '<button type="button" class="btn btn--ghost" id="restart">Start again</button></section>';
+    document.getElementById('restart').addEventListener('click', reset);
+  }
+
+  function renderDone() {
+    elChrome.hidden = true;
+    showNav(false);
+    submitToSheet();
+    elStage.innerHTML =
+      '<section class="panel panel--end">' +
+      '<p class="kicker">Response submitted</p>' +
+      '<h2 class="end-title">Thank you for your participation!</h2>' +
+      '<p class="end-lede">Your responses are anonymous and will be used exclusively for research purposes.</p>' +
+      '<button type="button" class="linkish" id="restart2">Start a new response</button></section>';
+    document.getElementById('restart2').addEventListener('click', reset);
+  }
+
+  function reset() {
+    Object.keys(A).forEach(function (k) { delete A[k]; });
+    STATE.i = 0; STATE.terminated = null; STATE.phase = 'welcome'; STATE.startedAt = null;
+    LAST = null; NOTE = null;
+    SUBMITTED = false;
+    clear();
+    render();
+  }
+
+  /* ============================================================
+     Google Sheets submission
+     Paste the deployed Apps Script Web App URL below (ends in /exec).
+     ============================================================ */
+  var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwv5hqboVoMLgGKXz4ninms-RZ8becQPQjMSf9Lv-IF-IFclzC8jVVayiozNISRVE5c/exec';
+  var SUBMITTED = false;
+
+  function answerText_(s, a) {
+    if (!a) return '';
+    if (s.type === 'heatmap') {
+      return (a.values || []).map(function (i) {
+        return conceptByCode(s.concept).fragments[i];
+      }).join(' | ');
+    }
+    if (a.value !== undefined) {
+      var opt = optByValue(s, a.value);
+      var lbl = opt ? opt.l : a.value;
+      return a.other ? (lbl + ' (' + a.other + ')') : String(lbl);
+    }
+    if (a.values !== undefined) {
+      var labels = (a.values || []).map(function (v) {
+        var o = optByValue(s, v);
+        return o ? o.l : v;
+      });
+      return a.other ? labels.concat([a.other]).join(' | ') : labels.join(' | ');
+    }
+    if (a.map !== undefined) {
+      return Object.keys(a.map).map(function (k) {
+        var x = a.map[k];
+        if (x && typeof x === 'object' && !Array.isArray(x)) {
+          return k + '=' + Object.keys(x).map(function (z) { return z + ':' + x[z]; }).join('/');
+        }
+        return k + '=' + (Array.isArray(x) ? x.join('/') : x);
+      }).join(' | ');
+    }
+    return '';
+  }
+
+  /* Flat, one-key-per-question payload for the Google Sheet.
+     Keys are "Q<n> - <question text>" so the sheet header is self-explanatory. */
+  function flatPayload() {
+    var out = {
+      'Study': 'Marinela Brandverse, Marinela questionnaire, USA',
+      'Started At': STATE.startedAt || '',
+      'Completed At': new Date().toISOString(),
+      'Status': STATE.terminated ? 'terminated' : 'complete',
+      'Terminated At': STATE.terminated || ''
+    };
+    var onPath = {};
+    visible().forEach(function (s) { onPath[s.id] = true; });
+    SCREENS.forEach(function (s) {
+      if (!s.num || !onPath[s.id]) return;
+      var a = A[s.id];
+      if (!a) return;
+      var key = s.num + ' - ' + s.title;
+      out[key] = answerText_(s, a);
+    });
+    return out;
+  }
+
+  function submitToSheet() {
+    if (SUBMITTED) return;
+    if (!SCRIPT_URL || SCRIPT_URL.indexOf('PASTE_YOUR_DEPLOYED_WEB_APP_URL_HERE') !== -1) {
+      console.warn('SCRIPT_URL is not set — response was not sent to Google Sheets.');
+      return;
+    }
+    SUBMITTED = true;
+    try {
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(flatPayload())
+      }).catch(function (err) {
+        console.error('Survey submission failed:', err);
+        SUBMITTED = false;
+      });
+    } catch (err) {
+      console.error('Survey submission failed:', err);
+      SUBMITTED = false;
+    }
+  }
+
+  function payload() {
+    var out = {
+      study: 'Marinela Brandverse, Marinela questionnaire, USA',
+      startedAt: STATE.startedAt,
+      completedAt: new Date().toISOString(),
+      status: STATE.terminated ? 'terminated' : 'complete',
+      terminatedAt: STATE.terminated,
+      randomisation: RND,
+      categories: cats(),
+      answers: {}
+    };
+    var onPath = {};
+    visible().forEach(function (s) { onPath[s.id] = true; });
+    SCREENS.forEach(function (s) {
+      if (!s.num || !onPath[s.id]) return;
+      var a = A[s.id];
+      if (!a) return;
+      var rec = { question: s.title };
+      if (a.value !== undefined) rec.value = a.value;
+      if (a.values !== undefined) rec.values = a.values;
+      if (a.map !== undefined) rec.map = a.map;
+      if (a.other) rec.other = a.other;
+      if (s.type === 'heatmap') {
+        rec.phrases = (a.values || []).map(function (i) { return conceptByCode(s.concept).fragments[i]; });
+      }
+      if (s.concept) rec.concept = s.concept;
+      if (s.block) rec.block = s.block;
+      out.answers[s.num] = rec;
+    });
+    return out;
+  }
+  function toCSV(p) {
+    var rows = [];
+    rows.push(['status', p.status]);
+    rows.push(['startedAt', p.startedAt || '']);
+    rows.push(['completedAt', p.completedAt]);
+    Object.keys(p.answers).forEach(function (k) {
+      var r = p.answers[k], v;
+      if (r.value !== undefined) v = r.value;
+      else if (r.values !== undefined) v = (r.phrases || r.values).join(' | ');
+      else if (r.map !== undefined) v = Object.keys(r.map).map(function (kk) {
+        var x = r.map[kk];
+        if (x && typeof x === 'object' && !Array.isArray(x)) {
+          return kk + '=' + Object.keys(x).map(function (z) { return z + ':' + x[z]; }).join('/');
+        }
+        return kk + '=' + (Array.isArray(x) ? x.join('/') : x);
+      }).join(' | ');
+      else v = '';
+      rows.push([k, v]);
+      if (r.other) rows.push([k + '_other', r.other]);
+    });
+    var q = function (x) { return '"' + String(x).replace(/"/g, '""') + '"'; };
+    return [['field', 'value'].map(q).join(',')]
+      .concat(rows.map(function (r) { return r.map(q).join(','); })).join('\n');
+  }
+  function download(name, text, mime) {
+    try {
+      var blob = new Blob([text], { type: mime + ';charset=utf-8' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url; a.download = name;
+      document.body.appendChild(a); a.click();
+      document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
+    } catch (e) { /* download not available here */ }
+  }
+
+  var STORE = (typeof window !== 'undefined' && window.storage) ? window.storage : null;
+  var saveTimer = null;
+  function save() {
+    if (!STORE) return;
+    if (saveTimer) clearTimeout(saveTimer);
+    saveTimer = setTimeout(function () {
+      try {
+        STORE.set('marinela:draft', JSON.stringify({ A: A, i: STATE.i, phase: STATE.phase, startedAt: STATE.startedAt, rnd: RND }))
+          .catch(function () {});
+      } catch (e) { /* ignore */ }
+    }, 400);
+  }
+  function clear() {
+    if (!STORE) return;
+    try { STORE.delete('marinela:draft').catch(function () {}); } catch (e) { /* ignore */ }
+  }
+
+  function current() { return visible()[STATE.i]; }
+
+  function note(msg) {
+    NOTE = msg;
+    elHint.textContent = msg;
+    elHint.classList.add('is-on');
+    setTimeout(function () {
+      if (NOTE === msg) { NOTE = null; render(); }
+    }, 2400);
+  }
+
+  elStage.addEventListener('click', function (ev) {
+    var t = ev.target.closest ? ev.target.closest('[data-act]') : null;
+    if (!t) return;
+    var s = current();
+    if (!s) return;
+    var act = t.getAttribute('data-act');
+
+    if (t.classList.contains('is-off')) {
+      note('Deselect one of your current answers to change this.');
+      return;
+    }
+
+    var a = A[s.id] || (A[s.id] = {});
+
+    if (act === 'opt') {
+      var v = t.getAttribute('data-v');
+      if (s.type === 'single' || s.type === 'agree') {
+        a.value = v;
+        var o = optByValue(s, v);
+        if (s.type === 'agree' || !o || !o.specify) delete a.other;
+      } else {
+        a.values = a.values || [];
+        var opt = optByValue(s, v);
+        var idx = a.values.indexOf(v);
+        if (idx !== -1) {
+          a.values.splice(idx, 1);
+          if (opt && opt.specify) delete a.other;
+        } else if (opt && opt.exclusive) {
+          a.values = [v];
+        } else {
+          a.values.push(v);
+        }
+      }
+      return draw();
+    }
+
+    if (act === 'grid') {
+      a.map = a.map || {};
+      a.map[t.getAttribute('data-r')] = t.getAttribute('data-v');
+      return draw();
+    }
+    if (act === 'gmc') {
+      a.map = a.map || {};
+      var col = t.getAttribute('data-v'), row = t.getAttribute('data-r');
+      a.map[col] = a.map[col] || [];
+      var k = a.map[col].indexOf(row);
+      if (k === -1) {
+        var colDef = null;
+        (s.cols || []).forEach(function (c) { if (c.v === col) colDef = c; });
+        (s.cols || []).forEach(function (c) {
+          if (c.v === col) return;
+          if ((colDef && colDef.exclusive) || c.exclusive) {
+            var arr = a.map[c.v] || [];
+            var j = arr.indexOf(row);
+            if (j !== -1) arr.splice(j, 1);
+          }
+        });
+        a.map[col].push(row);
+      } else {
+        a.map[col].splice(k, 1);
+      }
+      return draw();
+    }
+    if (act === 'gscale') {
+      a.map = a.map || {};
+      a.map[t.getAttribute('data-r')] = parseInt(t.getAttribute('data-n'), 10);
+      return draw();
+    }
+    if (act === 'crate') {
+      a.map = a.map || {};
+      a.map[t.getAttribute('data-c')] = parseInt(t.getAttribute('data-n'), 10);
+      return draw();
+    }
+    if (act === 'eval') {
+      a.map = a.map || {};
+      a.map[t.getAttribute('data-k')] = parseInt(t.getAttribute('data-n'), 10);
+      return draw();
+    }
+    if (act === 'brate') {
+      a.map = a.map || {};
+      var p = t.getAttribute('data-p');
+      a.map[p] = a.map[p] || {};
+      a.map[p][t.getAttribute('data-k')] = parseInt(t.getAttribute('data-n'), 10);
+      return draw();
+    }
+    if (act === 'frag') {
+      a.values = a.values || [];
+      var fi = parseInt(t.getAttribute('data-i'), 10);
+      var pos = a.values.indexOf(fi);
+      if (pos === -1) a.values.push(fi); else a.values.splice(pos, 1);
+      return draw();
+    }
+  });
+
+  elStage.addEventListener('keydown', function (ev) {
+    if (ev.key !== 'Enter' && ev.key !== ' ') return;
+    var t = ev.target.closest ? ev.target.closest('[data-act="frag"]') : null;
+    if (!t) return;
+    ev.preventDefault();
+    ev.stopPropagation();
+    t.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+  });
+
+  elStage.addEventListener('input', function (ev) {
+    var t = ev.target;
+    if (!t.getAttribute) return;
+    var act = t.getAttribute('data-act');
+    if (act !== 'text' && act !== 'specify') return;
+    var s = current(); if (!s) return;
+    var a = A[s.id] || (A[s.id] = {});
+    if (act === 'specify') a.other = t.value;
+    else {
+      a.values = a.values || [];
+      a.values[parseInt(t.getAttribute('data-i'), 10)] = t.value;
+    }
+    var req = requirement(s);
+    elNext.disabled = !!req;
+    elHint.textContent = req || '';
+    elHint.classList.toggle('is-on', !!req);
+    save();
+  });
+
+  function draw() {
+    render();
+    var s = current();
+    if (s) autoAdvance(s);
+  }
+
+  var advTimer = null;
+  function autoAdvance(s) {
+    if (advTimer) clearTimeout(advTimer);
+    if (s.type !== 'single' && s.type !== 'agree') return;
+    var a = A[s.id];
+    if (!a || !a.value) return;
+    if (s.type === 'single') {
+      var o = optByValue(s, a.value);
+      if (o && o.specify) return;
+    }
+    advTimer = setTimeout(next, 340);
+  }
+
+  function next() {
+    var vis = visible();
+    var s = vis[STATE.i];
+    if (!s) return;
+    if (s.num && requirement(s)) return;
+
+    if (typeof s.terminate === 'function') {
+      var a = A[s.id] || {};
+      if (s.terminate(a.value)) {
+        STATE.terminated = s.num;
+        STATE.phase = 'terminated';
+        render();
+        return;
+      }
+    }
+    var after = visible();
+    var pos = after.indexOf(s);
+    if (pos === -1) pos = Math.min(STATE.i, after.length - 1);
+    if (pos >= after.length - 1) { STATE.phase = 'done'; render(); return; }
+    STATE.i = pos + 1;
+    render();
+  }
+
+  function back() {
+    if (STATE.i === 0) return;
+    STATE.i -= 1;
+    render();
+  }
+
+  elNext.addEventListener('click', next);
+  elBack.addEventListener('click', back);
+
+  document.addEventListener('keydown', function (e) {
+    if (STATE.phase !== 'run') return;
+    if (e.target && /^(INPUT|TEXTAREA)$/.test(e.target.tagName) && e.key !== 'Enter') return;
+    if (e.key === 'Enter') { if (!elNext.disabled) { e.preventDefault(); next(); } }
+  });
+
+  buildSteps();
+  render();
+})();
+
+</script>
+</body>
+</html>

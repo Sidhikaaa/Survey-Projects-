@@ -1,0 +1,2190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Cuestionario de Snacks - México</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   Tokens
+   ============================================================ */
+:root{
+  --page:#EEF3FA;
+  --panel:#FFFFFF;
+  --ink:#15233C;
+  --ink-2:#3B4A66;
+  --muted:#6D7B94;
+  --line:#E3E9F3;
+  --line-2:#CBD6E8;
+  --blue:#2F6FED;
+  --blue-dark:#1E55C6;
+  --blue-soft:#EBF2FE;
+  --blue-soft-2:#D5E4FD;
+  --soft:#F6F9FD;
+  --radius:14px;
+  --shadow:0 1px 2px rgba(21,35,60,.04), 0 14px 34px -20px rgba(21,35,60,.30);
+  --sans:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  background:var(--page);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:16px;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+button{font-family:inherit;font-size:inherit;color:inherit}
+input{font-family:inherit;font-size:inherit}
+table{border-collapse:collapse}
+
+/* ============================================================
+   Header
+   ============================================================ */
+.chrome{
+  position:sticky; top:0; z-index:40;
+  background:rgba(255,255,255,.92);
+  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.chrome[hidden]{display:none}
+.chrome-top{
+  max-width:1180px; margin:0 auto;
+  display:flex; align-items:center; gap:16px;
+  padding:14px 26px 12px;
+}
+.study{
+  font-size:12px; font-weight:800; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--blue); white-space:nowrap;
+}
+.meta{
+  margin-left:auto; display:flex; align-items:center; gap:14px;
+  font-size:13px; font-weight:500; color:var(--muted);
+}
+.pct{
+  font-weight:700; color:var(--blue); font-variant-numeric:tabular-nums;
+  background:var(--blue-soft); border-radius:100px; padding:3px 11px; font-size:12.5px;
+}
+
+.steps{
+  max-width:1180px; margin:0 auto; list-style:none;
+  display:flex; padding:0 26px 12px; gap:8px;
+}
+.step{
+  flex:1; display:flex; align-items:center; gap:7px; min-width:0;
+  font-size:12px; font-weight:600; color:var(--muted);
+}
+.step-n{
+  width:20px; height:20px; flex:none; border-radius:50%;
+  border:1.5px solid var(--line-2); background:var(--panel);
+  display:flex; align-items:center; justify-content:center;
+  font-size:10.5px; font-weight:700; color:var(--muted);
+  transition:all .2s ease;
+}
+.step-l{white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.step.is-done .step-n{background:var(--blue-soft-2); border-color:var(--blue-soft-2); color:var(--blue-dark)}
+.step.is-done{color:var(--ink-2)}
+.step.is-now .step-n{background:var(--blue); border-color:var(--blue); color:#fff; box-shadow:0 0 0 4px var(--blue-soft)}
+.step.is-now{color:var(--blue)}
+.stepnow{display:none}
+
+.track{height:3px; background:var(--blue-soft-2)}
+.bar{height:100%; width:0%; background:var(--blue); border-radius:0 3px 3px 0; transition:width .4s cubic-bezier(.4,0,.2,1)}
+
+/* ============================================================
+   Layout with side navigation
+   ============================================================ */
+.layout{
+  display:grid; grid-template-columns:minmax(0,1fr);
+  justify-content:center; padding:28px 16px 100px;
+}
+.stage{width:100%; max-width:780px; margin:0 auto}
+
+.panel{
+  background:var(--panel);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:32px 34px 34px;
+  animation:rise .3s cubic-bezier(.22,.9,.3,1) both;
+}
+@keyframes rise{from{opacity:0; transform:translateY(8px)}to{opacity:1; transform:none}}
+
+/* nav buttons */
+.navbar{
+  position:fixed; left:0; right:0; bottom:0; height:70px;
+  background:rgba(255,255,255,.94);
+  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  border-top:1px solid var(--line); z-index:45;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+.navbar[hidden],.navbtn[hidden],.hint[hidden]{display:none}
+
+.navbtn{
+  position:fixed; bottom:calc(14px + env(safe-area-inset-bottom));
+  z-index:46; cursor:pointer; border:0;
+  display:inline-flex; align-items:center; gap:9px;
+  font-weight:700; border-radius:100px;
+  transition:background .16s ease, box-shadow .16s ease, opacity .16s ease, transform .12s ease;
+}
+.navbtn:active{transform:scale(.97)}
+.navbtn svg{width:17px; height:17px; flex:none}
+
+.navbtn--back{
+  left:16px; padding:11px 20px 11px 15px;
+  background:var(--panel); color:var(--ink-2);
+  box-shadow:inset 0 0 0 1.5px var(--line-2);
+}
+.navbtn--back:hover:not(:disabled){box-shadow:inset 0 0 0 1.5px var(--blue); color:var(--blue)}
+.navbtn--back:disabled{opacity:.35; cursor:not-allowed}
+
+.navbtn--next{
+  right:16px; padding:13px 22px 13px 26px;
+  background:var(--blue); color:#fff;
+  box-shadow:0 6px 18px -8px rgba(47,111,237,.9);
+  font-size:15.5px;
+}
+.navbtn--next:hover:not(:disabled){background:var(--blue-dark)}
+.navbtn--next:disabled{
+  background:var(--line-2); color:#fff; cursor:not-allowed; box-shadow:none;
+}
+
+.hint{
+  position:fixed; bottom:calc(84px + env(safe-area-inset-bottom));
+  left:50%; transform:translateX(-50%); z-index:46; margin:0;
+  max-width:min(86vw,440px);
+  background:var(--panel); border:1px solid var(--line);
+  box-shadow:0 8px 22px -12px rgba(21,35,60,.45);
+  border-radius:100px; padding:8px 18px;
+  text-align:center; font-size:12.5px; font-weight:600; color:var(--ink-2);
+  opacity:0; transition:opacity .18s ease; pointer-events:none;
+}
+.hint.is-on{opacity:1}
+
+/* desktop: navigation moves to the sides of the card */
+@media (min-width:1180px){
+  .layout{padding:34px 16px 92px}
+  .navbar{display:none}
+  .navbtn{position:fixed; top:50%; bottom:auto; transform:translateY(-50%)}
+  .navbtn:active{transform:translateY(-50%) scale(.97)}
+  .navbtn--back{
+    left:max(24px, calc(50% - 476px)); padding:0;
+    width:54px; height:54px; justify-content:center;
+  }
+  .navbtn--back .lbl{display:none}
+  .navbtn--next{
+    right:max(24px, calc(50% - 520px));
+    padding:15px 24px 15px 28px;
+  }
+  .hint{bottom:26px}
+}
+
+/* ============================================================
+   Question head
+   ============================================================ */
+.q-head{margin-bottom:24px}
+.q-num{
+  display:inline-block; margin-bottom:12px;
+  background:var(--blue-soft); color:var(--blue-dark);
+  border-radius:100px; padding:4px 12px;
+  font-size:11.5px; font-weight:800; letter-spacing:.06em;
+}
+.q-num--sub{margin-bottom:10px}
+.q-title{font-size:22px; font-weight:800; line-height:1.32; margin:0; letter-spacing:-.015em}
+.q-note{margin:10px 0 0; color:var(--muted); font-size:14px; font-weight:500}
+
+.kicker{
+  margin:0 0 12px; font-size:11.5px; font-weight:800;
+  letter-spacing:.1em; text-transform:uppercase; color:var(--blue);
+}
+
+/* ============================================================
+   Options
+   ============================================================ */
+.opts{display:flex; flex-direction:column; gap:9px}
+.opts--cols{display:grid; grid-template-columns:repeat(auto-fill,minmax(215px,1fr)); gap:9px}
+
+.opt{
+  display:flex; align-items:flex-start; gap:12px; width:100%;
+  text-align:left; background:var(--soft);
+  border:1.5px solid transparent; border-radius:12px;
+  padding:13px 16px; cursor:pointer;
+  transition:background .15s ease, border-color .15s ease, color .15s ease;
+}
+.opt:hover{background:var(--blue-soft); border-color:var(--blue-soft-2)}
+.opt.is-on{background:var(--blue); border-color:var(--blue); color:#fff}
+.opt.is-on .opt-sub{color:rgba(255,255,255,.82)}
+.opt.is-off{
+  opacity:.45; cursor:not-allowed; background:var(--soft);
+  border-color:transparent; color:var(--muted);
+}
+.opt.is-off:hover{background:var(--soft); border-color:transparent}
+
+.mark{
+  width:19px; height:19px; flex:none; margin-top:2px;
+  border:2px solid var(--line-2); background:#fff; position:relative;
+  transition:border-color .15s ease, background .15s ease;
+}
+.mark.radio{border-radius:50%}
+.mark.check{border-radius:6px}
+.opt:hover>.mark{border-color:var(--blue)}
+.is-on>.mark{border-color:#fff; background:#fff}
+.is-on>.mark.radio::after{
+  content:""; position:absolute; inset:0; margin:auto;
+  width:8px; height:8px; border-radius:50%; background:var(--blue);
+}
+.is-on>.mark.check::after{
+  content:""; position:absolute; left:5px; top:2px;
+  width:5px; height:9px; border:solid var(--blue); border-width:0 2.5px 2.5px 0;
+  transform:rotate(43deg);
+}
+.opt-text{display:flex; flex-direction:column; gap:3px; min-width:0}
+.opt-label{font-size:15px; font-weight:600; line-height:1.45}
+.opt-sub{font-size:13.5px; font-weight:400; color:var(--muted); line-height:1.5}
+
+.specify{
+  margin:-2px 0 4px 31px; width:calc(100% - 31px);
+  border:1.5px solid var(--line-2); border-radius:10px;
+  padding:11px 14px; background:#fff; color:var(--ink);
+}
+.specify:focus{outline:none; border-color:var(--blue)}
+.specify::placeholder{color:#9AA6BC}
+
+.counter{margin:15px 0 0; font-size:13px; font-weight:500; color:var(--muted)}
+
+/* ============================================================
+   Matrix tables
+   ============================================================ */
+.mtx-wrap{width:100%}
+.mtx{width:100%; table-layout:fixed}
+.mtx thead th{
+  padding:0 4px 12px; text-align:center; vertical-align:bottom;
+  font-size:13px; font-weight:700; color:var(--ink-2);
+}
+.mtx thead th.corner{width:36%}
+.th-l{display:block}
+.th-a{display:block; margin-top:4px; font-size:11px; font-weight:500; color:var(--muted); line-height:1.3}
+.mtx tbody th.rowhead{
+  text-align:left; font-weight:600; font-size:14.5px; color:var(--ink-2);
+  padding:12px 16px 12px 14px; line-height:1.45;
+}
+.mtx tbody tr{background:var(--soft)}
+.mtx tbody tr:nth-child(even){background:var(--panel)}
+.mtx tbody tr:hover{background:var(--blue-soft)}
+.mtx tbody tr td:last-child,.mtx tbody tr th:first-child{border-radius:0}
+.mtx tbody th.rowhead{border-radius:10px 0 0 10px}
+.mtx tbody th.rowhead.is-empty{padding:0}
+.mtx tbody td:last-child{border-radius:0 10px 10px 0}
+.mtx tbody td{padding:5px 3px; text-align:center}
+
+.cell{
+  display:flex; align-items:center; justify-content:center;
+  width:100%; min-height:38px; background:transparent;
+  border:0; cursor:pointer; border-radius:8px; padding:6px 2px;
+}
+.cell>.mark{margin-top:0}
+.cell:hover>.mark{border-color:var(--blue)}
+.cell.is-off{opacity:.32; cursor:not-allowed}
+.cell.is-off:hover>.mark{border-color:var(--line-2)}
+.cell.is-on>.mark{border-color:var(--blue); background:var(--blue)}
+.cell.is-on>.mark.radio::after{background:#fff}
+.cell.is-on>.mark.check::after{border-color:#fff}
+.cell-l{display:none}
+
+/* ============================================================
+   Text fields
+   ============================================================ */
+.stack{display:flex; flex-direction:column; gap:14px}
+.tfield{display:flex; align-items:center; gap:12px}
+.tfield-n{
+  width:28px; height:28px; flex:none; border-radius:50%;
+  background:var(--blue-soft); color:var(--blue-dark);
+  display:flex; align-items:center; justify-content:center;
+  font-size:12.5px; font-weight:700;
+}
+.tfield input{
+  flex:1; min-width:0; border:1.5px solid var(--line-2); border-radius:10px;
+  padding:12px 14px; background:#fff; color:var(--ink); font-weight:500;
+}
+.tfield input:focus{outline:none; border-color:var(--blue)}
+.tfield input::placeholder{color:#9AA6BC; font-weight:400}
+
+/* ============================================================
+   Concepts and heat map
+   ============================================================ */
+.concept{background:var(--soft); border-radius:12px; padding:24px 24px 18px}
+.concept--tight{padding:20px}
+.concept-title{
+  font-size:11.5px; font-weight:800; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--blue); margin:0 0 14px; line-height:1.5;
+}
+.concept-title--plain{
+  text-transform:none; letter-spacing:0; font-size:15.5px;
+  font-weight:700; color:var(--ink);
+}
+.concept-body{
+  font-size:15.5px; line-height:1.7; color:var(--ink-2);
+  margin-bottom:20px; font-weight:500;
+}
+.concept-body b{color:var(--blue-dark); font-weight:700}
+.concept .mtx tbody tr{background:transparent}
+.concept .mtx tbody tr:nth-child(even){background:transparent}
+.concept .mtx tbody tr:hover{background:var(--blue-soft)}
+
+.ref{
+  display:inline-block; margin:0 0 18px;
+  background:var(--blue-soft); color:var(--blue-dark);
+  border-radius:100px; padding:6px 14px;
+  font-size:11.5px; font-weight:800; letter-spacing:.07em; text-transform:uppercase;
+}
+
+.hm{background:var(--soft); border-radius:12px; padding:24px 26px 22px}
+.hm-title{
+  margin:0 0 16px; font-size:11.5px; font-weight:800;
+  letter-spacing:.08em; text-transform:uppercase; color:var(--blue);
+}
+.hm-text{margin:0; font-size:17px; line-height:2.05; color:var(--ink-2); font-weight:500}
+.frag{
+  display:inline; cursor:pointer; -webkit-tap-highlight-color:transparent;
+  padding:2px 0; border-radius:4px; color:inherit;
+  text-decoration:underline; text-decoration-style:dotted;
+  text-decoration-thickness:1.5px; text-underline-offset:5px;
+  text-decoration-color:var(--line-2);
+  transition:background .14s ease, color .14s ease, text-decoration-color .14s ease;
+}
+.frag:hover{background:var(--blue-soft-2); text-decoration-color:var(--blue)}
+.frag:focus-visible{outline:2px solid var(--blue); outline-offset:3px}
+.frag.is-on{
+  background:var(--blue); color:#fff; font-weight:600;
+  box-shadow:0 0 0 3px var(--blue);
+  text-decoration-color:rgba(255,255,255,.55); text-decoration-style:solid;
+}
+.glue{color:var(--ink-2)}
+
+.sub-q{margin-top:26px; padding-top:24px; border-top:1.5px solid var(--line)}
+.sub-q-title{margin:0 0 8px; font-size:15.5px; font-weight:700}
+.sub-q-quote{
+  margin:0 0 18px; font-size:15.5px; line-height:1.6; font-weight:600;
+  color:var(--blue-dark); background:var(--blue-soft);
+  padding:14px 16px; border-radius:10px;
+}
+
+/* ============================================================
+   Intro, welcome, end
+   ============================================================ */
+.panel--intro{padding:40px 34px}
+.intro-title{font-size:26px; font-weight:800; margin:0 0 12px; line-height:1.28; letter-spacing:-.02em}
+.intro-lede{margin:0; color:var(--ink-2); font-size:16px; max-width:60ch; font-weight:500}
+.intro-lede b{color:var(--blue-dark); font-weight:700}
+.chipwrap{display:flex; flex-wrap:wrap; gap:7px; margin-top:20px}
+.chip{
+  background:var(--blue-soft); color:var(--blue-dark);
+  border-radius:100px; padding:5px 13px; font-size:13px; font-weight:600;
+}
+
+.panel--welcome{padding:44px 36px 38px}
+.welcome-title{font-size:32px; font-weight:800; margin:0 0 16px; line-height:1.2; letter-spacing:-.025em}
+.welcome-lede{margin:0 0 14px; color:var(--ink-2); font-size:16px; max-width:60ch; font-weight:500}
+.sections-box{margin:26px 0 28px; border-radius:12px; background:var(--soft); padding:20px 24px}
+.sections-box-h{
+  margin:0 0 12px; font-size:11.5px; font-weight:800;
+  letter-spacing:.09em; text-transform:uppercase; color:var(--blue);
+}
+.sections-list{margin:0; padding-left:20px; columns:2; column-gap:28px}
+.sections-list li{font-size:14.5px; font-weight:600; color:var(--ink-2); margin-bottom:6px; break-inside:avoid}
+
+.panel--end{padding:46px 36px}
+.end-title{font-size:28px; font-weight:800; margin:0 0 12px; line-height:1.25; letter-spacing:-.02em}
+.end-lede{margin:0 0 28px; color:var(--ink-2); font-size:16px; max-width:56ch; font-weight:500}
+.endrow{display:flex; flex-wrap:wrap; gap:10px; margin-bottom:18px}
+
+.btn{
+  border-radius:10px; padding:13px 26px; cursor:pointer;
+  border:0; font-size:15.5px; font-weight:700;
+  transition:background .15s ease, box-shadow .15s ease;
+}
+.btn--primary{background:var(--blue); color:#fff; box-shadow:0 6px 18px -8px rgba(47,111,237,.9)}
+.btn--primary:hover{background:var(--blue-dark)}
+.btn--ghost{background:var(--soft); color:var(--ink-2); box-shadow:inset 0 0 0 1.5px var(--line-2)}
+.btn--ghost:hover{box-shadow:inset 0 0 0 1.5px var(--blue); color:var(--blue)}
+.btn--lg{padding:15px 34px; font-size:16px; width:100%; max-width:280px}
+
+.linkish{
+  display:block; margin-top:18px; background:none; border:0; padding:0;
+  color:var(--muted); font-size:13.5px; font-weight:600; cursor:pointer;
+  text-decoration:underline; text-underline-offset:3px;
+}
+.linkish:hover{color:var(--blue)}
+
+:focus-visible{outline:2px solid var(--blue); outline-offset:2px}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width:900px){
+  .steps{display:none}
+  .stepnow{
+    display:block; max-width:1180px; margin:0 auto;
+    padding:0 20px 11px; font-size:12.5px; font-weight:700; color:var(--blue);
+  }
+}
+
+@media (max-width:719px){
+  .chrome-top{padding:12px 18px 9px}
+  .study{font-size:11px}
+  .meta{font-size:12px; gap:10px; white-space:nowrap}
+  .layout{padding:16px 12px 96px}
+  .panel{padding:24px 20px 26px; border-radius:12px}
+  .panel--intro,.panel--welcome,.panel--end{padding:30px 20px}
+  .q-title{font-size:19px}
+  .welcome-title{font-size:25px}
+  .sections-list{columns:1}
+  .opts--cols{grid-template-columns:1fr}
+  .btn--lg{max-width:none}
+  .hint{font-size:11.5px; padding:7px 15px}
+  .navbtn--back{padding:10px 16px 10px 13px; font-size:14px}
+  .navbtn--next{padding:12px 20px 12px 24px; font-size:15px}
+
+  /* matrix collapses to one card per row */
+  .mtx,.mtx tbody,.mtx tr{display:block; width:100%}
+  .mtx thead{display:none}
+  .mtx tbody tr,.mtx tbody tr:nth-child(even){
+    background:var(--soft); border-radius:12px;
+    padding:14px 14px 9px; margin-bottom:9px;
+  }
+  .mtx tbody tr:hover{background:var(--soft)}
+  .mtx tbody th.rowhead{
+    display:block; padding:0 0 11px; font-size:15px;
+    font-weight:700; color:var(--ink); border-radius:0;
+  }
+  .mtx tbody td,.mtx tbody td:last-child{
+    display:inline-block; width:auto; padding:0 6px 6px 0;
+    text-align:left; border-radius:0;
+  }
+  .cell{
+    display:inline-flex; width:auto; min-height:0; gap:8px;
+    border-radius:100px; padding:8px 15px 8px 11px; background:var(--panel);
+    box-shadow:inset 0 0 0 1.5px var(--line-2);
+  }
+  .cell.is-on{background:var(--blue); box-shadow:none}
+  .cell.is-on>.mark{border-color:#fff; background:#fff}
+  .cell.is-on>.mark.radio::after{background:var(--blue)}
+  .cell.is-on>.mark.check::after{border-color:var(--blue)}
+  .cell-l{display:inline; font-size:13.5px; font-weight:600; color:var(--ink-2)}
+  .cell.is-on .cell-l{color:#fff}
+  .mtx--scale tbody tr{display:flex; flex-wrap:wrap; align-items:center}
+  .mtx--scale tbody th.rowhead{flex:0 0 100%}
+  .mtx--scale tbody th.rowhead.is-empty{display:none}
+  .mtx--scale tbody td,.mtx--scale tbody td:last-child{
+    flex:1 1 0; min-width:0; display:block; padding:0 5px 5px 0;
+  }
+  .mtx--scale tbody td:last-child{padding-right:0}
+  .mtx--scale .cell{
+    width:100%; justify-content:center; gap:6px; padding:9px 4px;
+  }
+  .mtx--scale .cell>.mark{width:16px; height:16px}
+  .mtx--scale .cell-l{font-size:13px}
+
+  .hm-text{font-size:16px; line-height:2}
+  .concept{padding:20px 18px 14px}
+}
+
+@media (max-width:560px){
+  .study{display:none}
+  .stepnow{padding-bottom:10px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important; transition-duration:.01ms !important}
+}
+</style>
+</head>
+<body>
+
+<header class="chrome" id="chrome" hidden>
+  <div class="chrome-top">
+    <span class="study">Cuestionario de Snacks</span>
+    <div class="meta">
+      <span id="count"></span>
+      <span class="pct" id="pct">0%</span>
+    </div>
+  </div>
+  <div class="stepnow" id="stepnow"></div>
+  <ol class="steps" id="steps"></ol>
+  <div class="track"><div class="bar" id="bar"></div></div>
+</header>
+
+<div class="layout">
+  <main class="stage" id="stage"></main>
+</div>
+
+<div class="navbar" id="navbar" hidden></div>
+<button type="button" class="navbtn navbtn--back" id="back" hidden>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+  <span class="lbl">Atrás</span>
+</button>
+<button type="button" class="navbtn navbtn--next" id="next" hidden>
+  <span class="lbl">Siguiente</span>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+</button>
+<p class="hint" id="hint" hidden></p>
+
+<script>
+/* ============================================================
+   MARINELA BRANDVERSE - CUESTIONARIO MARINELA - MEXICO
+   Contenido transcrito del cuestionario aprobado.
+   ============================================================ */
+(function () {
+  'use strict';
+
+  var esc = function (s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  };
+  var shuffle = function (arr) {
+    var a = arr.slice(), i, j, t;
+    for (i = a.length - 1; i > 0; i--) {
+      j = Math.floor(Math.random() * (i + 1));
+      t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  };
+  var LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+  /* ---------- bancos de opciones, tal como figuran en el documento ---------- */
+  var OCCASIONS = [
+    'Antes del desayuno',
+    'En el desayuno',
+    'Entre el desayuno y la comida',
+    'En la comida',
+    'Entre la comida y la cena',
+    'En la cena',
+    'Después de la cena',
+    'Ocasión especial o celebración',
+    'Antes, durante o después de hacer ejercicio'
+  ];
+
+  var DRIVERS_Q9 = [
+    'Se me antoja en ese momento',
+    'Es la opción más económica',
+    'Quiero compartirlo con alguien',
+    'Necesito energía rápida',
+    'Me recuerda a algo o a alguien',
+    'Quiero darme un premio o recompensa',
+    'Forma parte de mi rutina',
+    'Lo vi en redes sociales o alguien me lo recomendó',
+    'Quiero probar algo nuevo',
+    'Es fácil de llevar',
+    'Es fácil de conseguir en una tienda',
+    'Es fácil de comer'
+  ];
+  /* P13 difiere en una opción: "Para darme un premio o recompensa" */
+  var DRIVERS_Q13 = [
+    'Se me antoja en ese momento',
+    'Es la opción más económica',
+    'Quiero compartirlo con alguien',
+    'Necesito energía rápida',
+    'Me recuerda a algo o a alguien',
+    'Para darme un premio o recompensa',
+    'Forma parte de mi rutina',
+    'Lo vi en redes sociales o alguien me lo recomendó',
+    'Quiero probar algo nuevo',
+    'Es fácil de llevar',
+    'Es fácil de conseguir en una tienda',
+    'Es fácil de comer'
+  ];
+
+  var COMPANY = ['Solo', 'Con amigos', 'Con compañeros de trabajo', 'Con familia', 'Con mi pareja'];
+
+  /* P11 y P15 difieren en el documento */
+  var PLACES_Q11 = [
+    'Casa',
+    'Escuela /Universidad/ trabajo',
+    'Mientras voy de un lugar a otro (carro, transporte público)',
+    'Evento social o reunión con amigos o familia',
+    'En el parque o aire libre',
+    'Otro'
+  ];
+  var PLACES_Q15 = [
+    'Casa',
+    'Escuela / Universidad / Trabajo',
+    'Mientras voy de un lugar a otro (carro, transporte público)',
+    'Evento social o reunión con amigos o familia',
+    'En el parque/aire libre',
+    'Otro'
+  ];
+
+  var ACTIVITIES = [
+    'Viendo series o películas',
+    'En redes sociales o internet',
+    'Jugando videojuegos',
+    'Escuchando música o podcast',
+    'Leyendo',
+    'Antes, durante o después de hacer ejercicio',
+    'Estudiando o trabajando',
+    'Nada en particular, solo comiendo',
+    'Otro'
+  ];
+
+  var MARINELA_BRANDS = [
+    'Pingüinos', 'Gansito', 'Submarinos', 'Choco Roles', 'Rollo', 'Dalmata',
+    'Chocotorro', 'Pastelito Hersheys', 'Sponch',
+    'Barritas', 'Canelitas', 'Príncipe', 'Polvorones', 'Triki Trakes',
+    'Napolitano', 'Rocko', 'Lors', 'Suavicremas', 'Plativolos', 'Bombonetes',
+    'Mobi'
+  ];
+
+  var AGREE_5 = [
+    'Totalmente en desacuerdo', 'En desacuerdo', 'Ni de acuerdo ni en desacuerdo',
+    'De acuerdo', 'Totalmente de acuerdo'
+  ];
+
+  var FREQ = [
+    { v: 'daily', l: 'Diario' },
+    { v: 'w23', l: '2 a 3 veces por semana' },
+    { v: 'w1', l: '1 vez por semana' },
+    { v: 'w2', l: '1 vez cada dos semanas' },
+    { v: 'rare', l: 'Menos de 1 vez al mes' }
+  ];
+
+  /* ---------- los tres territorios ---------- */
+  var CONCEPTS = [
+    {
+      code: 'T2',
+      label: 'Tus rituales, tus reglas',
+      title: 'HAZ LO POSIBLE: TUS RITUALES, TUS REGLAS',
+      hmTitle: 'TUS RITUALES, TUS REGLAS',
+      suffix: 'a',
+      body: 'Lo que soy, lo que consumo y mis rituales son la mejor forma de expresarme y conectar con otros, <b>pero a veces siento que cuesta que se vea todo mi potencial.</b>' +
+        '<br><br><b>(nombre de marca)</b> me entiende, crea y hace posibles productos, marcas y momentos que van conmigo, <b>que me invitan a mostrarme con autenticidad y a mi manera.</b>' +
+        '<br><br><b><i>Con (nombre de marca), tu manera de ser se hace visible, se hace posibles.</i></b>',
+      fragments: [
+        'Lo que soy, lo que consumo y mis rituales',
+        'son la mejor forma de expresarme y conectar con otros',
+        'pero a veces siento que cuesta que se vea todo mi potencial',
+        'Marinela me entiende',
+        'crea y hace posibles productos, marcas y momentos que van conmigo',
+        'que me invitan a mostrarme con autenticidad y a mi manera',
+        'tu manera de ser se hace visible, se hace posibles'
+      ],
+      glue: [' ', ', ', '. ', ', ', ', ', '. Con Marinela, ', '.']
+    },
+    {
+      code: 'T3',
+      label: 'Disfrute sin filtros',
+      title: 'DISFRUTE SIN FILTROS',
+      hmTitle: 'DISFRUTE SIN FILTROS',
+      suffix: 'b',
+      body: 'Lo mejor pasa cuando me suelto y disfruto, cuando soy yo sin filtros y todo es genuino. <b>Pero a veces parece que disfrutar es una obligación más, algo que hay que ganarse y justificar.</b>' +
+        '<br><br><b>(nombre de marca)</b> me invita a disfrutar sin filtros con productos auténticos que no necesitan justificación ni argumentos, <b>porque son los más ricos.</b>' +
+        '<br><br><b><i>Con (nombre de marca), sigues siendo tú, mientras disfrutas de lo auténtico, sin filtros.</i></b>',
+      fragments: [
+        'Lo mejor pasa cuando me suelto y disfruto',
+        'cuando soy yo sin filtros y todo es genuino',
+        'a veces parece que disfrutar es una obligación más',
+        'algo que hay que ganarse y justificar',
+        'Marinela me invita a disfrutar sin filtros',
+        'con productos auténticos que no necesitan justificación ni argumentos',
+        'porque son los más ricos',
+        'sigues siendo tú, mientras disfrutas de lo auténtico, sin filtros'
+      ],
+      glue: [', ', '. Pero ', ', ', '. ', ' ', ', ', '. Con Marinela, ', '.']
+    },
+    {
+      code: 'T5',
+      label: 'Lo que llevas dentro',
+      title: 'LO QUE LLEVAS DENTRO',
+      hmTitle: 'LO QUE LLEVAS DENTRO',
+      suffix: 'c',
+      body: 'En un mundo que no para de decirme quién ser, mantenerme fiel a lo que llevo dentro es un acto de resistencia y de puro disfrute, <b>pero siento que no siempre es posibles.</b>' +
+        '<br><br><b>(nombre de marca)</b> me invita a disfrutar lo que llevo dentro, y a mostrarle al mundo todas las cualidades que hacen de mí <b>una persona única y especial dentro de mi grupo.</b>' +
+        '<br><br><b><i>Con (nombre de marca), no hay nada mejor que lo que llevas dentro.</i></b>',
+      fragments: [
+        'En un mundo que no para de decirme quién ser',
+        'mantenerme fiel a lo que llevo dentro',
+        'es un acto de resistencia y de puro disfrute',
+        'pero siento que no siempre es posibles',
+        'Marinela me invita a disfrutar lo que llevo dentro',
+        'y a mostrarle al mundo todas las cualidades que hacen de mí una persona única y especial',
+        'dentro de mi grupo',
+        'no hay nada mejor que lo que llevas dentro'
+      ],
+      glue: [', ', ' ', ', ', '. ', ', ', ' ', '. Con Marinela, ', '.']
+    }
+  ];
+
+  /* P17, P18 y P19, en el orden del documento */
+  var TERRITORY_Q17 = [
+    { v: 'T2', l: 'Lo que soy, lo que consumo y mis rituales son la mejor forma de expresarme y conectar con otros.' },
+    { v: 'T3', l: 'Lo mejor pasa cuando me suelto y disfruto, cuando soy yo sin filtros y todo es genuino.' },
+    { v: 'T5', l: 'Mantenerme fiel a lo que llevo dentro es un acto de resistencia y de puro disfrute.' }
+  ];
+  var TERRITORY_Q18 = [
+    { v: 'T2', l: 'A veces siento que cuesta que se vea todo mi potencial.' },
+    { v: 'T3', l: 'A veces, parece que disfrutar es una obligación más, algo que hay que ganarse y justificar.' },
+    { v: 'T5', l: 'A veces, parece que el mundo no para de decirme quién ser.' }
+  ];
+  var TERRITORY_Q19 = [
+    { v: 'T2', l: 'Una marca que me entiende, y por eso crea y hace posibles productos, marcas y momentos que van conmigo.' },
+    { v: 'T3', l: 'Una marca que me invita a disfrutar sin filtros con productos auténticos que no necesitan justificación ni argumentos, porque son los más ricos.' },
+    { v: 'T5', l: 'Una marca que me invita a disfrutar lo que llevo dentro, y a mostrarle al mundo todas las cualidades que hacen de mí una persona única y especial dentro de mi grupo.' }
+  ];
+
+  /* ---------- bloques P31, tal como figuran ---------- */
+  var BLOCKS = [
+    {
+      id: 'b1',
+      options: [
+        'Línea sin azúcar o sin azúcares añadidos',
+        'Línea sin gluten',
+        'Etiqueta limpia (ingredientes reconocibles, sin aditivos)',
+        'Línea alta en proteínas',
+        'Línea alta en fibra o integral',
+        'Versión baja en calorías',
+        'Línea reducida en azúcar',
+        'Línea vegana o de origen vegetal',
+        'Línea sin lactosa',
+        'Endulzado con Stevia o fruto del monje',
+        'Línea infantil con perfil nutricional mejorado'
+      ]
+    },
+    {
+      id: 'b2',
+      options: [
+        'Línea de chocolate negro con más del 70% de cacao',
+        'Rellenos premium (dulce de leche artesanal, praliné, crema de avellana)',
+        'Línea «Extra» o «doble» (doble crema, doble chocolate)',
+        'Versión totalmente bañada en chocolate',
+        'Edición de pastelería gourmet (estilo pastelería francesa)',
+        'Línea con sabores a licor o esencia (ron, café, vainilla bourbon)',
+        'Línea de tarta de queso o tiramisú o red velvet'
+      ]
+    },
+    {
+      id: 'b3',
+      options: [
+        'Ediciones limitadas de temporada (Día de Muertos, Navidad, San Valentín)',
+        'Sabores regionales mexicanos (cajeta, rompope, tres leches, mazapán)',
+        'Sabores exóticos y asiáticos (matcha, lichi)',
+        'Colaboraciones con otras marcas reconocidas',
+        'Colaboraciones con chefs o panaderías de renombre',
+        'Sabores internacionales (dulce de leche argentino, churro español)',
+        'Agridulces (chamoy, tajín, chile)'
+      ]
+    },
+    {
+      id: 'b4',
+      options: [
+        'Minibocados o formato de snack en porciones individuales',
+        'Formato familiar o multipack para compartir',
+        'Línea de desayuno (más sustancioso, con avena y granola)',
+        'Línea para llevar (envase individual y resistente)',
+        'Formato para fiestas o cumpleaños (tartas y cupcakes listos para consumir)',
+        'Línea de acompañamiento para el café (galletas finas y biscotti)',
+        'Colaboraciones entre marcas del portafolio de Marinela'
+      ]
+    },
+    {
+      id: 'b5',
+      options: [
+        'Marinela Café (cafeterías propias)',
+        'Suscripción mensual o Caja sorpresa',
+        'Personalización (mensajes, fotos en pasteles a través de la app)',
+        'Experiencia Marinela (tienda insignia, museo, visitas a la fábrica)',
+        'Máquinas expendedoras premium',
+        'Línea HORECA (hoteles, restaurantes, cafeterías)'
+      ]
+    },
+    {
+      id: 'b6',
+      options: [
+        'Envases compostables/reciclables',
+        'Línea de comercio justo (cacao, vainilla)',
+        'Edición con impacto social (porcentaje destinado a fundaciones)',
+        'Ingredientes de origen local o pequeños productores'
+      ]
+    },
+    {
+      id: 'b7',
+      options: [
+        'Cereales y barritas de cereales',
+        'Mezclas para hornear en casa',
+        'Ingredientes para coberturas, rellenos y coberturas para repostería casera',
+        'Bebidas (leches saborizadas, bebidas malteadas, frappés listos para consumir)',
+        'Helados y paletas',
+        'Cremas para untar (crema de avellana, mermeladas)',
+        'Panes dulces tradicionales (concha, rosquilla, oreja)'
+      ]
+    }
+  ];
+
+  var TRIBES = [
+    { code: 'TR1', text: 'En la vida, no espero el momento perfecto para vivir, yo lo creo. Una vida bien vivida se construye con pequeñas decisiones tomadas a mi manera.' },
+    { code: 'TR2', text: 'Me gusta disfrutar todos los días, soy de esas personas que hace que un martes cualquiera se sienta especial, solo o acompañado.' },
+    { code: 'TR3', text: 'Prefiero lo auténtico sobre lo perfecto, y busco aquello que me ayuda a mostrar mi esencia. Lo auténtico no se finge, simplemente se reconoce.' }
+  ];
+
+  /* ---------- rotación: solo donde el documento lo pide ---------- */
+  var RND = {
+    blocks: shuffle(BLOCKS.map(function (b) { return b.id; })),
+    tribes: shuffle(TRIBES.map(function (t) { return t.code; }))
+  };
+
+  var conceptByCode = function (c) {
+    for (var i = 0; i < CONCEPTS.length; i++) if (CONCEPTS[i].code === c) return CONCEPTS[i];
+    return null;
+  };
+  var blockById = function (id) {
+    for (var i = 0; i < BLOCKS.length; i++) if (BLOCKS[i].id === id) return BLOCKS[i];
+    return null;
+  };
+  var tribeByCode = function (c) {
+    for (var i = 0; i < TRIBES.length; i++) if (TRIBES[i].code === c) return TRIBES[i];
+    return null;
+  };
+
+  var A = {};
+  var STATE = { i: 0, terminated: null, phase: 'welcome', startedAt: null };
+
+  function cats() {
+    var q4 = A.Q4 && A.Q4.value;
+    var cookies = (q4 === 'cookies' || q4 === 'both');
+    var cakes = (q4 === 'cakes' || q4 === 'both');
+    if (cakes && A.Q5a && A.Q5a.value === 'rare') cakes = false;
+    if (cookies && A.Q5b && A.Q5b.value === 'rare') cookies = false;
+    return { cookies: cookies, cakes: cakes };
+  }
+  function knowsMarinela() { return A.Q22 && A.Q22.value === 'yes'; }
+  function knownBrands() {
+    var a = A.Q23;
+    if (!a || !a.values) return [];
+    return a.values.slice();
+  }
+  function winningTerritory() {
+    if (!A.Q30 || !A.Q30.value) return null;
+    return conceptByCode(A.Q30.value);
+  }
+
+  function opts(list) { return list.map(function (l) { return { v: l, l: l }; }); }
+
+  var SCREENS = [];
+  function push(s) { SCREENS.push(s); return s; }
+
+  /* ============================================================
+     BIENVENIDA
+     ============================================================ */
+  push({ id: 'welcome', type: 'welcome', sec: 0 });
+
+  /* ============================================================
+     BLOQUE 1. PERFIL Y SELECCIÓN
+     ============================================================ */
+  push({
+    id: 'i1', type: 'intro', sec: 1, kicker: 'Bloque 1 de 6',
+    title: 'Perfil y selección',
+    lede: 'Para comenzar, algunas preguntas sobre ti.'
+  });
+
+  push({
+    id: 'Q1', auto: true, sec: 1, num: 'P1', type: 'single',
+    title: '¿Cuál es tu edad?',
+    options: [
+      { v: '13-18', l: '13-18 años' },
+      { v: '19-24', l: '19-24 años' },
+      { v: '25+', l: '25 años o más' }
+    ],
+    terminate: function (v) { return v === '25+'; }
+  });
+
+  push({
+    id: 'Q2', auto: true, sec: 1, num: 'P2', type: 'single',
+    title: '¿En qué ciudad vives?',
+    options: [
+      { v: 'cdmx', l: 'CDMX' },
+      { v: 'monterrey', l: 'Monterrey' },
+      { v: 'other', l: 'Otra' }
+    ],
+    terminate: function (v) { return v === 'other'; }
+  });
+
+  push({
+    id: 'Q3', auto: true, sec: 1, num: 'P3', type: 'single',
+    title: '¿Con qué género te identificas?',
+    options: [
+      { v: 'male', l: 'Hombre' },
+      { v: 'female', l: 'Mujer' },
+      { v: 'nb', l: 'No binario / género fluido' },
+      { v: 'na', l: 'Prefiero no decirlo' }
+    ]
+  });
+
+  push({
+    id: 'Q4', auto: true, sec: 1, num: 'P4', type: 'single',
+    title: 'Cuando se te antoja algo dulce, o simplemente tienes antojo o hambre, ¿qué sueles elegir como primera opción?',
+    options: [
+      { v: 'cookies', l: 'Una galleta' },
+      { v: 'cakes', l: 'Un pastelito' },
+      { v: 'both', l: 'Ambas por igual' },
+      { v: 'none', l: 'Ninguna de las anteriores' }
+    ],
+    terminate: function (v) { return v === 'none'; }
+  });
+
+  push({
+    id: 'Q5a', auto: true, sec: 1, num: 'P5.a', type: 'single',
+    title: '¿Con qué frecuencia consumes pastelitos?',
+    options: FREQ,
+    showIf: function () { return A.Q4 && (A.Q4.value === 'cakes' || A.Q4.value === 'both'); },
+    terminate: function (v) { return A.Q4.value === 'cakes' && v === 'rare'; }
+  });
+
+  push({
+    id: 'Q5b', auto: true, sec: 1, num: 'P5.b', type: 'single',
+    title: '¿Con qué frecuencia consumes galletas?',
+    options: FREQ,
+    showIf: function () { return A.Q4 && (A.Q4.value === 'cookies' || A.Q4.value === 'both'); },
+    terminate: function (v) {
+      if (A.Q4.value === 'cookies') return v === 'rare';
+      if (A.Q4.value === 'both') return v === 'rare' && A.Q5a && A.Q5a.value === 'rare';
+      return false;
+    }
+  });
+
+  /* ============================================================
+     BLOQUE 2. HÁBITOS Y MOMENTOS DE CONSUMO
+     ============================================================ */
+  push({
+    id: 'i2', type: 'intro', sec: 2, kicker: 'Bloque 2 de 6',
+    title: 'Hábitos y momentos de consumo',
+    lede: 'Algunas preguntas sobre cómo, dónde y cuándo consumes estos productos.'
+  });
+
+  push({
+    id: 'Q6', sec: 2, num: 'P6', type: 'multi', min: 1,
+    title: '¿Dónde sueles comprar estos productos?',
+    note: 'Selecciona todas las opciones que correspondan.',
+    options: opts([
+      'Tienda de Conveniencia',
+      'Supermercado',
+      'Tienda de la esquina o tienda de abarrotes',
+      'En la escuela / Universidad / Trabajo',
+      'Entrega a domicilio o app',
+      'Otro'
+    ])
+  });
+
+  push({
+    id: 'Q7', sec: 2, num: 'P7', type: 'gridSingle',
+    title: 'Tu semana de Snacks',
+    note: 'Asigna cada momento del día a la categoría de snack que más asocies con él.',
+    rows: OCCASIONS,
+    cols: function () {
+      var c = cats(), out = [];
+      if (c.cakes) out.push({ v: 'cakes', l: 'Pastelitos' });
+      if (c.cookies) out.push({ v: 'cookies', l: 'Galletas' });
+      if (c.cakes && c.cookies) out.push({ v: 'both', l: 'Ambos' });
+      out.push({ v: 'none', l: 'Ninguna' });
+      return out;
+    }
+  });
+
+  push({
+    id: 'Q8', sec: 2, num: 'P8', type: 'gridScale',
+    title: 'A la hora de elegir estos productos, ¿qué importancia tiene cada uno de estos factores?',
+    note: 'Escala del 1 al 5, donde 1 = no importante en absoluto y 5 = muy importante.',
+    lowLabel: 'No importante en absoluto', highLabel: 'Muy importante',
+    rows: [
+      'Sabor y textura',
+      'Precio',
+      'Marca familiar o conocida',
+      'Disponible y fácil de encontrar',
+      'Novedad o innovación',
+      'De moda o conocido en redes sociales',
+      'Recomendación de alguien cercano',
+      'Formato mini o bites (tamaños pequeños)',
+      'Formato individual',
+      'Formato para compartir',
+      'Practicidad para transportar',
+      'Practicidad para comer'
+    ]
+  });
+
+  /* ===== BLOQUE 2.1 GALLETAS ===== */
+  var ifCookies = function () { return cats().cookies; };
+  var ifCakes = function () { return cats().cakes; };
+
+  push({
+    id: 'i21', type: 'intro', sec: 2, showIf: ifCookies,
+    kicker: 'Bloque 2.1',
+    title: 'Hábitos y momentos de consumo: galletas'
+  });
+
+  push({
+    id: 'Q9', sec: 2, num: 'P9', type: 'multi', min: 3, max: 3, showIf: ifCookies,
+    title: '¿Qué te lleva a elegir una galleta?',
+    note: 'Elige las 3 razones más importantes.',
+    options: opts(DRIVERS_Q9)
+  });
+
+  push({
+    id: 'Q10', sec: 2, num: 'P10', type: 'multi', min: 1, showIf: ifCookies,
+    title: '¿Con quién sueles consumir galletas?',
+    note: 'Selecciona todas las opciones que consideres.',
+    options: opts(COMPANY)
+  });
+
+  push({
+    id: 'Q11', sec: 2, num: 'P11', type: 'multi', min: 1, showIf: ifCookies,
+    title: '¿Dónde sueles consumir galletas?',
+    note: 'Selecciona todas las opciones que consideres.',
+    options: opts(PLACES_Q11)
+  });
+
+  push({
+    id: 'Q12', sec: 2, num: 'P12', type: 'multi', min: 1, max: 3, showIf: ifCookies,
+    title: '¿Qué sueles hacer mientras consumes galletas?',
+    note: 'Elige hasta tres opciones.',
+    options: ACTIVITIES.map(function (l) {
+      return { v: l, l: l, exclusive: l === 'Nada en particular, solo comiendo' };
+    })
+  });
+
+  /* ===== BLOQUE 2.2 PASTELITOS ===== */
+  push({
+    id: 'i22', type: 'intro', sec: 2, showIf: ifCakes,
+    kicker: 'Bloque 2.2',
+    title: 'Hábitos y momentos de consumo: pastelitos'
+  });
+
+  push({
+    id: 'Q13', sec: 2, num: 'P13', type: 'multi', min: 3, max: 3, showIf: ifCakes,
+    title: '¿Qué te lleva a elegir un pastelito?',
+    note: 'Elige las 3 razones más importantes.',
+    options: opts(DRIVERS_Q13)
+  });
+
+  push({
+    id: 'Q14', sec: 2, num: 'P14', type: 'multi', min: 1, showIf: ifCakes,
+    title: '¿Con quién sueles consumir pastelitos?',
+    note: 'Selecciona todas las opciones que consideres.',
+    options: opts(COMPANY)
+  });
+
+  push({
+    id: 'Q15', sec: 2, num: 'P15', type: 'multi', min: 1, showIf: ifCakes,
+    title: '¿Dónde sueles consumir pastelitos?',
+    note: 'Selecciona todas las opciones que consideres.',
+    options: opts(PLACES_Q15)
+  });
+
+  push({
+    id: 'Q16', sec: 2, num: 'P16', type: 'multi', min: 1, max: 3, showIf: ifCakes,
+    title: '¿Qué sueles estar haciendo mientras consumes pastelitos?',
+    note: 'Elige hasta tres opciones.',
+    options: ACTIVITIES.map(function (l) {
+      return { v: l, l: l, exclusive: l === 'Nada en particular, solo comiendo' };
+    })
+  });
+
+  /* ============================================================
+     BLOQUE 3. EVALUACIÓN DE TERRITORIOS
+     ============================================================ */
+  push({
+    id: 'i3', type: 'intro', sec: 3, kicker: 'Bloque 3 de 6',
+    title: 'Evaluación de territorios',
+    lede: 'Las siguientes preguntas contéstalas pensando en una marca grande/global de galletas y pastelitos.'
+  });
+
+  push({
+    id: 'Q17', sec: 3, num: 'P17', type: 'single',
+    title: '¿Con cuál de estas afirmaciones te identificas más?',
+    note: 'Selecciona una sola opción.',
+    options: TERRITORY_Q17
+  });
+
+  push({
+    id: 'Q18', sec: 3, num: 'P18', type: 'single',
+    title: '¿Cuál de estas situaciones sientes más en tu vida cotidiana?',
+    note: 'Selecciona una sola opción.',
+    options: TERRITORY_Q18
+  });
+
+  push({
+    id: 'Q19', sec: 3, num: 'P19', type: 'single',
+    title: '¿Con cuál de estas marcas conectarías más o cuál consumirías más?',
+    note: 'Selecciona una sola opción.',
+    options: TERRITORY_Q19
+  });
+
+  push({
+    id: 'i3b', type: 'intro', sec: 3, kicker: 'Lee con atención',
+    title: 'Tres ideas de marca',
+    lede: 'Ahora vamos a mostrarte 3 ideas de marca. No hay respuestas correctas ni incorrectas; queremos saber cuál te resulta más atractiva y conecta mejor contigo.'
+  });
+
+  push({
+    id: 'Q20', sec: 3, num: 'P20', type: 'conceptRate',
+    title: 'Lee cada una de estas ideas y califícalas del 1 al 5.',
+    note: '1 = no conecta conmigo en absoluto / 5 = conecta completamente conmigo.',
+    lowLabel: 'No conecta conmigo en absoluto', highLabel: 'Conecta completamente conmigo'
+  });
+
+  /* ============================================================
+     BLOQUE 4. PERCEPCIÓN DE MARCA
+     ============================================================ */
+  push({
+    id: 'i4', type: 'intro', sec: 4, kicker: 'Bloque 4 de 6',
+    title: 'Percepción de marca',
+    lede: 'Ahora algunas preguntas sobre las marcas de esta categoría.'
+  });
+
+  push({
+    id: 'Q21a', sec: 4, num: 'P21.a', type: 'textList', showIf: ifCookies,
+    title: '¿Cuáles son tus top 3 marcas de galletas favoritas?',
+    fields: 3, requiredFields: 1
+  });
+
+  push({
+    id: 'Q21b', sec: 4, num: 'P21.b', type: 'textList', showIf: ifCakes,
+    title: '¿Cuáles son tus top 3 marcas de pastelitos favoritos?',
+    fields: 3, requiredFields: 1
+  });
+
+  push({
+    id: 'Q22', auto: true, sec: 4, num: 'P22', type: 'single',
+    title: '¿Has oído hablar de la marca Marinela?',
+    options: [{ v: 'yes', l: 'Sí' }, { v: 'no', l: 'No' }]
+  });
+
+  push({
+    id: 'Q23', sec: 4, num: 'P23', type: 'multi', min: 0, columns: true,
+    title: '¿Conoces algunas de estas marcas?',
+    note: 'Selecciona todas las opciones que correspondan.',
+    options: opts(MARINELA_BRANDS)
+  });
+
+  push({
+    id: 'Q24', sec: 4, num: 'P24', type: 'multi', min: 0, columns: true,
+    title: '¿Cuáles has comprado alguna vez?',
+    note: 'Selecciona todas las opciones que correspondan.',
+    showIf: function () { return knownBrands().length > 0; },
+    options: function () { return opts(knownBrands()); }
+  });
+
+  push({ id: 'reveal', type: 'reveal', sec: 4 });
+
+  push({
+    id: 'Q25', sec: 4, num: 'P25', type: 'single',
+    title: 'Pensando en tu relación con Marinela, ¿cómo la describirías?',
+    note: 'Selecciona una sola opción.',
+    options: [
+      { v: 'stranger', l: 'Desconocido', sub: 'No la conozco o no significa nada para mí.' },
+      { v: 'acquaintance', l: 'Conocido', sub: 'La conozco, pero no tengo una relación cercana.' },
+      { v: 'friend', l: 'Amigo', sub: 'Es parte de mi vida cotidiana.' },
+      { v: 'family', l: 'Familiar', sub: 'La siento cercana, de siempre.' },
+      { v: 'bestfriend', l: 'Mejor amigo o confidente', sub: 'Es parte de quién soy.' }
+    ]
+  });
+
+  push({
+    id: 'Q26', sec: 4, num: 'P26', type: 'gridScale', showIf: knowsMarinela,
+    title: '¿Hasta qué punto estás de acuerdo con las siguientes afirmaciones sobre Marinela?',
+    note: 'Escala del 1 al 5, donde 1 = totalmente en desacuerdo y 5 = totalmente de acuerdo.',
+    lowLabel: 'Totalmente en desacuerdo', highLabel: 'Totalmente de acuerdo',
+    rows: [
+      'Marinela es una marca en la que confío.',
+      'Marinela es una marca que suele innovar.',
+      'Marinela ha evolucionado con el tiempo.',
+      'Marinela es solo para generaciones más grandes adultas que yo.',
+      'Marinela es una marca para todos.',
+      'Marinela es solo para las generaciones más jóvenes.',
+      'Marinela ofrece productos diferentes a los de otras marcas.',
+      'Marinela es más que una marca: es parte de quien soy y mi cultura.'
+    ]
+  });
+
+  push({
+    id: 'Q27', sec: 4, num: 'P27', type: 'gridMultiCol', showIf: knowsMarinela,
+    title: 'De los siguientes atributos, ¿cuáles crees que Marinela tiene hoy? ¿Y cuáles crees que podría tener en el futuro?',
+    note: 'Responde todas las líneas. Puede seleccionar más de una opción en cada línea.',
+    cols: [
+      { v: 'today', l: 'Marinela HOY' },
+      { v: 'future', l: 'Marinela PODRÍA SER' },
+      { v: 'na', l: 'NO LO ASOCIO CON MARINELA', exclusive: true }
+    ],
+    rows: [
+      'Una marca que me inspira a ser auténtico/a',
+      'Una marca que defiende el placer sin culpa',
+      'Una marca conectada con mis raíces e identidad',
+      'Una marca que celebra lo cotidiano',
+      'Una marca que impulsa mi manera de vivir',
+      'Una marca que me entiende y no me juzga',
+      'Una marca de calidad',
+      'Una marca cercana',
+      'Una marca fácil de encontrar o disponible en todos lados',
+      'Una marca innovadora que siempre ofrece algo nuevo',
+      'Una marca líder en su categoría'
+    ]
+  });
+
+  /* heat map, luego P28 y P29, uno por concepto, en el orden del documento */
+  CONCEPTS.forEach(function (c) {
+    push({
+      id: 'HM_' + c.code, sec: 4, num: 'P27 heat map (' + c.suffix + ')',
+      type: 'heatmap', concept: c.code,
+      title: 'Lee el siguiente texto y selecciona las frases o fragmentos que más llamen tu atención o con los que más te identifiques.',
+      note: 'Puedes seleccionar tantos como quieras.'
+    });
+    push({
+      id: 'Q28' + c.suffix, sec: 4, num: 'P28.' + c.suffix, type: 'conceptEval', concept: c.code,
+      title: 'Pensando en el concepto que acabas de leer, indica qué tanto…',
+      note: 'Escala del 1 al 5, donde 1 = no importante en absoluto y 5 = muy importante.'
+    });
+    push({
+      id: 'Q29' + c.suffix, sec: 4, num: 'P29.' + c.suffix, type: 'agree', concept: c.code,
+      title: '¿Qué tan de acuerdo estás con la siguiente afirmación?',
+      quote: 'Esta idea tiene el potencial de seguir siendo relevante para las nuevas generaciones y mantenerse vigente con el paso del tiempo.'
+    });
+  });
+
+  push({
+    id: 'Q30', sec: 4, num: 'P30', type: 'single',
+    title: 'De las 3 ideas anteriores, ¿cuál es tu favorita?',
+    note: 'Selecciona una sola opción.',
+    options: CONCEPTS.map(function (c) { return { v: c.code, l: c.label }; })
+  });
+
+  /* ============================================================
+     BLOQUE 5. MARINELA MÁS ALLÁ DE LO QUE ES HOY (STRETCHABILITY)
+     ============================================================ */
+  push({
+    id: 'i5', type: 'intro', sec: 5, kicker: 'Bloque 5 de 6',
+    title: 'Marinela más allá de lo que es hoy',
+    lede: 'Marinela está explorando nuevas direcciones para sus productos y experiencias. Te mostramos algunas ideas organizadas por categoría.'
+  });
+
+  RND.blocks.forEach(function (bid, n) {
+    var b = blockById(bid);
+    push({
+      id: 'Q31_' + bid, sec: 5, num: 'P31 (bloque ' + (n + 1) + ' de 7)', type: 'multi',
+      min: 1, max: 2, block: bid,
+      title: 'En cada categoría, elige hasta 2 opciones que tengan más sentido para Marinela:',
+      options: opts(b.options).concat([{ v: 'Ninguna', l: 'Ninguna', exclusive: true }])
+    });
+    push({
+      id: 'Q31r_' + bid, sec: 5, num: 'P31 calificación (bloque ' + (n + 1) + ')', type: 'blockRate', block: bid,
+      title: 'Para cada idea seleccionada:',
+      note: 'Escala del 1 al 5, donde 1 = no encaja en absoluto y 5 = encaja perfectamente.',
+      lowLabel: 'No encaja en absoluto', highLabel: 'Encaja perfectamente',
+      showIf: function () {
+        var a = A['Q31_' + bid];
+        return !!(a && a.values && a.values.length >= 1 && a.values.indexOf('Ninguna') === -1);
+      }
+    });
+  });
+
+  push({
+    id: 'Q32', sec: 5, num: 'P32', type: 'multi', min: 1, max: 3,
+    title: '¿En cuáles de estas ocasiones te gustaría ver más propuestas de Marinela en el futuro?',
+    note: 'Selecciona máximo 3.',
+    options: opts(OCCASIONS.concat([
+      'Reuniones con amigos', 'Momentos para consentirme', 'Para llevar o consumir fuera de casa'
+    ]))
+  });
+
+  push({
+    id: 'Q33', sec: 5, num: 'P33', type: 'multi', min: 1, max: 2,
+    title: '¿Qué tipo de productos esperarías que lanzara Marinela?',
+    note: 'Elegir máximo dos opciones.',
+    options: opts([
+      'Productos más indulgentes',
+      'Productos más funcionales',
+      'Productos más premium',
+      'Productos más cotidianos',
+      'Productos más divertidos',
+      'Productos más innovadores'
+    ])
+  });
+
+  /* ============================================================
+     BLOQUE 6. IDENTIFICACIÓN DE TRIBU
+     ============================================================ */
+  push({
+    id: 'i6', type: 'intro', sec: 6, kicker: 'Bloque 6 de 6',
+    title: 'Identificación de tribu',
+    lede: 'Esta última sección nos ayuda a entender cómo eres tú. No hay respuestas correctas ni incorrectas.'
+  });
+
+  push({
+    id: 'Q34', sec: 6, num: 'P34', type: 'single', tribes: true,
+    title: '¿Con cuál de estos 3 tipos de persona te identificas más?',
+    note: 'Selecciona una sola opción.',
+    options: RND.tribes.map(function (code, i) {
+      return { v: code, l: 'Tipo ' + LETTERS[i], sub: tribeByCode(code).text };
+    }).concat([{ v: 'none', l: 'Ninguna dice nada de mí' }])
+  });
+
+  push({
+    id: 'Q35', sec: 6, num: 'P35', type: 'single', tribes: true,
+    title: '¿Qué tipo de persona crees que consume Marinela principalmente hoy?',
+    note: 'Selecciona una sola opción.',
+    options: RND.tribes.map(function (code, i) {
+      return { v: code, l: 'Opción ' + LETTERS[i], sub: tribeByCode(code).text };
+    }).concat([{ v: 'unsure', l: 'No lo tengo claro' }])
+  });
+
+  push({ id: 'done', type: 'done', sec: 6 });
+
+  /* ============================================================
+     ENGINE
+     ============================================================ */
+  function optionsOf(s) {
+    return typeof s.options === 'function' ? s.options() : (s.options || []);
+  }
+  function optByValue(s, v) {
+    var list = optionsOf(s), i;
+    for (i = 0; i < list.length; i++) if (list[i].v === v) return list[i];
+    return null;
+  }
+
+  function visible() {
+    return SCREENS.filter(function (s) {
+      if (s.type === 'welcome' || s.type === 'done') return false;
+      if (typeof s.showIf === 'function') { try { return !!s.showIf(); } catch (e) { return false; } }
+      return true;
+    });
+  }
+  function questionScreens() {
+    return visible().filter(function (s) { return s.num; });
+  }
+
+  function requirement(s) {
+    var a = A[s.id];
+    switch (s.type) {
+      case 'single': {
+        if (!a || !a.value) return 'Elige una opción para continuar.';
+        var opt = optByValue(s, a.value);
+        if (opt && opt.specify && !(a.other || '').trim()) return 'Escribe una breve descripción para continuar.';
+        return null;
+      }
+      case 'agree':
+        return (a && a.value) ? null : 'Elige una opción para continuar.';
+      case 'multi': {
+        var v = (a && a.values) || [];
+        var min = s.min || 0, max = s.max || 99;
+        var hasExclusive = v.some(function (x) {
+          var o = optByValue(s, x); return !!(o && o.exclusive);
+        });
+        if (hasExclusive) return null;
+        if (min === max && min > 0) {
+          if (v.length < min) return 'Selecciona ' + min + '. Te falta' + ((min - v.length) > 1 ? 'n' : '') + ' ' + (min - v.length) + '.';
+          return null;
+        }
+        if (v.length < min) return 'Selecciona al menos ' + min + ' para continuar.';
+        return null;
+      }
+      case 'gridSingle': {
+        var need = s.rows.length - Object.keys((a && a.map) || {}).length;
+        return need > 0 ? (need > 1 ? 'Faltan ' + need + ' filas por responder.' : 'Falta 1 fila por responder.') : null;
+      }
+      case 'gridScale': {
+        var n2 = s.rows.length - Object.keys((a && a.map) || {}).length;
+        return n2 > 0 ? (n2 > 1 ? 'Faltan ' + n2 + ' filas por calificar.' : 'Falta 1 fila por calificar.') : null;
+      }
+      case 'gridMultiCol': {
+        var m = (a && a.map) || {};
+        var miss = s.rows.filter(function (r) {
+          return !s.cols.some(function (c) { return (m[c.v] || []).indexOf(r) !== -1; });
+        }).length;
+        return miss > 0 ? (miss > 1 ? 'Faltan ' + miss + ' filas por responder.' : 'Falta 1 fila por responder.') : null;
+      }
+      case 'textList': {
+        var f = (a && a.values) || [];
+        var filled = f.filter(function (x) { return (x || '').trim(); }).length;
+        return filled >= (s.requiredFields || 1) ? null : 'Escribe al menos una marca para continuar.';
+      }
+      case 'conceptRate': {
+        var left = CONCEPTS.length - Object.keys((a && a.map) || {}).length;
+        return left > 0 ? (left > 1 ? 'Faltan ' + left + ' ideas por calificar.' : 'Falta 1 idea por calificar.') : null;
+      }
+      case 'heatmap': return null;
+      case 'conceptEval': {
+        var left2 = 4 - Object.keys((a && a.map) || {}).length;
+        return left2 > 0 ? 'Faltan ' + left2 + ' por calificar.' : null;
+      }
+      case 'blockRate': {
+        var picks = ((A['Q31_' + s.block] || {}).values) || [];
+        var m5 = (a && a.map) || {}, missing = 0;
+        picks.forEach(function (p) {
+          var r = m5[p] || {};
+          if (!r.brand) missing++;
+          if (!r.territory) missing++;
+        });
+        return missing > 0 ? (missing > 1 ? 'Faltan ' + missing + ' calificaciones.' : 'Falta 1 calificación.') : null;
+      }
+      default: return null;
+    }
+  }
+
+  var NOTE = null;
+  var LAST = null;
+
+  var elStage = document.getElementById('stage');
+  var elBar = document.getElementById('bar');
+  var elPct = document.getElementById('pct');
+  var elCount = document.getElementById('count');
+  var elBack = document.getElementById('back');
+  var elNext = document.getElementById('next');
+  var elHint = document.getElementById('hint');
+  var elChrome = document.getElementById('chrome');
+  var elSteps = document.getElementById('steps');
+  var elStepNow = document.getElementById('stepnow');
+  var elNavbar = document.getElementById('navbar');
+  var elNextLbl = elNext.querySelector('.lbl');
+
+  var SECTION_NAMES = ['', 'Perfil', 'Hábitos', 'Territorios', 'Marca', 'Stretchability', 'Tribu'];
+
+  function showNav(on) {
+    elNavbar.hidden = !on;
+    elBack.hidden = !on;
+    elNext.hidden = !on;
+    elHint.hidden = !on;
+  }
+
+  function buildSteps() {
+    var html = '';
+    for (var i = 1; i <= 6; i++) {
+      html += '<li class="step" data-sec="' + i + '"><span class="step-n">' + i +
+        '</span><span class="step-l">' + SECTION_NAMES[i] + '</span></li>';
+    }
+    elSteps.innerHTML = html;
+  }
+
+  function optionRow(o, checked, disabled, kind, screenId) {
+    var cls = 'opt' + (checked ? ' is-on' : '') + (disabled ? ' is-off' : '');
+    var h = '<button type="button" class="' + cls + '" data-act="opt" data-v="' + esc(o.v) + '"' +
+      (disabled ? ' aria-disabled="true"' : '') +
+      ' role="' + (kind === 'radio' ? 'radio' : 'checkbox') + '" aria-checked="' + (checked ? 'true' : 'false') + '">' +
+      '<span class="mark ' + kind + '"></span>' +
+      '<span class="opt-text"><span class="opt-label">' + esc(o.l) + '</span>';
+    if (o.sub) h += '<span class="opt-sub">' + esc(o.sub) + '</span>';
+    h += '</span></button>';
+    if (o.specify && checked) {
+      h += '<input class="specify" data-act="specify" type="text" placeholder="Por favor especifica" value="' +
+        esc((A[screenId] && A[screenId].other) || '') + '" />';
+    }
+    return h;
+  }
+
+  function matrixTable(cfg) {
+    var h = '<div class="mtx-wrap"><table class="mtx' + (cfg.cls ? ' ' + cfg.cls : '') +
+      '"><thead><tr><th class="corner"></th>';
+    cfg.cols.forEach(function (c) {
+      h += '<th><span class="th-l">' + esc(c.l) + '</span>' +
+        (c.anchor ? '<span class="th-a">' + esc(c.anchor) + '</span>' : '') + '</th>';
+    });
+    h += '</tr></thead><tbody>';
+    cfg.rows.forEach(function (r) {
+      h += '<tr><th scope="row" class="rowhead' + (r.l ? '' : ' is-empty') +
+        '">' + esc(r.l) + '</th>';
+      cfg.cols.forEach(function (c) {
+        var on = cfg.isOn(r, c);
+        var off = !on && cfg.isOff && cfg.isOff(r, c);
+        h += '<td' + (on ? ' class="on"' : '') + '><button type="button" class="cell' + (on ? ' is-on' : '') +
+          (off ? ' is-off' : '') +
+          '" data-act="' + cfg.act + '" ' + (off ? 'aria-disabled="true" ' : '') + cfg.data(r, c) +
+          ' role="' + (cfg.kind === 'check' ? 'checkbox' : 'radio') + '" aria-checked="' + (on ? 'true' : 'false') +
+          '" aria-label="' + esc((r.aria || r.l) + ': ' + c.l) + '">' +
+          '<span class="mark ' + (cfg.kind === 'check' ? 'check' : 'radio') + '"></span>' +
+          '<span class="cell-l">' + esc(c.l) + '</span></button></td>';
+      });
+      h += '</tr>';
+    });
+    return h + '</tbody></table></div>';
+  }
+
+  function scaleCols(low, high) {
+    var cols = [], i;
+    for (i = 1; i <= 5; i++) {
+      cols.push({ v: i, l: String(i), anchor: i === 1 ? low : (i === 5 ? high : '') });
+    }
+    return cols;
+  }
+
+  function render() {
+    var vis = visible();
+    var s;
+
+    if (STATE.phase === 'welcome') { renderWelcome(); return; }
+    if (STATE.phase === 'terminated') { renderTerminated(); return; }
+    if (STATE.phase === 'done') { renderDone(); return; }
+
+    if (STATE.i >= vis.length) { STATE.phase = 'done'; render(); return; }
+    s = vis[STATE.i];
+
+    elChrome.hidden = false;
+    showNav(true);
+
+    var pct = vis.length > 1 ? Math.round((STATE.i / (vis.length - 1)) * 100) : 0;
+    elBar.style.width = pct + '%';
+    elPct.textContent = pct + '%';
+
+    var qs = questionScreens();
+    var qIndex = s.num ? qs.indexOf(s) + 1 : 0;
+    elCount.textContent = qIndex ? 'Pregunta ' + qIndex + ' de ' + qs.length : '';
+
+    Array.prototype.forEach.call(elSteps.children, function (li) {
+      var n = parseInt(li.getAttribute('data-sec'), 10);
+      li.className = 'step' + (n === s.sec ? ' is-now' : (n < s.sec ? ' is-done' : ''));
+    });
+    elStepNow.textContent = 'Bloque ' + s.sec + ' de 6: ' + SECTION_NAMES[s.sec];
+
+    var body;
+    if (s.type === 'intro') {
+      body = '<section class="panel panel--intro">' +
+        '<p class="kicker">' + esc(s.kicker) + '</p>' +
+        '<h2 class="intro-title">' + esc(s.title) + '</h2>' +
+        (s.lede ? '<p class="intro-lede">' + esc(s.lede) + '</p>' : '') + '</section>';
+    } else if (s.type === 'reveal') {
+      body = '<section class="panel panel--intro">' +
+        '<p class="kicker">Lee antes de continuar</p>' +
+        '<h2 class="intro-title">Una misma familia</h2>' +
+        '<p class="intro-lede">A partir de ahora quiero que pienses que todos esos productos pertenecen a una misma familia: <b>MARINELA</b>.</p>' +
+        '<div class="chipwrap">' + MARINELA_BRANDS.map(function (b) {
+          return '<span class="chip">' + esc(b) + '</span>';
+        }).join('') + '</div></section>';
+    } else {
+      body = '<section class="panel">' + head(s) + fieldFor(s) + '</section>';
+    }
+    elStage.innerHTML = body;
+    if (LAST !== s.id) {
+      LAST = s.id;
+      window.scrollTo({ top: 0, behavior: 'auto' });
+    }
+
+    elBack.disabled = STATE.i === 0;
+    var req = s.num ? requirement(s) : null;
+    elNext.disabled = !!req;
+    elNextLbl.textContent = (STATE.i === vis.length - 1) ? 'Enviar' : 'Siguiente';
+    elHint.textContent = NOTE || req || '';
+    elHint.classList.toggle('is-on', !!(NOTE || req));
+    save();
+  }
+
+  function head(s) {
+    var h = '<header class="q-head">';
+    if (s.num) h += '<span class="q-num">' + esc(s.num) + '</span>';
+    h += '<h2 class="q-title">' + esc(s.title) + '</h2>';
+    if (s.note) h += '<p class="q-note">' + esc(s.note) + '</p>';
+    return h + '</header>';
+  }
+
+  function fieldFor(s) {
+    var a = A[s.id] || {};
+    var h = '';
+
+    if (s.type === 'single') {
+      h += '<div class="opts' + (s.tribes ? ' opts--stacked' : '') + '" role="radiogroup">';
+      optionsOf(s).forEach(function (o) {
+        h += optionRow(o, a.value === o.v, false, 'radio', s.id);
+      });
+      return h + '</div>';
+    }
+
+    if (s.type === 'agree') {
+      h += '<p class="sub-q-quote">\u201c' + esc(s.quote) + '\u201d</p><div class="opts" role="radiogroup">';
+      AGREE_5.forEach(function (l) {
+        h += optionRow({ v: l, l: l }, a.value === l, false, 'radio', s.id);
+      });
+      return h + '</div>';
+    }
+
+    if (s.type === 'multi') {
+      var all = optionsOf(s);
+      if (a.values && typeof s.options === 'function') {
+        a.values = a.values.filter(function (v) { return !!optByValue(s, v); });
+      }
+      var vals = a.values || [];
+      var exclusiveOn = vals.some(function (v) {
+        var o = optByValue(s, v); return !!(o && o.exclusive);
+      });
+      var atMax = !!(s.max && vals.length >= s.max);
+
+      h += '<div class="opts' + (s.columns ? ' opts--cols' : '') + '" role="group">';
+      all.forEach(function (o) {
+        var checked = vals.indexOf(o.v) !== -1;
+        var disabled = false;
+        if (!checked) {
+          if (o.exclusive) disabled = false;
+          else disabled = exclusiveOn || atMax;
+        }
+        h += optionRow(o, checked, disabled, 'check', s.id);
+      });
+      h += '</div>';
+
+      var msg = '';
+      if (exclusiveOn) {
+        msg = 'Las demás opciones se desactivan mientras esta está seleccionada.';
+      } else if (s.max && s.max < 90) {
+        msg = vals.length + ' de ' + s.max + ' seleccionadas';
+        if (atMax) msg += '. Deselecciona una para cambiar tu respuesta.';
+      }
+      if (msg) h += '<p class="counter">' + esc(msg) + '</p>';
+      return h;
+    }
+
+    if (s.type === 'gridSingle') {
+      var map = a.map || {};
+      return matrixTable({
+        kind: 'radio', act: 'grid',
+        rows: s.rows.map(function (r) { return { l: r }; }),
+        cols: s.cols(),
+        isOn: function (r, c) { return map[r.l] === c.v; },
+        data: function (r, c) { return 'data-r="' + esc(r.l) + '" data-v="' + esc(c.v) + '"'; }
+      });
+    }
+
+    if (s.type === 'gridScale') {
+      var m = a.map || {};
+      return matrixTable({
+        kind: 'radio', act: 'gscale', cls: 'mtx--scale',
+        rows: s.rows.map(function (r) { return { l: r }; }),
+        cols: scaleCols(s.lowLabel, s.highLabel),
+        isOn: function (r, c) { return m[r.l] === c.v; },
+        data: function (r, c) { return 'data-r="' + esc(r.l) + '" data-n="' + c.v + '"'; }
+      });
+    }
+
+    if (s.type === 'gridMultiCol') {
+      var mm = a.map || {};
+      var rowHas = function (rl, pred) {
+        return s.cols.some(function (c) {
+          if (pred && !pred(c)) return false;
+          return (mm[c.v] || []).indexOf(rl) !== -1;
+        });
+      };
+      return matrixTable({
+        kind: 'check', act: 'gmc',
+        rows: s.rows.map(function (r) { return { l: r }; }),
+        cols: s.cols,
+        isOn: function (r, c) { return (mm[c.v] || []).indexOf(r.l) !== -1; },
+        isOff: function (r, c) {
+          if ((mm[c.v] || []).indexOf(r.l) !== -1) return false;
+          if (c.exclusive) return rowHas(r.l, function (x) { return !x.exclusive; });
+          return rowHas(r.l, function (x) { return !!x.exclusive; });
+        },
+        data: function (r, c) { return 'data-r="' + esc(r.l) + '" data-v="' + esc(c.v) + '"'; }
+      });
+    }
+
+    if (s.type === 'textList') {
+      var vv = a.values || [];
+      h += '<div class="stack">';
+      for (var i = 0; i < s.fields; i++) {
+        h += '<label class="tfield"><span class="tfield-n">' + (i + 1) + '</span>' +
+          '<input type="text" data-act="text" data-i="' + i + '" value="' + esc(vv[i] || '') +
+          '" placeholder="' + (i === 0 ? 'Nombre de la marca' : 'Opcional') + '" /></label>';
+      }
+      return h + '</div>';
+    }
+
+    if (s.type === 'conceptRate') {
+      var cm = a.map || {};
+      h += '<div class="stack">';
+      CONCEPTS.forEach(function (c) {
+        h += '<article class="concept"><h3 class="concept-title">' + esc(c.title) + '</h3>' +
+          '<div class="concept-body">' + c.body + '</div>' +
+          matrixTable({
+            kind: 'radio', act: 'crate', cls: 'mtx--scale',
+            rows: [{ l: '', aria: c.title }],
+            cols: scaleCols(s.lowLabel, s.highLabel),
+            isOn: function (r, cc) { return cm[c.code] === cc.v; },
+            data: function (r, cc) { return 'data-c="' + c.code + '" data-n="' + cc.v + '"'; }
+          }) + '</article>';
+      });
+      return h + '</div>';
+    }
+
+    if (s.type === 'heatmap') {
+      var c2 = conceptByCode(s.concept);
+      var sel = a.values || [];
+      h += '<div class="hm"><p class="hm-title">' + esc(c2.hmTitle) + '</p><p class="hm-text">';
+      c2.fragments.forEach(function (f, i) {
+        h += '<span class="frag' + (sel.indexOf(i) !== -1 ? ' is-on' : '') +
+          '" data-act="frag" data-i="' + i + '" role="checkbox" tabindex="0" aria-checked="' +
+          (sel.indexOf(i) !== -1 ? 'true' : 'false') + '">' + esc(f) + '</span>';
+        var g = (c2.glue && c2.glue[i] !== undefined) ? c2.glue[i] : ' ';
+        if (g) h += '<span class="glue">' + esc(g) + '</span>';
+      });
+      h += '</p></div><p class="counter">' + (sel.length === 1 ? '1 frase seleccionada' : sel.length + ' frases seleccionadas') + '</p>';
+      return h;
+    }
+
+    if (s.type === 'conceptEval') {
+      var c3 = conceptByCode(s.concept);
+      var em = a.map || {};
+      h += '<p class="ref">' + esc(c3.hmTitle) + '</p>';
+      return h + matrixTable({
+        kind: 'radio', act: 'eval', cls: 'mtx--scale',
+        rows: [
+          { l: 'Conecta conmigo', k: 'connects' },
+          { l: 'Encaja con Marinela', k: 'fits' },
+          { l: 'Es diferente a otras marcas que conozco', k: 'different' },
+          { l: 'Es creíble para Marinela', k: 'credible' }
+        ],
+        cols: scaleCols('No importante en absoluto', 'Muy importante'),
+        isOn: function (r, c) { return em[r.k] === c.v; },
+        data: function (r, c) { return 'data-k="' + r.k + '" data-n="' + c.v + '"'; }
+      });
+    }
+
+    if (s.type === 'blockRate') {
+      var picks = ((A['Q31_' + s.block] || {}).values) || [];
+      var rm = a.map || {};
+      var wt = winningTerritory();
+      h += '<div class="stack">';
+      picks.forEach(function (p) {
+        var r = rm[p] || {};
+        h += '<article class="concept concept--tight"><h3 class="concept-title concept-title--plain">' +
+          esc(p) + '</h3>' +
+          matrixTable({
+            kind: 'radio', act: 'brate', cls: 'mtx--scale',
+            rows: [
+              { l: '\u00bfQu\u00e9 tan bien encaja con Marinela como marca?', k: 'brand' },
+              { l: '\u00bfQu\u00e9 tan bien encaja con \u201c' + (wt ? wt.label : 'el territorio ganador elegido en P30') + '\u201d?', k: 'territory' }
+            ],
+            cols: scaleCols(s.lowLabel, s.highLabel),
+            isOn: function (row, c) { return r[row.k] === c.v; },
+            data: function (row, c) { return 'data-p="' + esc(p) + '" data-k="' + row.k + '" data-n="' + c.v + '"'; }
+          }) + '</article>';
+      });
+      return h + '</div>';
+    }
+
+    return h;
+  }
+
+  function renderWelcome() {
+    elChrome.hidden = true;
+    showNav(false);
+    elStage.innerHTML =
+      '<section class="panel panel--welcome">' +
+      '<p class="kicker">Estudio de investigaci\u00f3n de mercado</p>' +
+      '<h1 class="welcome-title">Cuestionario de snacks</h1>' +
+      '<p class="welcome-lede">Gracias por participar. Esta encuesta trata sobre los snacks dulces que compras y consumes, y sobre algunas ideas de marca de las que queremos tu opini\u00f3n. No hay respuestas correctas ni incorrectas; solo queremos saber qu\u00e9 piensas.</p>' +
+      '<p class="welcome-lede">Tus respuestas son an\u00f3nimas y se utilizar\u00e1n exclusivamente con fines de investigaci\u00f3n.</p>' +
+      '<div class="sections-box"><p class="sections-box-h">El cuestionario tiene 6 bloques</p><ol class="sections-list">' +
+      '<li>Perfil y selecci\u00f3n</li><li>H\u00e1bitos y momentos de consumo</li><li>Evaluaci\u00f3n de territorios</li>' +
+      '<li>Percepci\u00f3n de marca</li><li>La marca m\u00e1s all\u00e1 de lo que es hoy</li><li>Identificaci\u00f3n de tribu</li>' +
+      '</ol></div>' +
+      '<button type="button" class="btn btn--primary btn--lg" id="start">Comenzar la encuesta</button>' +
+      '</section>';
+    document.getElementById('start').addEventListener('click', function () {
+      STATE.phase = 'run'; STATE.i = 0; STATE.startedAt = new Date().toISOString(); render();
+    });
+  }
+
+  function renderTerminated() {
+    elChrome.hidden = true;
+    showNav(false);
+    submitToSheet();
+    elStage.innerHTML =
+      '<section class="panel panel--end">' +
+      '<p class="kicker">Encuesta finalizada</p>' +
+      '<h2 class="end-title">Gracias por tu tiempo</h2>' +
+      '<p class="end-lede">Seg\u00fan tus respuestas, este estudio no aplica para ti en este momento. Te agradecemos tu inter\u00e9s y esperamos contar contigo en el pr\u00f3ximo.</p>' +
+      '<button type="button" class="btn btn--ghost" id="restart">Comenzar de nuevo</button></section>';
+    document.getElementById('restart').addEventListener('click', reset);
+  }
+
+  function renderDone() {
+    elChrome.hidden = true;
+    showNav(false);
+    submitToSheet();
+    elStage.innerHTML =
+      '<section class="panel panel--end">' +
+      '<p class="kicker">Respuesta enviada</p>' +
+      '<h2 class="end-title">\u00a1Gracias por su participaci\u00f3n!</h2>' +
+      '<p class="end-lede">Sus respuestas son an\u00f3nimas y se utilizar\u00e1n exclusivamente con fines de investigaci\u00f3n.</p>' +
+      '<button type="button" class="linkish" id="restart2">Iniciar una nueva respuesta</button></section>';
+    document.getElementById('restart2').addEventListener('click', reset);
+  }
+
+  function reset() {
+    Object.keys(A).forEach(function (k) { delete A[k]; });
+    STATE.i = 0; STATE.terminated = null; STATE.phase = 'welcome'; STATE.startedAt = null;
+    LAST = null; NOTE = null;
+    SUBMITTED = false;
+    clear();
+    render();
+  }
+
+  /* ============================================================
+     Google Sheets submission
+     Paste the deployed Apps Script Web App URL below (ends in /exec).
+     ============================================================ */
+  var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwPD4YWboxjhkkwkhhHhh8-LeUPVRpBrIeNN7i_R2PbNxFSAkGdcakxXpSoKveBo9EN/exec';
+  var SUBMITTED = false;
+
+  function answerText_(s, a) {
+    if (!a) return '';
+    if (s.type === 'heatmap') {
+      return (a.values || []).map(function (i) {
+        return conceptByCode(s.concept).fragments[i];
+      }).join(' | ');
+    }
+    if (a.value !== undefined) {
+      var opt = optByValue(s, a.value);
+      var lbl = opt ? opt.l : a.value;
+      return a.other ? (lbl + ' (' + a.other + ')') : String(lbl);
+    }
+    if (a.values !== undefined) {
+      var labels = (a.values || []).map(function (v) {
+        var o = optByValue(s, v);
+        return o ? o.l : v;
+      });
+      return a.other ? labels.concat([a.other]).join(' | ') : labels.join(' | ');
+    }
+    if (a.map !== undefined) {
+      return Object.keys(a.map).map(function (k) {
+        var x = a.map[k];
+        if (x && typeof x === 'object' && !Array.isArray(x)) {
+          return k + '=' + Object.keys(x).map(function (z) { return z + ':' + x[z]; }).join('/');
+        }
+        return k + '=' + (Array.isArray(x) ? x.join('/') : x);
+      }).join(' | ');
+    }
+    return '';
+  }
+
+  /* Flat, one-key-per-question payload for the Google Sheet.
+     Keys are "P<n> - <question text>" so the sheet header is self-explanatory. */
+  function flatPayload() {
+    var out = {
+      'Study': 'Marinela Brandverse, Cuestionario Marinela, Mexico',
+      'Started At': STATE.startedAt || '',
+      'Completed At': new Date().toISOString(),
+      'Status': STATE.terminated ? 'terminated' : 'complete',
+      'Terminated At': STATE.terminated || ''
+    };
+    var onPath = {};
+    visible().forEach(function (s) { onPath[s.id] = true; });
+    SCREENS.forEach(function (s) {
+      if (!s.num || !onPath[s.id]) return;
+      var a = A[s.id];
+      if (!a) return;
+      var key = s.num + ' - ' + s.title;
+      out[key] = answerText_(s, a);
+    });
+    return out;
+  }
+
+  function submitToSheet() {
+    if (SUBMITTED) return;
+    if (!SCRIPT_URL || SCRIPT_URL.indexOf('PASTE_YOUR_DEPLOYED_WEB_APP_URL_HERE') !== -1) {
+      console.warn('SCRIPT_URL is not set — response was not sent to Google Sheets.');
+      return;
+    }
+    SUBMITTED = true;
+    try {
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(flatPayload())
+      }).catch(function (err) {
+        console.error('Survey submission failed:', err);
+        SUBMITTED = false;
+      });
+    } catch (err) {
+      console.error('Survey submission failed:', err);
+      SUBMITTED = false;
+    }
+  }
+
+  function payload() {
+    var out = {
+      study: 'Marinela Brandverse, Cuestionario Marinela, Mexico',
+      startedAt: STATE.startedAt,
+      completedAt: new Date().toISOString(),
+      status: STATE.terminated ? 'terminated' : 'complete',
+      terminatedAt: STATE.terminated,
+      randomisation: RND,
+      categories: cats(),
+      answers: {}
+    };
+    var onPath = {};
+    visible().forEach(function (s) { onPath[s.id] = true; });
+    SCREENS.forEach(function (s) {
+      if (!s.num || !onPath[s.id]) return;
+      var a = A[s.id];
+      if (!a) return;
+      var rec = { question: s.title };
+      if (a.value !== undefined) rec.value = a.value;
+      if (a.values !== undefined) rec.values = a.values;
+      if (a.map !== undefined) rec.map = a.map;
+      if (a.other) rec.other = a.other;
+      if (s.type === 'heatmap') {
+        rec.phrases = (a.values || []).map(function (i) { return conceptByCode(s.concept).fragments[i]; });
+      }
+      if (s.concept) rec.concept = s.concept;
+      if (s.block) rec.block = s.block;
+      out.answers[s.num] = rec;
+    });
+    return out;
+  }
+  function toCSV(p) {
+    var rows = [];
+    rows.push(['status', p.status]);
+    rows.push(['startedAt', p.startedAt || '']);
+    rows.push(['completedAt', p.completedAt]);
+    Object.keys(p.answers).forEach(function (k) {
+      var r = p.answers[k], v;
+      if (r.value !== undefined) v = r.value;
+      else if (r.values !== undefined) v = (r.phrases || r.values).join(' | ');
+      else if (r.map !== undefined) v = Object.keys(r.map).map(function (kk) {
+        var x = r.map[kk];
+        if (x && typeof x === 'object' && !Array.isArray(x)) {
+          return kk + '=' + Object.keys(x).map(function (z) { return z + ':' + x[z]; }).join('/');
+        }
+        return kk + '=' + (Array.isArray(x) ? x.join('/') : x);
+      }).join(' | ');
+      else v = '';
+      rows.push([k, v]);
+      if (r.other) rows.push([k + '_other', r.other]);
+    });
+    var q = function (x) { return '"' + String(x).replace(/"/g, '""') + '"'; };
+    return [['field', 'value'].map(q).join(',')]
+      .concat(rows.map(function (r) { return r.map(q).join(','); })).join('\n');
+  }
+  function download(name, text, mime) {
+    try {
+      var blob = new Blob([text], { type: mime + ';charset=utf-8' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url; a.download = name;
+      document.body.appendChild(a); a.click();
+      document.body.removeChild(a);
+      setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
+    } catch (e) { /* download not available here */ }
+  }
+
+  var STORE = (typeof window !== 'undefined' && window.storage) ? window.storage : null;
+  var saveTimer = null;
+  function save() {
+    if (!STORE) return;
+    if (saveTimer) clearTimeout(saveTimer);
+    saveTimer = setTimeout(function () {
+      try {
+        STORE.set('marinela:draft', JSON.stringify({ A: A, i: STATE.i, phase: STATE.phase, startedAt: STATE.startedAt, rnd: RND }))
+          .catch(function () {});
+      } catch (e) { /* ignore */ }
+    }, 400);
+  }
+  function clear() {
+    if (!STORE) return;
+    try { STORE.delete('marinela:draft').catch(function () {}); } catch (e) { /* ignore */ }
+  }
+
+  function current() { return visible()[STATE.i]; }
+
+  function note(msg) {
+    NOTE = msg;
+    elHint.textContent = msg;
+    elHint.classList.add('is-on');
+    setTimeout(function () {
+      if (NOTE === msg) { NOTE = null; render(); }
+    }, 2400);
+  }
+
+  elStage.addEventListener('click', function (ev) {
+    var t = ev.target.closest ? ev.target.closest('[data-act]') : null;
+    if (!t) return;
+    var s = current();
+    if (!s) return;
+    var act = t.getAttribute('data-act');
+
+    if (t.classList.contains('is-off')) {
+      note('Deselecciona una de tus respuestas para cambiar esto.');
+      return;
+    }
+
+    var a = A[s.id] || (A[s.id] = {});
+
+    if (act === 'opt') {
+      var v = t.getAttribute('data-v');
+      if (s.type === 'single' || s.type === 'agree') {
+        a.value = v;
+        var o = optByValue(s, v);
+        if (s.type === 'agree' || !o || !o.specify) delete a.other;
+      } else {
+        a.values = a.values || [];
+        var opt = optByValue(s, v);
+        var idx = a.values.indexOf(v);
+        if (idx !== -1) {
+          a.values.splice(idx, 1);
+          if (opt && opt.specify) delete a.other;
+        } else if (opt && opt.exclusive) {
+          a.values = [v];
+        } else {
+          a.values.push(v);
+        }
+      }
+      return draw();
+    }
+
+    if (act === 'grid') {
+      a.map = a.map || {};
+      a.map[t.getAttribute('data-r')] = t.getAttribute('data-v');
+      return draw();
+    }
+    if (act === 'gmc') {
+      a.map = a.map || {};
+      var col = t.getAttribute('data-v'), row = t.getAttribute('data-r');
+      a.map[col] = a.map[col] || [];
+      var k = a.map[col].indexOf(row);
+      if (k === -1) {
+        var colDef = null;
+        (s.cols || []).forEach(function (c) { if (c.v === col) colDef = c; });
+        (s.cols || []).forEach(function (c) {
+          if (c.v === col) return;
+          if ((colDef && colDef.exclusive) || c.exclusive) {
+            var arr = a.map[c.v] || [];
+            var j = arr.indexOf(row);
+            if (j !== -1) arr.splice(j, 1);
+          }
+        });
+        a.map[col].push(row);
+      } else {
+        a.map[col].splice(k, 1);
+      }
+      return draw();
+    }
+    if (act === 'gscale') {
+      a.map = a.map || {};
+      a.map[t.getAttribute('data-r')] = parseInt(t.getAttribute('data-n'), 10);
+      return draw();
+    }
+    if (act === 'crate') {
+      a.map = a.map || {};
+      a.map[t.getAttribute('data-c')] = parseInt(t.getAttribute('data-n'), 10);
+      return draw();
+    }
+    if (act === 'eval') {
+      a.map = a.map || {};
+      a.map[t.getAttribute('data-k')] = parseInt(t.getAttribute('data-n'), 10);
+      return draw();
+    }
+    if (act === 'brate') {
+      a.map = a.map || {};
+      var p = t.getAttribute('data-p');
+      a.map[p] = a.map[p] || {};
+      a.map[p][t.getAttribute('data-k')] = parseInt(t.getAttribute('data-n'), 10);
+      return draw();
+    }
+    if (act === 'frag') {
+      a.values = a.values || [];
+      var fi = parseInt(t.getAttribute('data-i'), 10);
+      var pos = a.values.indexOf(fi);
+      if (pos === -1) a.values.push(fi); else a.values.splice(pos, 1);
+      return draw();
+    }
+  });
+
+  elStage.addEventListener('keydown', function (ev) {
+    if (ev.key !== 'Enter' && ev.key !== ' ') return;
+    var t = ev.target.closest ? ev.target.closest('[data-act="frag"]') : null;
+    if (!t) return;
+    ev.preventDefault();
+    ev.stopPropagation();
+    t.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+  });
+
+  elStage.addEventListener('input', function (ev) {
+    var t = ev.target;
+    if (!t.getAttribute) return;
+    var act = t.getAttribute('data-act');
+    if (act !== 'text' && act !== 'specify') return;
+    var s = current(); if (!s) return;
+    var a = A[s.id] || (A[s.id] = {});
+    if (act === 'specify') a.other = t.value;
+    else {
+      a.values = a.values || [];
+      a.values[parseInt(t.getAttribute('data-i'), 10)] = t.value;
+    }
+    var req = requirement(s);
+    elNext.disabled = !!req;
+    elHint.textContent = req || '';
+    elHint.classList.toggle('is-on', !!req);
+    save();
+  });
+
+  function draw() {
+    render();
+    var s = current();
+    if (s) autoAdvance(s);
+  }
+
+  var advTimer = null;
+  function autoAdvance(s) {
+    if (advTimer) clearTimeout(advTimer);
+    if (s.type !== 'single' && s.type !== 'agree') return;
+    var a = A[s.id];
+    if (!a || !a.value) return;
+    if (s.type === 'single') {
+      var o = optByValue(s, a.value);
+      if (o && o.specify) return;
+    }
+    advTimer = setTimeout(next, 340);
+  }
+
+  function next() {
+    var vis = visible();
+    var s = vis[STATE.i];
+    if (!s) return;
+    if (s.num && requirement(s)) return;
+
+    if (typeof s.terminate === 'function') {
+      var a = A[s.id] || {};
+      if (s.terminate(a.value)) {
+        STATE.terminated = s.num;
+        STATE.phase = 'terminated';
+        render();
+        return;
+      }
+    }
+    var after = visible();
+    var pos = after.indexOf(s);
+    if (pos === -1) pos = Math.min(STATE.i, after.length - 1);
+    if (pos >= after.length - 1) { STATE.phase = 'done'; render(); return; }
+    STATE.i = pos + 1;
+    render();
+  }
+
+  function back() {
+    if (STATE.i === 0) return;
+    STATE.i -= 1;
+    render();
+  }
+
+  elNext.addEventListener('click', next);
+  elBack.addEventListener('click', back);
+
+  document.addEventListener('keydown', function (e) {
+    if (STATE.phase !== 'run') return;
+    if (e.target && /^(INPUT|TEXTAREA)$/.test(e.target.tagName) && e.key !== 'Enter') return;
+    if (e.key === 'Enter') { if (!elNext.disabled) { e.preventDefault(); next(); } }
+  });
+
+  buildSteps();
+  render();
+})();
+
+</script>
+</body>
+</html>
